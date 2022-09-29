@@ -63,6 +63,15 @@
 	\include{dissertation/introduction}    
 	\ifnumequal{\value{contnumfig}}{1}{\counterwithout{figure}{chapter}}{\counterwithin{figure}{chapter}}
 	\ifnumequal{\value{contnumtab}}{1}{\counterwithout{table}{chapter}}{\counterwithin{table}{chapter}}
+	
+	% Основное содержание
+	\include{dissertation/partReview}
+	\include{dissertation/partModalAnalysis}
+	\include{dissertation/partVerification}
+	\include{dissertation/partAprobation}
+	
+	% Заключение
+	\include{dissertation/conclusion}
 
 	% Список литературы
 	\include{dissertation/references}

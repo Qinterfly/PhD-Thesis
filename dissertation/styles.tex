@@ -64,14 +64,15 @@
 
 % Определение разделителей
 % Точка с пробелом в номере раздела
-\ifnumgreater{\value{headingdelim}}{0}{%
+\ifnumgreater{\value{headingdelim}}{0}{
     \renewcommand\cftchapteraftersnum{.\space} 
 }{}
 % Точка с пробелом в номерах подразделов и их производных
-\ifnumgreater{\value{headingdelim}}{1}{%
+\ifnumgreater{\value{headingdelim}}{1}{
     \renewcommand\cftsectionaftersnum{.\space}   
     \renewcommand\cftsubsectionaftersnum{.\space} 
     \renewcommand\cftsubsubsectionaftersnum{.\space}
+    \setsecnumformat{\csname the#1\endcsname.\space}
 }{}
 
 % Включение приложения в оглавление
@@ -80,8 +81,8 @@
 % --- Колонтитулы --- %
 
 % Порядковый номер страницы печатают на середине верхнего поля страницы (ГОСТ Р 7.0.11-2011, 5.3.8)
-\makeevenhead{plain}{}{\rmfamily\thepage}{}
-\makeoddhead{plain}{}{\rmfamily\thepage}{}
+\makeevenhead{plain}{}{--~\rmfamily\thepage~--}{}
+\makeoddhead{plain}{}{--~\rmfamily\thepage~--}{}
 \makeevenfoot{plain}{}{}{}
 \makeoddfoot{plain}{}{}{}
 \pagestyle{plain}
@@ -91,7 +92,7 @@
 
 \newcommand*{\tocheader}{
 \ifnumequal{\value{pgnum}}{1}{
-    \ifendTOC\else\hbox to \linewidth%
+	\ifendTOC\else\hbox to \linewidth%
       {\noindent{}~\hfill{Стр.}}\par%
       \ifnumless{\value{page}}{3}{}{%
         \vspace{0.5\onelineskip}
@@ -107,19 +108,19 @@
 % Эти установки будут давать одинаковый результат независимо от выбора базовым шрифтом 12 пт или 14 пт
 \newcommand{\basegostsectionfont}{\fontsize{14pt}{16pt}\selectfont\bfseries}
 
-\makechapterstyle{thesisgost}{%
+\makechapterstyle{thesisgost}{
     \chapterstyle{default}
     \setlength{\beforechapskip}{0pt}
     \setlength{\midchapskip}{0pt}
     \setlength{\afterchapskip}{\theintvl\curtextsize}
-    \renewcommand*{\chapnamefont}{\basegostsectionfont}
-    \renewcommand*{\chapnumfont}{\basegostsectionfont}
-    \renewcommand*{\chaptitlefont}{\basegostsectionfont}
+    \renewcommand*{\chapnamefont}{\basegostsectionfont\large}
+    \renewcommand*{\chapnumfont}{\basegostsectionfont\large}
+    \renewcommand*{\chaptitlefont}{\basegostsectionfont\itshape\large}
     \renewcommand*{\chapterheadstart}{}
-    \ifnumgreater{\value{headingdelim}}{0}{%
-        \renewcommand*{\afterchapternum}{.\space}   % добавляет точку с пробелом после номера раздела
-    }{%
-        \renewcommand*{\afterchapternum}{\quad}     % добавляет \quad после номера раздела
+    \ifnumgreater{\value{headingdelim}}{0}{
+        \renewcommand*{\afterchapternum}{.\space} % Добавляет точку с пробелом после номера главы
+    }{
+        \renewcommand*{\afterchapternum}{\quad}   % Добавляет \quad после номера главы
     }
     \renewcommand*{\printchapternum}{\hdngaligni\hdngalign\chapnumfont \thechapter}
     \renewcommand*{\printchaptername}{}
@@ -127,15 +128,17 @@
 }
 
 \makeatletter
-\makechapterstyle{thesisgostchapname}{%
+\makechapterstyle{thesisgostchapname}{
     \chapterstyle{thesisgost}
     \renewcommand*{\printchapternum}{\chapnumfont \thechapter}
-    \renewcommand*{\printchaptername}{\hdngaligni\hdngalign\chapnamefont \@chapapp} %
+    \renewcommand*{\printchaptername}{\hdngaligni\hdngalign\chapnamefont \@chapapp}
 }
 \makeatother
 
+% Выбор стиля глав
 \chapterstyle{thesisgost}
 
+% Задание отступов всех разделов и их производных
 \setsecheadstyle{\basegostsectionfont\hdngalign}
 \setsecindent{\otstuplen}
 
@@ -145,16 +148,18 @@
 \setsubsubsecheadstyle{\basegostsectionfont\hdngalign}
 \setsubsubsecindent{\otstuplen}
 
-\sethangfrom{\noindent #1} %все заголовки подразделов центрируются с учетом номера, как block
+% Центрирование заголовков с учетом номера
+\sethangfrom{\noindent #1} 
 
-\ifnumequal{\value{chapstyle}}{1}{%
+% Написание слова "Глава" перед каждым номером раздела в оглавлении
+\ifnumequal{\value{chapstyle}}{1}{
     \chapterstyle{thesisgostchapname}
-    \renewcommand*{\cftchaptername}{\chaptername\space} % будет вписано слово Глава перед каждым номером раздела в оглавлении
+    \renewcommand*{\cftchaptername}{\chaptername\space}
 }{}
 
 % --- Интервалы до и после заголовков (ГОСТ Р 7.0.11-2011, 5.3.5) --- %
 
-% Отделение от текста до и после заголовков тремя интервалами
+% Отделение от текста до и после заголовков интервалами
 \setbeforesecskip{\theintvl\curtextsize}
 \setaftersecskip{\theintvl\curtextsize}
 \setbeforesubsecskip{\theintvl\curtextsize}
@@ -166,10 +171,10 @@
 
 % Пропорциональные заголовки и базовый шрифт 14 пт
 \ifnumequal{\value{headingsize}}{1}{
-    \renewcommand{\basegostsectionfont}{\large\bfseries}
-    \renewcommand*{\chapnamefont}{\Large\bfseries}
-    \renewcommand*{\chapnumfont}{\Large\bfseries}
-    \renewcommand*{\chaptitlefont}{\Large\bfseries}
+    \renewcommand{\basegostsectionfont}{\bfseries}
+    \renewcommand*{\chapnamefont}{\large\bfseries}
+    \renewcommand*{\chapnumfont}{\large\bfseries}
+    \renewcommand*{\chaptitlefont}{\large\itshape\bfseries}
 }{}
 
 % --- Счётчики --- %
