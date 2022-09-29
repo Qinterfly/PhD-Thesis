@@ -23,18 +23,6 @@
 \usepackage{mathtools}              % Добавляет окружение multlined
 \usepackage{xfrac}                  % Красивые дроби
 \usepackage{upgreek}                % Русская традиция начертания греческих букв
-\usepackage[
-    locale = DE,
-    list-separator       = {;\,},
-    list-final-separator = {;\,},
-    list-pair-separator  = {;\,},
-    list-units           = single,
-    range-units          = single,
-    range-phrase         = {\text{\ensuremath{-}}},
-    fraction-function    = \sfrac,
-    separate-uncertainty,
-    ]{siunitx}[=v2] % Размерности SI
-\sisetup{inter-unit-product = \ensuremath{{}\cdot{}}}
 
 % --- Кодировки и шрифты --- %
 
@@ -77,7 +65,7 @@
 % Подключение русифицированных шрифтов XCharter
 \ifnumequal{\value{usealtfont}}{2}{
 	\usepackage[scaled = 0.914]{XCharter} 
-	\usepackage[charter, vvarbb, scaled = 1.048]{newtxmath}
+	%\usepackage[charter, vvarbb, scaled = 1.048]{newtxmath}
 	\setDisplayskipStretch{-0.078}
 }{}
 
@@ -93,6 +81,7 @@
 % --- Таблицы --- %
 
 \usepackage{threeparttable} % Автоматическая ширина подписи таблицы
+\usepackage{tabularray}     % Таблицы с гибкими настройками
 
 % --- Общее форматирование --- %
 
@@ -108,10 +97,17 @@
 
 % --- Векторная графика --- %
 
-\usepackage{tikz}
+\usepackage{stanli}                       % Отрисовка конструкций
+\usepackage{tikz}						  % Пакет векторной графики
+\usetikzlibrary{shadows, arrows}          % Использование теней и стрелок в Tikz
+\usetikzlibrary{positioning}              % Позиционирование в Tikz
+\usetikzlibrary{patterns}                 % Паттерны заливки
+\usetikzlibrary{decorations.pathmorphing} % Декорации
+\usetikzlibrary{calc}                     % Расчетная библиотека
 
 % --- Гиперссылки --- %
 
+\usepackage{color}
 \usepackage{hyperref}
 
 % --- Изображения --- %

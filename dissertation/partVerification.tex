@@ -4,6 +4,802 @@
 
 \section{Освобождение математических моделей от наложенных связей}
 
+\subsection{Описание метода}
+
+Пусть имеется скорректированная по результатам испытаний закрепленная конечно-элементная (КЭ) модель $ L $ некоторой упруго-массовой конструкции. Модель описывается матрицами жесткости $ \mat{K} $  и масс $ \mat{M} $, имеет $ n $  степеней свободы и $ N $ узлов. Система уравнений собственных колебаний этой модели имеет следующий вид:
+\begin{equation}
+	\mat{K} \mat{x} + \mat{M} \ddot{\mat{x}} = 0.
+	\label{eq:eigFreeProblem}
+\end{equation}
+
+Ставится задача освободить КЭ-модель от закреплений, при условии, что известны инерционные характеристики свободной конструкции, а именно: масса и массовые моменты инерции относительно некоторой точки, например, центра тяжести. Информации об убранных при начальном закреплении модели степенях свободы либо нет, либо она неактуальна, то есть она не позволяет сделать модель свободной. Последнее имеет место быть, например, когда проводится коррекция динамических свойств закрепленной модели по результатам эксперимента.
+
+Для понимания предлагаемого метода представим, что рассматриваемая модель $ L $ находится на воображаемой платформе, к которой она прикреплена всеми узлами, которые были зафиксированы. Эта платформа может перемещаться и поворачиваться как жесткое целое. Положение платформы в глобальной неподвижной системе координат будем определять координатами точки $ C $ ~---~ вектором $ \mat{R}_0 = (x_0, y_0, z_0) $, а ориентация в пространстве задается вектором конечного поворота $ \mat{\vec{\mat{\Omega}}} = (\omega_1, \omega_2, \omega_3) $ \figref{fig:designScheme}. Воображаемая платформа в общем случае находится на упругом основании, заданном тремя линейными и тремя крутильными жесткостями.
+
+При ускорении платформы на конструкцию действуют дополнительные силы инерции, обусловленные ускорением каждой точки конструкции за счёт перемещения и поворота платформы, поэтому уравнение движения конструкции \eqref{eq:eigFreeProblem} перепишется в следующем виде:
+
+\begin{equation}
+	\mat{K} \mat{x} + \mat{M} (\ddot{\mat{x}} + \ddot{\mat{x}}_0) = 0,
+	\label{eq:eigProbModified}
+\end{equation}
+где $ \mat{x}_0 = \begin{bmatrix}
+           \mat{R}_{0} \\
+           \mat{R}_{1} \\
+           \hdots \\
+           \mat{R}_{N}
+         \end{bmatrix} =
+         \begin{bmatrix}
+           x_1^0(x_0, y_0, \hdots , \omega_3) \\
+           x_2^0(x_0, y_0, \hdots , \omega_3) \\
+           \hdots \\
+           x_N^0(x_0, y_0, \hdots , \omega_3)
+         \end{bmatrix} $, $ \mat{R}_i = \mat{R}_0 + \mat{r}_i $, \\
+
+\noindent
+$ (x_0, y_0, z_0) $~---~линейные смещения платформы, \\
+$ (\omega_1, \omega_2, \omega_3) $~---~компоненты вектора конечного поворота $ \mat{\Omega} $, \\
+$ \mat{M} $, $ \mat{K} $~---~матрицы масс и жесткости модели соответственно.
+
+\begin{figure}[!htb]
+	\centerfloat
+	\begin{tikzpicture}[scale = 1]
+	  % Задание переменных
+      \pgfmathsetmacro{\CS}{3}
+      \pgfmathsetmacro{\cx}{6}
+      \pgfmathsetmacro{\cy}{4}
+      \pgfmathsetmacro{\ix}{4.5}
+      \pgfmathsetmacro{\iy}{5}
+      \draw [black, fill = blue!5] plot [smooth, tension = 0.6] coordinates {(5, 2.5)(6, 2)(7, 1.5)(8, 3)(9, 4)(7.5, 5)(6, 6)(5, 6.5)(2, 5)(3, 4)(5, 2.5)};
+	  % Построение
+	    % Вектора
+	  \draw[vector] (0, 0) -- (\cx, \cy) node[midway, below right]{$\mat{R}_0$};
+	  \draw[vector] (0, 0) -- (\ix, \iy) node[midway, above left]{$\mat{R}_i$} node[at end, above]{$i$};
+	  \draw[vector] (\cx, \cy) node[circle, scale = 0.4, fill = black, label = right:{$C$}]{} -- (\ix, \iy) node[midway, above right]{$\mat{r}_i$};
+	  	% Оси
+	  \draw[axis] (0, 0) node[left] {O} -- (0, \CS) node[at end, left] {$y$};
+	  \draw[axis] (0, 0) -- (\CS, 0) node[at end, below] {$x$};
+	  \draw[axis] (0, 0) -- (1, -0.9) node[at end, below] {$z$};
+	  \node (A) at (7, 5.75) {$L$};
+	\end{tikzpicture}
+	\caption{Расчетная схема} \label{fig:designScheme}
+\end{figure}
+
+В случае малых поворотов матрица $ \lambda $ линейна относительно компонент этого вектора и имеет следующий вид:
+\begin{equation}
+	\lambda =
+\begin{pmatrix}
+1 & \omega_3 & -\omega_2 \\
+-\omega_3 & 1 & \omega_1 \\
+\omega_2 & -\omega_1 & 1 \\
+\end{pmatrix}.
+\end{equation}
+
+Каждый узел КЭ-модели $ L $ до деформирования имеет координаты $ (x_i^0, y_i^0, z_i^0) $, $ i = 1 \hdots N $ в своей системе координат, которая необязательно совпадает с системой координат, выбранной выше, тогда точка $ C $ в этой системе имеет координаты $ (x_0, y_0, z_0) $. Так как рассматриваются малые перемещения, то зависимость $ \mat{r}_i = \mat{r}_i (\omega_1, \omega_2, \omega_3) $~---~линейная относительно компонент вектора конечного поворота:
+\begin{gather}
+\mat{r}_i = \lambda \mat{r}_i^0 =
+\begin{pmatrix}
+1 & \omega_3 & -\omega_2 \\
+-\omega_3 & 1 & \omega_1 \\
+\omega_2 & -\omega_1 & 1 \\
+\end{pmatrix}
+\begin{bmatrix}
+	x_i^0 - x_0 \\
+	y_i^0 - y_0 \\
+	z_i^0 - z_0 \\
+\end{bmatrix} = \nonumber \\
+= \begin{bmatrix}
+\Delta x_i^0 - \Delta z_i^0 \omega_2 + \Delta y_i^0 \omega_3 \\
+\Delta z_i^0 \omega_1 + y_i^0 - \Delta x_i^0 \omega_3 \\
+-\Delta y_i^0 \omega_1 + \Delta x_i^0 \omega_2 + \Delta z_i^0 \\
+\end{bmatrix}
+, \ i = 1 \hdots N.
+\label{eq:rotVecLin}
+\end{gather}
+
+Для определенности пусть каждый узел описывается тремя линейными и тремя угловыми степенями свободы (хотя в общем случае это может быть не так), тогда выражение \eqref{eq:eigProbModified} с учетом \eqref{eq:rotVecLin} перепишется в следующем виде:
+\begin{equation}
+	\mat{K}
+	\begin{bmatrix}
+	x_1 \\ x_2 \\ x_3 \\ x_4 \\ x_5 \\ x_6 \\
+	\hdots \\ \hdots \\ \hdots \\ \hdots \\ \hdots \\
+	x_n
+	\end{bmatrix}
+	 + \mat{M} \left(
+	\begin{bmatrix}
+	\ddot{x}_1 \\ \ddot{x}_2 \\ \ddot{x}_3 \\ \ddot{x}_4 \\ \ddot{x}_5 \\ \ddot{x}_6 \\
+	\hdots \\ \hdots \\ \hdots \\ \hdots \\ \hdots \\
+	\ddot{x}_n
+	\end{bmatrix}
+	 +
+	 \begin{bmatrix}
+		\ddot{x}_0 - \Delta z_1^0 \ddot{\omega}_2 + \Delta y_1^0 \ddot{\omega}_3 \\
+		\ddot{y}_0 + \Delta z_1^0 \ddot{\omega}_1 - \Delta x_1^0 \ddot{\omega}_3 \\
+		\ddot{z}_0 -\Delta y_1^0 \ddot{\omega}_1 + \Delta x_1^0 \ddot{\omega}_2 \\
+		\ddot{\omega}_1 \\
+		\ddot{\omega}_2	\\
+		\ddot{\omega}_3 \\
+		\hdots \\
+		\ddot{z}_0 -\Delta y_N^0 \ddot{\omega}_1 + \Delta x_N^0 \ddot{\omega}_2 \\
+		\ddot{\omega}_1 \\
+		\ddot{\omega}_2	\\
+		\ddot{\omega}_3 \\
+	 \end{bmatrix}
+	 \right) = 0.
+	 \label{1MotionModified}
+\end{equation}
+
+Перепишем это уравнение в матричном виде:
+\begin{equation}
+	\widehat{\mat{K}} \overline{\mat{x}} + \widehat{\mat{M}} \ddot{\overline{\mat{x}}} = 0,
+	\label{MotionEquationLocal}
+\end{equation}
+где
+\begin{equation*}
+\widehat{\mat{K}}=
+\left(
+\begin{array}{c c c | c c c}
+k_{1,1} & \hdots & k_{1,n} & 0 & \hdots & 0 \\
+k_{2,1} & \hdots & k_{2,n} & 0 & \hdots & 0 \\
+\hdots & \hdots & \hdots & \hdots & \hdots & \hdots \\
+k_{n,1} & \hdots & k_{n,n} & 0 & \hdots & 0 \\
+\end{array}
+\right),
+\end{equation*}
+\begin{equation*}
+\overline{\mat{x}} =
+\begin{pmatrix}
+	x_1 \\
+	x_2 \\
+	\hdots \\
+	x_n \\
+	x_0 \\
+	y_0 \\
+	\hdots \\
+	\omega_3
+\end{pmatrix}, \
+\widehat{\mat{M}}=
+\left(
+\begin{array}{c c c | c c c}
+m_{1,1} & \hdots & m_{1,n} &
+\sum\limits_{j=1}^N m_{1, \mat{G}_{j, 1}} & \hdots
+&
+\sum\limits_{j=1}^N
+\begin{pmatrix}
+m_{1,\mat{G}_{j,6}} + \\
++ \Delta x_j^0 m_{1, \mat{G}_{j,2}} - \\
+- \Delta y_j^0 m_{1, \mat{G}_{j,1}} \\
+\end{pmatrix} \\
+
+m_{2,1} & \hdots & m_{2,n} &
+\sum\limits_{j=1}^N m_{2, \mat{G}_{j, 1}} & \hdots
+&
+\sum\limits_{j=1}^N
+\begin{pmatrix}
+	m_{2,\mat{G}_{j,6}} + \\
+	+ \Delta x_j^0 m_{2, \mat{G}_{j,2}} - \\
+	- \Delta y_j^0 m_{2, \mat{G}_{j,1}} \\
+\end{pmatrix} \\
+
+\hdots & \hdots & \hdots & \hdots & \hdots & \hdots \\
+
+m_{n,1} & \hdots & m_{n,n} &
+\sum\limits_{j=1}^N m_{n, \mat{G}_{j, 1}} & \hdots
+&
+\sum\limits_{j=1}^N
+\begin{pmatrix}
+	m_{n,\mat{G}_{j,6}} + \\
+	+ \Delta x_j^0 m_{n, \mat{G}_{j,2}} - \\
+	- \Delta y_j^0 m_{n, \mat{G}_{j,1}} \\
+\end{pmatrix} \\
+\end{array}
+\right).
+\end{equation*}
+При этом матрица $ \mat{G}_{ji} $ содержит порядковый номер уравнения, соответствующего $i$-ой степени свободы $ j $-го узла.
+
+Составим уравнения движения платформы. Пусть $ c_{1,2,3}, \ \kappa_{1,2,3} $~---~линейные и угловые жесткости крепления платформы. Если платформа свободна, эти жесткости равны нулю. Пусть $ m_0 $~---~общая масса платформы и конечно-элементной модели $ L $, а  $ J_{1,2,3} $~--~соответствующие массовые моменты инерции. Тогда можно записать 6 уравнений движения платформы с КЭ-моделью как жесткого целого:
+\begin{equation}
+	\kappa \cdot \xi + \mu \cdot \ddot{\xi} + \sum m \cdot \ddot{\mat{x}} = 0,
+	\label{1MotionPlatform}
+\end{equation}
+где
+\begin{gather}
+	\xi =
+	\begin{Bmatrix}
+		x_0 \\ y_0 \\ z_0 \\ \omega_1 \\ \omega_2 \\ \omega_3
+	\end{Bmatrix}, \
+	\kappa =
+	\begin{pmatrix}
+		c_1 & 0 & 0 & 0 & 0 & 0 \\
+		0 & c_2 & 0 & 0 & 0 & 0 \\
+		0 & 0 & c_3 & 0 & 0 & 0 \\
+		0 & 0 & 0 & k_1 & 0 & 0 \\
+		0 & 0 & 0 & 0 & k_2 & 0 \\
+		0 & 0 & 0 & 0 & 0 & k_3
+	\end{pmatrix},  \\
+	\mu =
+	\begin{pmatrix}
+		m_0 & 0 & 0 & 0 & 0 & 0 \\
+		0 & m_0 & 0 & 0 & 0 & 0 \\
+		0 & 0 & m_0 & 0 & 0 & 0 \\
+		0 & 0 & 0 & J_1 & 0 & 0 \\
+		0 & 0 & 0 & 0 & J_2 & 0 \\
+		0 & 0 & 0 & 0 & 0 & J_3
+	\end{pmatrix}.
+\end{gather}
+
+Уравнения \eqref{MotionEquationLocal} и \eqref{1MotionPlatform} образуют новую систему уравнений движения с симметричными матрицами размером $ n + 6 $:
+\begin{equation}
+	\overline{\mat{K}} \cdot \overline{\mat{x}} + \overline{\mat{M}} \cdot \ddot{\overline{\mat{x}}} = 0,
+\end{equation}
+или
+\begin{equation}
+	\begin{pmatrix}
+	\mat{K} & 0 \\
+	0 & \kappa
+	\end{pmatrix}
+	\begin{bmatrix}
+	\mat{x} \\
+	\xi
+	\end{bmatrix}
+	+
+	\begin{pmatrix}
+	\mat{M} & (\sum m)^\intercal \\
+	\sum m & \mu
+	\end{pmatrix}
+	\begin{bmatrix}
+	\ddot{\mat{x}} \\
+	\ddot{\xi}
+	\end{bmatrix} = 0.
+	\label{eq:resLocalSystem}
+\end{equation}
+
+Система \eqref{eq:resLocalSystem} описывает собственные колебания конечно-элементной модели $ L $ вместе с платформой. Если модель  получена путем закрепления свободной модели $ \overline{L} $, жесткости крепления платформы равны нулю, масса и моменты инерции платформы соответствуют незакрепленной модели , тогда частоты, найденные из решения проблемы \eqref{eq:resLocalSystem}  будут близки к частотам  колебаний свободной модели $ \overline{L} $. При этом формы собственных колебаний, найденные из \eqref{eq:resLocalSystem}, также будут близки к формам свободной модели, если их привести к одной системе координат с учетом относительного движения.
+
+Найдем абсолютные координаты согласно \eqref{eq:rotVecLin}:
+\begin{equation}
+	\tilde{\overline{\mat{x}}} = \overline{\mat{x}} + \overline{\mat{x}}_0 =
+	\begin{pmatrix} \tilde{\mat{x}} \\ \xi \end{pmatrix}
+	+
+	\begin{pmatrix} \mat{x}_0 \\ 0 \end{pmatrix}, \label{AbsoluteCoord}
+\end{equation}
+\begin{equation*}
+	\begin{pmatrix}
+		\tilde{x}_1 \\
+		\tilde{x}_2 \\
+		\tilde{x}_3 \\
+		\tilde{x}_4 \\
+		\tilde{x}_5 \\
+		\tilde{x}_6 \\
+		\hdots \\
+		\tilde{x}_{n-3} \\
+		\tilde{x}_{n-2} \\
+		\tilde{x}_{n-1} \\
+		\tilde{x}_{n} \\
+		x_0 \\
+		y_0 \\
+		\hdots \\
+		\omega_3
+	\end{pmatrix} =
+	\begin{pmatrix}
+		x_1 \\
+		x_2 \\
+		x_3 \\
+		x_4 \\
+		x_5 \\
+		x_6 \\
+		\hdots \\
+		x_{n-3} \\
+		x_{n-2} \\
+		x_{n-1} \\
+		x_{n} \\
+		x_0 \\
+		y_0 \\
+		\hdots \\
+		\omega_3
+	\end{pmatrix} +
+	\begin{pmatrix}
+		x_0 - \Delta z_1^0 \omega_2 + \Delta y_1^0 \omega_3 \\
+		y_0 + \Delta z_1^0 \omega_1 - \Delta x_1^0 \omega_3 \\
+		z_0 -\Delta y_1^0 \omega_1 + \Delta x_1^0 \omega_2 \\
+		\omega_1 \\
+		\omega_2	\\
+		\omega_3 \\
+		\hdots \\
+		z_0 -\Delta y_N^0 \omega_1 + \Delta x_N^0 \omega_2 \\
+		\omega_1 \\
+		\omega_2 \\
+		\omega_3 \\
+		0 \\
+		0 \\
+		\hdots \\
+		0
+	 \end{pmatrix}.
+\end{equation*}
+
+Выразим локальные координаты $ \overline{\mat{x}} $:
+\begin{equation}
+	\overline{\mat{x}} = \tilde{\overline{\mat{x}}} - \overline{\mat{x}}_0 = \begin{pmatrix}	\mat{x} \\ \xi \end{pmatrix} -
+\begin{pmatrix} \mat{x}_0 \\ 0\end{pmatrix}.
+	\label{1LocalCoord}
+\end{equation}
+
+Подставим \eqref{1LocalCoord} в \eqref{eq:resLocalSystem}:
+\begin{gather}
+	\widehat{\mat{K}} \cdot (\tilde{\overline{\mat{x}}} - \overline{\mat{x}}_0) + \widehat{\mat{M}} \cdot  (\ddot{\tilde{\overline{\mat{x}}}} - \ddot{\overline{\mat{x}}}_0) = 0, \\
+	\begin{pmatrix}
+		\mat{K} & 0 \\
+		0 & \kappa
+	\end{pmatrix}
+	\left[
+	\begin{Bmatrix}
+		\tilde{\mat{x}} \\
+		\xi
+	\end{Bmatrix}
+	+
+	\begin{Bmatrix}
+		\mat{x}_0 \\
+		0
+	\end{Bmatrix}
+	\right]
+	+
+	\begin{pmatrix}
+	\mat{M} & (\sum m)^\intercal \\
+	\sum m & \mu
+	\end{pmatrix}
+	\left[
+	\begin{Bmatrix}
+		\ddot{\tilde{\mat{x}}} \\
+		\ddot{\xi}
+	\end{Bmatrix}
+	+
+	\begin{Bmatrix}
+		\ddot{\mat{x}}_0 \\
+		0
+	\end{Bmatrix}
+	\right] = 0 \nonumber.
+\end{gather}
+
+Так как
+\begin{equation}
+	\left( \sum m \right)^\intercal \ddot{\xi} = \mat{M} \cdot \ddot{\mat{x}}_0, \ \left( \sum k \right) ^\intercal \xi = \mat{K} \cdot \mat{x}_0,
+\end{equation}
+
+тогда
+\begin{equation}
+	\begin{pmatrix}
+		\mat{K} & -(\sum \kappa)^\intercal \\
+		0 & \kappa
+	\end{pmatrix}
+	\begin{Bmatrix}
+		\tilde{\mat{x}} \\
+		\xi
+	\end{Bmatrix}
+	+
+	\begin{pmatrix}
+	\mat{M} & 0 \\
+	\sum m & \mu
+	\end{pmatrix}
+	\begin{Bmatrix}
+		\ddot{\tilde{\mat{x}}} \\
+		\ddot{\xi}
+	\end{Bmatrix} -
+	\begin{Bmatrix}
+		0 \\
+		\sum m \ddot{\mat{x}}_0
+	\end{Bmatrix}
+	= 0.
+\end{equation}
+
+Введем обозначение:
+\begin{equation}
+	\sum m \cdot \ddot{\mat{x}}_0 = \sum \sum m \cdot \ddot{\xi}.
+\end{equation}
+
+Тогда последняя система уравнений перепишется следующим образом:
+\begin{equation}
+	\begin{pmatrix}
+		\mat{K} & -(\sum k)^\intercal \\
+		 0 & \kappa
+	\end{pmatrix}
+	\begin{Bmatrix}
+		\tilde{\mat{x}} \\
+		\xi
+	\end{Bmatrix}
+	+
+	\begin{pmatrix}
+		\mat{M} & 0 \\
+		\sum \mu & \mu - \sum \sum m
+	\end{pmatrix}
+		\begin{Bmatrix}
+		\ddot{\tilde{\mat{x}}} \\
+		\ddot{\xi}
+	\end{Bmatrix}
+	= 0.
+	\label{eq:finalSys}
+\end{equation}
+
+Заметим, что $ \sum k = F_s(\mat{K}) \in \set{R}^{6 \times n}$, $ \sum \sum m = F_m(F_s(\mat{M})) \in \set{R}^{6 \times 6} $. Эти матричные функции равны:
+\begin{gather}
+	F_m(\mat{A})
+	= \left(
+	\begin{smallmatrix}
+		\sum \limits_{i=1}^N a_{1,\mat{G}_{i,1}}
+		& \hdots
+		& \sum \limits_{i=1}^N a_{1,\mat{G}_{i,3}}
+		&
+		\sum\limits_{i=1}^N
+		\left(
+		\begin{smallmatrix}
+			a_{1,\mat{G}_{i,4}} + \\
+			+ \Delta y_i^0 a_{1, \mat{G}_{i,3}} - \\
+			- \Delta z_i^0 a_{1, \mat{G}_{i,2}} \\
+		\end{smallmatrix} \right)
+		&
+		\hdots
+		&
+		\sum\limits_{i=1}^N
+		\left(
+		\begin{smallmatrix}
+			a_{1,\mat{G}_{i,6}} + \\
+			+ \Delta x_i^0 a_{1, \mat{G}_{i,2}} - \\
+			- \Delta y_i^0 a_{1, \mat{G}_{i,1}} \\
+		\end{smallmatrix} \right) \\
+		\hdots & \hdots & \hdots & \hdots & \hdots & \hdots \\
+		\sum \limits_{i=1}^N a_{6,\mat{G}_{i,1}}
+		& \hdots
+		& \sum \limits_{i=1}^N a_{6,\mat{G}_{i,3}}
+		&
+		\sum\limits_{i=1}^N
+		\left(
+		\begin{smallmatrix}
+			a_{6,\mat{G}_{i,4}} + \\
+			+ \Delta y_i^0 a_{6, \mat{G}_{i,3}} - \\
+			- \Delta z_i^0 a_{6, \mat{G}_{i,2}} \\
+		\end{smallmatrix} \right)
+		&
+		\hdots
+		&
+		\sum\limits_{i=1}^N
+		\left(
+		\begin{smallmatrix}
+			a_{6,\mat{G}_{i,6}} + \\
+			+ \Delta x_i^0 a_{6, \mat{G}_{i,2}} - \\
+			- \Delta y_i^0 a_{6, \mat{G}_{i,1}} \\
+		\end{smallmatrix} \right) \\
+	\end{smallmatrix}
+	\right), \\
+	F_s(\mat{A})^\intercal
+	= \left(
+	\begin{smallmatrix}
+		\sum \limits_{i=1}^N a_{\mat{G}_{i,1}, 1}
+		& \hdots
+		& \sum \limits_{i=1}^N a_{\mat{G}_{i,3}, 1}
+		&
+		\sum\limits_{i=1}^N
+		\left(
+		\begin{smallmatrix}
+			a_{\mat{G}_{i,4}, 1} + \\
+			+ \Delta y_i^0 a_{\mat{G}_{i,3}, 1} - \\
+			- \Delta z_i^0 a_{\mat{G}_{i,2}, 1} \\
+		\end{smallmatrix} \right)
+		&
+		\hdots
+		&
+		\sum\limits_{i=1}^N
+		\left(
+		\begin{smallmatrix}
+			a_{\mat{G}_{i,6}, 1} + \\
+			+ \Delta x_i^0 a_{\mat{G}_{i,2}, 1} - \\
+			- \Delta y_i^0 a_{\mat{G}_{i,1}, 1} \\
+		\end{smallmatrix} \right) \\
+		\hdots & \hdots & \hdots & \hdots & \hdots & \hdots \\
+		\sum \limits_{i=1}^N a_{\mat{G}_{i,1},n}
+		& \hdots
+		& \sum \limits_{i=1}^N a_{\mat{G}_{i,3},n}
+		&
+		\sum\limits_{i=1}^N
+		\left(
+		\begin{smallmatrix}
+			a_{\mat{G}_{i,4},n} + \\
+			+ \Delta y_i^0 a_{\mat{G}_{i,3}, n} - \\
+			- \Delta z_i^0 a_{\mat{G}_{i,2}, n} \\
+		\end{smallmatrix} \right)
+		&
+		\hdots
+		&
+		\sum\limits_{i=1}^N
+		\left(
+		\begin{smallmatrix}
+			a_{\mat{G}_{i,6}, n} + \\
+			+ \Delta x_i^0 a_{\mat{G}_{i,2}, n} - \\
+			- \Delta y_i^0 a_{\mat{G}_{i,1}, n} \\
+		\end{smallmatrix} \right) \\
+	\end{smallmatrix}
+	\right),
+\end{gather}
+где $ a_{i,j}$~---~элементы матрицы $ \mat{A} $, $ (\Delta x^0_i, \Delta y^0_i, \Delta z^0_i) $~---~компоненты радиус-вектора от центра тяжести до $ i $-го узла недеформированной конструкции.
+
+Для дальнейшего преобразования \eqref{eq:finalSys} в симметричный вид, воспользуемся линейными комбинациями первых строк этой системы. В соответствии с таблицей $ \mat{G} $, для приведения матрицы масс в симметричный вид, получим:
+\begin{gather}
+	\sum \limits_\mat{G} \left[ \mat{K} \tilde{\mat{x}} - (\sum k)^\intercal \xi + \mat{M} \ddot{\tilde{\mat{x}}} = 0 \right], \\
+	\sum k \cdot \tilde{\mat{x}} - \sum \sum k \cdot \xi + \sum m \cdot \ddot{\tilde{\mat{x}}} = 0.
+\end{gather}
+
+Тогда из \eqref{eq:finalSys} получим итоговую систему уравнений:
+\begin{equation}
+	\begin{pmatrix}
+		\mat{K} & -(\sum k)^\intercal \\
+		 -(\sum k)^\intercal & \kappa + \sum \sum k
+	\end{pmatrix}
+	\begin{Bmatrix}
+		\tilde{\mat{x}} \\
+		\xi
+	\end{Bmatrix}
+	+
+	\begin{pmatrix}
+		\mat{M} & 0 \\
+		0 & \mu - \sum \sum m
+	\end{pmatrix}
+		\begin{Bmatrix}
+		\ddot{\tilde{\mat{x}}} \\
+		\ddot{\xi}
+	\end{Bmatrix}
+	= 0.
+	\label{eq:finalSysSym}
+\end{equation}
+
+Необходимо отметить, что точка $ C $ не обязательно должна располагаться в центре масс, она может находиться в любом месте конструкции. Пусть точка $ C $ находится на расстоянии $ (\Delta_x$, $\Delta_y$, $\Delta_z) $ от центра тяжести, тогда матрица $ \mu $ может быть вычислена следующим образом:
+\begin{equation}
+	\small
+	\mat{\mu} = m_0
+	\begin{pmatrix}
+		1 & 0 & 0 & 0 & \Delta_z & \Delta_y \\
+		0 & 1 & 0 & -\Delta_z & 0 & -\Delta_x \\
+		0 & 0 & 1 & \Delta_y & -\Delta_x & 0 \\
+		0 & -\Delta_z & \Delta_y & \frac{J_1}{m} + (\Delta^2 - \Delta_x^2) & -\Delta_x \Delta_y & -\Delta_x \Delta_z \\
+		\Delta_z & 0 & -\Delta_x & -\Delta_x \Delta_y & \frac{J_2}{m} + (\Delta^2 - \Delta_y^2) & -\Delta_y \Delta_z \\
+		\Delta_y & - \Delta_x & 0 & -\Delta_x \Delta_z & -\Delta_y \Delta_z & \frac{J_3}{m} + (\Delta^2 - \Delta_z^2)
+	\end{pmatrix},
+\end{equation}
+где $ \Delta^2 = \Delta_x^2 + \Delta_y^2 + \Delta_z^2 $.
+
+Положение точки $ C $ влияет на относительные координаты каждого узла $ (\Delta x^0_i, \Delta y^0_i, \Delta z^0_i) $ и матрицы $ \mat{\kappa} $ и $ \mat{\mu} $. Более того, модель может быть закреплена не в одной точке, но нужно иметь в виду, что после процедуры освобождения по \eqref{eq:finalSys} или \eqref{eq:finalSysSym} появляется специфическая погрешность, вызванная тем, что мы заменяем множество закрепленных степеней свободы всего шестью степенями свободы вектора $ \mat{\xi} $, что вносит определенные изменения в деформирование модели, а именно: все закрепленные точки относительно друг друга не деформируются. Другими словами потерянная информация о законах деформирования закрепленных точек не может быть восстановлена, поэтому освобожденная модель будет отличаться от исходной свободной модели.
+
+\subsection{Тестовые примеры освобождения расчетных моделей}
+
+\subsubsection{Система масс на пружинках}
+
+Уравнения \eqref{eq:resLocalSystem} и \eqref{eq:finalSysSym} могут быть использованы в преобразовании любых расчетных моделей, представленных в виде \eqref{eq:eigFreeProblem}. Проиллюстрируем их применение на простейшем примере: колебания двух масс на пружинках \figref{fig:freeingSprings}.
+
+\begin{figure}[!htb]
+	\centerfloat
+	\begin{tikzpicture}[scale = 1]
+	  % Задание переменных
+      \pgfmathsetmacro{\A}{4}
+      \pgfmathsetmacro{\B}{8.5}
+      \pgfmathsetmacro{\RMass}{0.35} % Радиус масс
+      \pgfmathsetmacro{\H}{2.1} % Высота
+      \pgfmathsetmacro{\eps}{1.9} % Высота
+      \pgfmathsetmacro{\dA}{1.75} % Расстояние между системами
+      \pgfmathsetmacro{\dArr}{0.75} % Длина стрелки
+      % Стили
+      \tikzstyle{mass} = [fill = blue!15]
+	  \tikzstyle{spring} = [thick, color = black, decoration = {aspect=0.3, segment length = 5mm, amplitude=2mm,coil},decorate]
+	  \tikzstyle{nodeNot} = [font = \footnotesize\linespread{1}\selectfont, align = center]
+	  % Пружины
+	  	% Левая
+	  \draw[spring] (0, 0) -- (0, \H) node [midway, right = 3mm, color = black] {$k_2$};
+	  \draw[spring] (0, \H) -- (0, 2*\H) node [midway, right = 3mm, color = black] {$k_1$};
+	  	% Центральная
+	  \draw[spring] (\A, -\H/2) -- (\A, 0) node [midway, right = 3mm, color = black] {$k_0$};
+	  \draw[spring] (\A, 0) -- (\A, \H) node [midway, right = 3mm, color = black] {$k_2$};
+	  \draw[spring] (\A, \H) -- (\A, 2*\H) node [midway, right = 3mm, color = black] {$k_1$};
+	  \draw[thick] (\A-\dA, 0) -- (\A+\dA, 0) --++ (0, 2*\H + \eps/2) node [midway, right = 1mm, color = black] {$m_0$} --++ (-2*\dA, 0) -- (\A-\dA, 0);
+	  	% Правая
+	  \draw[spring] (\B, -\H/2) -- (\B, 0) node [midway, right = 3mm, color = black] {$k_0$};
+	  \draw[spring] (\B, 0) -- (\B, \H) node [midway, right = 3mm, color = black] {$k_2$};
+	  \draw[spring] (\B, \H) -- (\B, 2*\H) node [midway, right = 3mm, color = black] {$k_1$};
+	  % Стрелки
+		% Левая
+	  \draw[thick, -latex] (0, \H) --++ (-\dArr, 0) --++ (0, \dArr) node[below left] {$ x_2 $};
+	  \draw[thick, -latex] (0, 2*\H) --++ (-\dArr, 0) --++ (0, \dArr) node[below left] {$ x_1 $};
+		% Центральная
+	  \draw[thick, -latex] (\A, \H) --++ (-\dArr, 0) --++ (0, \dArr) node[below left] {$ x_2 $};
+	  \draw[thick, -latex] (\A, 2*\H) --++ (-\dArr, 0) --++ (0, \dArr) node[below left] {$ x_1 $};
+	  \draw[thick, -latex] (\A, 0) --++ (-\dArr, 0) --++ (0, \dArr) node[below left] {$ x_0 $};
+	  	% Правая
+	  \draw[thick, -latex] (\B, \H) --++ (-\dArr, 0) --++ (0, \dArr) node[below left] {$ x_2 $};
+	  \draw[thick, -latex] (\B, 2*\H) --++ (-\dArr, 0) --++ (0, \dArr) node[below left] {$ x_1 $};
+	  \draw[thick, -latex] (\B, 0) --++ (-\dArr, 0) --++ (0, \dArr) node[below left] {$ x_0 $};
+	  % Построение точечных масс
+	  	% Левая
+	  \draw[mass] (0, \H) circle (\RMass) node[right=5mm] {$m_2$};
+	  \draw[mass] (0, 2*\H) circle (\RMass) node[right=5mm] {$m_1$};
+	  	% Центральная
+	  \draw[mass] (\A, \H) circle (\RMass) node[right=5mm] {$m_2$};
+	  \draw[mass] (\A, 2*\H) circle (\RMass) node[right=5mm] {$m_1$};
+	  	% Правая
+	  \draw[mass] (\B, \H) circle (\RMass) node[right=5mm] {$m_2$};
+	  \draw[mass] (\B, 2*\H) circle (\RMass) node[right=5mm] {$m_1$};
+	  \draw[mass] (\B, 0) circle (\RMass) node[right=5mm] {$m_3 = m_0 - m_1 - m_2$};
+	   % Подпись
+	  \node[text width = 2cm, nodeNot] at (0, 2*\H+\eps) {Закреплённая система};
+	  \node[text width = 4cm, nodeNot] at (\A, 2*\H+\eps) {Платформа, \\ освобождённая система};
+	  \node[text width = 3cm, nodeNot] at (\B, 2*\H+\eps) {Эквивалентная система};
+	  % node[left=2mm, color = blue] {$x_1$}
+	  % Заделки
+	  \point{f1}{0}{0}; 	 \support{3}{f1};
+	  \point{f2}{\A}{-\H/2}; \support{3}{f2};
+	  \point{f3}{\B}{-\H/2}; \support{3}{f3};
+	\end{tikzpicture}
+	\caption{Пример преобразования системы масс на пружинках} \label{fig:freeingSprings}
+\end{figure}
+
+Система уравнений собственных колебаний <<Закреплённой системы>> имеет следующий вид:
+\begin{equation}
+	\begin{pmatrix}
+		k_1+k_2 & -k_2 \\
+		-k_2 & k_2
+	\end{pmatrix}
+	\begin{Bmatrix}
+		x_1 \\ x_2
+	\end{Bmatrix} +
+	\begin{pmatrix}
+		m_1 & 0 \\
+		0 & m_2
+	\end{pmatrix}
+	\begin{Bmatrix}
+		\ddot{x}_1 \\ \ddot{x}_2
+	\end{Bmatrix} = 0.
+	\label{eq:springTransfom}
+\end{equation}
+
+Преобразование \eqref{eq:springTransfom} с учетом \eqref{eq:resLocalSystem} приводит к следующей системе уравнений:
+\begin{equation}
+	\begin{pmatrix}
+		k_1+k_2 & -k_2 & 0 \\
+		-k_2 & k_2 & 0 \\
+		0 & 0 & k_0
+	\end{pmatrix}
+	\begin{Bmatrix}
+		x_1 \\ x_2 \\ x_0
+	\end{Bmatrix} +
+	\begin{pmatrix}
+		m_1 & 0 & m_1 \\
+		0 & m_2 & m_2 \\
+		m_1 & m_2 & m_0
+	\end{pmatrix}
+	\begin{Bmatrix}
+		\ddot{x}_1 \\ \ddot{x}_2 \\ \ddot{x}_0
+	\end{Bmatrix} = 0.
+	\label{eq:springASymSys}
+\end{equation}
+
+Аналогичное преобразование, но с учетом \eqref{eq:finalSysSym}, даёт такую систему уравнений:
+\begin{equation}
+	\begin{pmatrix}
+		k_1+k_2 & -k_2 & -k_1 \\
+		-k_2 & k_2 & 0 \\
+		-k_1 & 0 & k_0+k_1
+	\end{pmatrix}
+	\begin{Bmatrix}
+		\tilde{x}_1 \\ \tilde{x}_2 \\ x_0
+	\end{Bmatrix} +
+	\begin{pmatrix}
+		m_1 & 0 & 0 \\
+		0 & m_2 & 0 \\
+		0 & 0 & m_0 - m_1 - m_2
+	\end{pmatrix}
+	\begin{Bmatrix}
+		\ddot{\tilde{x}}_1 \\ \ddot{\tilde{x}}_2 \\ \ddot{x}_0
+	\end{Bmatrix} = 0
+	\label{eq:springSymSys}
+\end{equation}
+
+Система уравнений, описывающих собственные колебаний <<Эквивалентной системы>>, имеет вид:
+\begin{equation}
+	\begin{pmatrix}
+		k_1+k_2 & -k_2 & -k_1 \\
+		-k_2 & k_2 & 0 \\
+		-k_1 & 0 & k_0+k_1
+	\end{pmatrix}
+	\begin{Bmatrix}
+		\tilde{x}_1 \\ \tilde{x}_2 \\ \tilde{x}_3
+	\end{Bmatrix} +
+	\begin{pmatrix}
+		m_1 & 0 & 0 \\
+		0 & m_2 & 0 \\
+		0 & 0 & m_3
+	\end{pmatrix}
+	\begin{Bmatrix}
+		\ddot{\tilde{x}}_1 \\ \ddot{\tilde{x}}_2 \\ \ddot{\tilde{x}}_3
+	\end{Bmatrix} = 0.
+	\label{eq:springEquival}
+\end{equation}
+
+Очевидно, что так как $ \tilde{x}_3 = x_0 $, $ m_3 = m_0 - m_1 - m_2$, то система уравнений \eqref{eq:springEquival} совпадает с системой уравнений \eqref{eq:springSymSys}. Кроме того, следует отметить, что частоты собственных колебаний, найденные по уравнениям \eqref{eq:springASymSys}, совпадают с частотами по \eqref{eq:springSymSys} и \eqref{eq:springEquival}. При этом собственные формы колебаний, приведенные к глобальной системе координат, совпадают с соответствующими формами, определенными по \eqref{eq:springSymSys} и \eqref{eq:springEquival}. Если в \eqref{eq:springASymSys}~--~\eqref{eq:springEquival} положить $ k_0 = 0$, получим уравнения колебаний свободной системы.
+
+\subsubsection{Балочная модель самолёта}
+
+На рисунке \ref{fig:freeingAircraft} представлена условная балочная модель самолёта, стоящего на трёх стойках шасси.
+
+\begin{figure}[!htb]
+    \centerfloat
+    \begin{tikzpicture}[scale = 0.8, coords]
+        % Задание переменных
+        \pgfmathsetmacro{\W}{4}
+        \pgfmathsetmacro{\H}{0.6}
+        \pgfmathsetmacro{\F}{1.2}
+        \pgfmathsetmacro{\T}{4}
+        \pgfmathsetmacro{\Td}{3}
+        \pgfmathsetmacro{\Ta}{0.5}
+        % Задание точек
+        \dpoint{orig}{0}{0}{0};
+        \dpoint{wL1}{0}{\W/2}{0};
+        \dpoint{wL1_}{0}{\W/2}{-\H};
+        \dpoint{wL}{0}{\W}{0};
+        \dpoint{wR1}{0}{-\W/2}{0};
+        \dpoint{wR1_}{0}{-\W/2}{-\H};
+        \dpoint{wR}{0}{-\W}{0};
+        \dpoint{fr}{\F}{0}{0};
+        \dpoint{t}{-\T}{0}{0};
+        \dpoint{td}{-\Td}{0}{0};
+        \dpoint{td_}{-\Td}{0}{-\H};
+        \dpoint{ta}{-\T-\Ta}{0}{\Ta};
+        % Построение
+        % Левая консоль
+        \dbeam {1}{orig}{wL1};
+        \dbeam {1}{wL1}{wL};
+        \dbeam {1}{wL1}{wL1_};
+        % Правая консоль
+        \dbeam {1}{orig}{wR1};
+        \dbeam {1}{wR1}{wR};
+        \dbeam {1}{wR1}{wR1_};
+        % Передняя часть
+        \dbeam {1}{orig}{fr};
+        % Хвост
+        \dbeam {1}{orig}{td};
+        \dbeam {1}{td}{t};
+        \dbeam {1}{td}{td_};
+        \dbeam {1}{t}{ta};
+        % Опоры
+        \support {2}{wL1_}; \hinge {1}{wL1_};
+        \support {2}{wR1_}; \hinge {1}{wR1_};
+        \support {1}{td_}; \hinge {1}{td_};
+    \end{tikzpicture}
+    \caption{Балочная модель самолёта} \label{fig:freeingAircraft}
+\end{figure}
+
+Балки, имитирующие шасси, закреплены следующим образом: для задней опоры запрещены перемещения в трех направлениях и по углу рыскания самолёта, а для двух передних~---~только перемещения по вертикали.
+
+В таблице \ref{tab:freeingAircraft} приведены первые 15 частот собственных колебаний закрепленной модели, свободной модели и модели, освобождённой от закреплений по предлагаемому методу. В последней колонке показана разница в процентах между частотами свободной и освобождённой модели. Из представленных результатов следует, что частоты практически совпали между собой. Анализ форм колебаний освобождённой модели показал, что они также близки к формам колебаний свободной модели.
+
+\begin{longtblr}[
+	caption = {Результаты применения метода освобождения к балочной модели самолета}, 
+	label = {tab:freeingAircraft}
+]{
+	colspec={|c|c|c|c|c|}, 
+	hlines
+}
+	\SetCell[r = 2]{c} № тона & \SetCell[c = 3]{c} Частоты собственных колебаний, Гц &&& \SetCell[r = 2]{c} Разница, \% \\
+	& Закрепленная & Свободная & Освобождённая &  \\ \hline
+    1 & 1.85662 & 0.00000 & 0.00003 & \SetCell[r = 6]{c} ---  \\ 
+    2 & 4.96444 & 0.00009 & 0.00006 &  \\ 
+    3 & 6.17794 & 0.00010 & 0.00008 &  \\ 
+    4 & 6.86614 & 0.00035 & 0.00010 &  \\ 
+    5 & 13.10533 & 0.00038 & 0.00012 &  \\ 
+    6 & 17.68520 & 0.00042 & 0.00014 &  \\ 
+    7 & 20.03209 & 6.45900 & 6.45896 & -0.00053 \\ 
+    8 & 21.06621 & 6.46460 & 6.46460 & -0.00007 \\ 
+    9 & 23.86814 & 6.98969 & 6.98972 & 0.00042 \\ 
+    10 & 30.36936 & 21.27473 & 21.27574 & 0.00475 \\ 
+    11 & 47.42829 & 22.40967 & 22.40978 & 0.00047 \\ 
+    12 & 53.07032 & 25.32626 & 25.32857 & 0.00913 \\ 
+    13 & 67.18707 & 33.51995 & 33.51972 & -0.00069 \\ 
+    14 & 71.56714 & 34.78906 & 34.78965 & 0.00170 \\ 
+    15 & 74.38522 & 36.34213 & 36.36089 & 0.05160
+\end{longtblr}
+
 \section{Коррекция параметров демпфирования}
 
 \section{Оценка чувствительности метода коррекции к погрешностям в результатах модальных испытаний}
