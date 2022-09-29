@@ -1,0 +1,243 @@
+% -------------------------------------- %
+% --- Задание диссертационного стиля --- %
+% -------------------------------------- %
+
+% --- Путь к изображениям --- %
+
+\graphicspath{{images/}}
+
+% --- Интервалы --- %
+
+% Для исправления интервала в таблицах ставится *
+\OnehalfSpacing* % Полуторный интервал (ГОСТ Р 7.0.11-201)
+
+% --- Макет страницы (ГОСТ 7.0.11-2011, 5.3.7) --- %
+
+% Выставляем значения полей 
+\geometry{a4paper, top = 2cm, bottom = 2cm, left = 2.5cm, right = 1cm, nofoot, nomarginpar} 
+\setlength{\topskip}{0pt}     % Размер дополнительного верхнего поля
+\setlength{\footskip}{12.3pt} % Снимет warning, согласно https://tex.stackexchange.com/a/334346
+
+% --- Выравнивание и переносы --- %
+%% http://tex.stackexchange.com/questions/241343/what-is-the-meaning-of-fussy-sloppy-emergencystretch-tolerance-hbadness
+%% http://www.latex-community.org/forum/viewtopic.php?p=70342#p70342
+
+\tolerance 1414
+\hbadness 1414
+\emergencystretch 1.5em % В случае проблем регулировать в первую очередь
+\hfuzz 0.3pt
+\vfuzz \hfuzz
+%\raggedbottom
+%\sloppy                % Избавляемся от переполнений
+\clubpenalty=10000      % Запрещаем разрыв страницы после первой строки абзаца
+\widowpenalty=10000     % Запрещаем разрыв страницы после последней строки абзаца
+\brokenpenalty=4991     % Ограничение на разрыв страницы, если строка заканчивается переносом
+
+% --- Блок управления параметрами для выравнивания заголовков в тексте --- %
+
+\newlength{\otstuplen}
+\setlength{\otstuplen}{\theotstup\parindent}
+
+% Выравнивание заголовков в тексте (ГОСТ Р 7.0.11-2011, 5.3.5)
+\ifnumequal{\value{headingalign}}{0}{
+    \newcommand{\hdngalign}{\centering} % По центру
+    \newcommand{\hdngaligni}{}
+    \setlength{\otstuplen}{0pt}
+}{
+    \newcommand{\hdngalign}{} % По левому краю
+    \newcommand{\hdngaligni}{\hspace{\otstuplen}}
+} 
+
+% --- Оглавление --- %
+
+% Задание заполнителя между названием и нумерацией
+\renewcommand{\cftchapterdotsep}{\cftdotsep} 
+
+% Запрет переноса заголовков в оглавлении (ГОСТ Р 7.0.11-2011, 5.3.5)
+\setrmarg{2.55em plus1fil}
+
+% Текстовое выделение
+\renewcommand{\cftchapterpagefont}{\normalfont}                  % Нежирные номера страниц у глав в оглавлении
+\renewcommand{\cftchapterleader}{\cftdotfill{\cftchapterdotsep}} % Нежирные точки до номеров страниц 
+																 %  у глав в оглавлении
+%\renewcommand{\cftchapterfont}{}                                % Нежирные названия глав в оглавлении
+
+% Определение разделителей
+% Точка с пробелом в номере раздела
+\ifnumgreater{\value{headingdelim}}{0}{%
+    \renewcommand\cftchapteraftersnum{.\space} 
+}{}
+% Точка с пробелом в номерах подразделов и их производных
+\ifnumgreater{\value{headingdelim}}{1}{%
+    \renewcommand\cftsectionaftersnum{.\space}   
+    \renewcommand\cftsubsectionaftersnum{.\space} 
+    \renewcommand\cftsubsubsectionaftersnum{.\space}
+}{}
+
+% Включение приложения в оглавление
+\renewcommand*{\cftappendixname}{\appendixname\space}
+
+% --- Колонтитулы --- %
+
+% Порядковый номер страницы печатают на середине верхнего поля страницы (ГОСТ Р 7.0.11-2011, 5.3.8)
+\makeevenhead{plain}{}{\rmfamily\thepage}{}
+\makeoddhead{plain}{}{\rmfamily\thepage}{}
+\makeevenfoot{plain}{}{}{}
+\makeoddfoot{plain}{}{}{}
+\pagestyle{plain}
+
+% Добавить Стр. над номерами страниц в оглавлении
+\newif\ifendTOC
+
+\newcommand*{\tocheader}{
+\ifnumequal{\value{pgnum}}{1}{
+    \ifendTOC\else\hbox to \linewidth%
+      {\noindent{}~\hfill{Стр.}}\par%
+      \ifnumless{\value{page}}{3}{}{%
+        \vspace{0.5\onelineskip}
+      }
+      \afterpage{\tocheader}
+    \fi
+}{}
+}
+
+% --- Оформление заголовков глав, разделов, подразделов --- %
+
+% Работа должна быть выполнена ... размером шрифта 12-14 пунктов (ГОСТ Р 7.0.11-2011, 5.3.8). То есть не должно быть надписей шрифтом более 14. Так и поставим.
+% Эти установки будут давать одинаковый результат независимо от выбора базовым шрифтом 12 пт или 14 пт
+\newcommand{\basegostsectionfont}{\fontsize{14pt}{16pt}\selectfont\bfseries}
+
+\makechapterstyle{thesisgost}{%
+    \chapterstyle{default}
+    \setlength{\beforechapskip}{0pt}
+    \setlength{\midchapskip}{0pt}
+    \setlength{\afterchapskip}{\theintvl\curtextsize}
+    \renewcommand*{\chapnamefont}{\basegostsectionfont}
+    \renewcommand*{\chapnumfont}{\basegostsectionfont}
+    \renewcommand*{\chaptitlefont}{\basegostsectionfont}
+    \renewcommand*{\chapterheadstart}{}
+    \ifnumgreater{\value{headingdelim}}{0}{%
+        \renewcommand*{\afterchapternum}{.\space}   % добавляет точку с пробелом после номера раздела
+    }{%
+        \renewcommand*{\afterchapternum}{\quad}     % добавляет \quad после номера раздела
+    }
+    \renewcommand*{\printchapternum}{\hdngaligni\hdngalign\chapnumfont \thechapter}
+    \renewcommand*{\printchaptername}{}
+    \renewcommand*{\printchapternonum}{\hdngaligni\hdngalign}
+}
+
+\makeatletter
+\makechapterstyle{thesisgostchapname}{%
+    \chapterstyle{thesisgost}
+    \renewcommand*{\printchapternum}{\chapnumfont \thechapter}
+    \renewcommand*{\printchaptername}{\hdngaligni\hdngalign\chapnamefont \@chapapp} %
+}
+\makeatother
+
+\chapterstyle{thesisgost}
+
+\setsecheadstyle{\basegostsectionfont\hdngalign}
+\setsecindent{\otstuplen}
+
+\setsubsecheadstyle{\basegostsectionfont\hdngalign}
+\setsubsecindent{\otstuplen}
+
+\setsubsubsecheadstyle{\basegostsectionfont\hdngalign}
+\setsubsubsecindent{\otstuplen}
+
+\sethangfrom{\noindent #1} %все заголовки подразделов центрируются с учетом номера, как block
+
+\ifnumequal{\value{chapstyle}}{1}{%
+    \chapterstyle{thesisgostchapname}
+    \renewcommand*{\cftchaptername}{\chaptername\space} % будет вписано слово Глава перед каждым номером раздела в оглавлении
+}{}
+
+% --- Интервалы до и после заголовков (ГОСТ Р 7.0.11-2011, 5.3.5) --- %
+
+% Отделение от текста до и после заголовков тремя интервалами
+\setbeforesecskip{\theintvl\curtextsize}
+\setaftersecskip{\theintvl\curtextsize}
+\setbeforesubsecskip{\theintvl\curtextsize}
+\setaftersubsecskip{\theintvl\curtextsize}
+\setbeforesubsubsecskip{\theintvl\curtextsize}
+\setaftersubsubsecskip{\theintvl\curtextsize}
+
+% --- Дополнительное задание размеров заголовков --- %
+
+% Пропорциональные заголовки и базовый шрифт 14 пт
+\ifnumequal{\value{headingsize}}{1}{
+    \renewcommand{\basegostsectionfont}{\large\bfseries}
+    \renewcommand*{\chapnamefont}{\Large\bfseries}
+    \renewcommand*{\chapnumfont}{\Large\bfseries}
+    \renewcommand*{\chaptitlefont}{\Large\bfseries}
+}{}
+
+% --- Счётчики --- %
+
+% Упрощённые настройки шаблона диссертации: нумерация формул, таблиц, рисунков
+% * Убираем связанность номера формулы с номером главы/раздела
+\ifnumequal{\value{contnumeq}}{1}{
+    \counterwithout{equation}{chapter} 
+}{}
+\ifnumequal{\value{contnumfig}}{1}{
+    \counterwithout{figure}{chapter}
+}{}
+\ifnumequal{\value{contnumtab}}{1}{
+    \counterwithout{table}{chapter}
+}{}
+
+% --- Регистрация счётчиков в системе totcounter --- %
+
+\AfterEndPreamble{
+    \regtotcounter{totalcount@figure}
+    \regtotcounter{totalcount@table}       % Если иным способом поставить в преамбуле то ошибка в числе таблиц
+    \regtotcounter{TotPages}               % Если иным способом поставить в преамбуле то ошибка в числе страниц
+    \newtotcounter{totalappendix}
+    \newtotcounter{totalchapter}
+}
+
+% --- Начертание математических выражений --- %
+
+% Русская традиция начертания математических знаков
+\renewcommand{\le}{\ensuremath{\leqslant}}
+\renewcommand{\leq}{\ensuremath{\leqslant}}
+\renewcommand{\ge}{\ensuremath{\geqslant}}
+\renewcommand{\geq}{\ensuremath{\geqslant}}
+\renewcommand{\emptyset}{\varnothing}
+
+% Русская традиция начертания математических функций
+\renewcommand{\tan}{\operatorname{tg}}
+\renewcommand{\cot}{\operatorname{ctg}}
+\renewcommand{\csc}{\operatorname{cosec}}
+
+% Русская традиция начертания греческих букв (греческие буквы вертикальные, через пакет upgreek)
+\renewcommand{\epsilon}{\ensuremath{\upvarepsilon}}
+\renewcommand{\phi}{\ensuremath{\upvarphi}}
+%\renewcommand{\kappa}{\ensuremath{\varkappa}}
+\renewcommand{\alpha}{\upalpha}
+\renewcommand{\beta}{\upbeta}
+\renewcommand{\gamma}{\upgamma}
+\renewcommand{\delta}{\updelta}
+\renewcommand{\varepsilon}{\upvarepsilon}
+\renewcommand{\zeta}{\upzeta}
+\renewcommand{\eta}{\upeta}
+\renewcommand{\theta}{\uptheta}
+\renewcommand{\vartheta}{\upvartheta}
+\renewcommand{\iota}{\upiota}
+\renewcommand{\kappa}{\upkappa}
+\renewcommand{\lambda}{\uplambda}
+\renewcommand{\mu}{\upmu}
+\renewcommand{\nu}{\upnu}
+\renewcommand{\xi}{\upxi}
+\renewcommand{\pi}{\uppi}
+\renewcommand{\varpi}{\upvarpi}
+\renewcommand{\rho}{\uprho}
+%\renewcommand{\varrho}{\upvarrho}
+\renewcommand{\sigma}{\upsigma}
+%\renewcommand{\varsigma}{\upvarsigma}
+\renewcommand{\tau}{\uptau}
+\renewcommand{\upsilon}{\upupsilon}
+\renewcommand{\varphi}{\upvarphi}
+\renewcommand{\chi}{\upchi}
+\renewcommand{\psi}{\uppsi}
+\renewcommand{\omega}{\upomega}

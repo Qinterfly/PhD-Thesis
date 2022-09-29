@@ -1,0 +1,84 @@
+% --------------------------------- %
+% --- Сборка текста диссертации --- %
+% --------------------------------- %
+
+% --- Служебные пакеты --- %
+
+\RequirePackage[l2tabu, orthodox]{nag} % Вывод информации об используемых пакетах
+
+% --- Определение класса документа --- %
+
+\documentclass[a4paper, 14pt, oneside, openany]{memoir} % Формат А4, 14pt (ГОСТ Р 7.0.11-2011, 5.3.6)
+
+% --- Подключение общих настроек шаблона, пакетов и команд --- %
+
+\input{common/setup}    % Общие настройки шаблона
+\input{common/packages} % Пакеты общие для диссертации и автореферата
+
+% --- Подключение специальных настроек шаблона и пакетов --- %
+
+\synopsisfalse                % Этот документ --- не автореферат
+\input{dissertation/packages} % Пакеты для диссертации
+\input{dissertation/setup}    % Упрощённые настройки шаблона
+
+% --- Подключение общих новых переменных, данных и стилей --- %
+
+\input{common/newnames} % Новые переменные        
+\input{common/data}     % Основные сведения
+\input{common/styles}   % Стили общие для диссертации и автореферата
+
+% --- Подключение специальные стилей для диссертации --- %
+
+\input{dissertation/styles}
+ 
+% --- Подключение библиографии --- %
+
+\input{biblio/settings}
+
+% --- Вывод отладочной информации --- %
+
+\typeout{Selected options:}
+\typeout{Draft mode: \arabic{draft}}
+\typeout{AltFont: \arabic{usealtfont}}
+\typeout{Precompile images: \arabic{imgprecompile}}
+\listfiles
+
+% --- Формирование документа --- %
+
+\begin{document}
+
+	% Переопределение именований типовых разделов --- %
+	\gappto\captionsrussian{\input{common/renames}\unskip} 
+	\input{common/renames}
+
+	% Титульный лист
+	\include{dissertation/title}           
+	
+	% Оглавление
+	\include{dissertation/contents}
+	\ifnumequal{\value{contnumfig}}{1}{}{\counterwithout{figure}{chapter}}
+	\ifnumequal{\value{contnumtab}}{1}{}{\counterwithout{table}{chapter}}
+	
+	% Введение
+	\include{dissertation/introduction}    
+	\ifnumequal{\value{contnumfig}}{1}{\counterwithout{figure}{chapter}}{\counterwithin{figure}{chapter}}
+	\ifnumequal{\value{contnumtab}}{1}{\counterwithout{table}{chapter}}{\counterwithin{table}{chapter}}
+
+	% Список литературы
+	\include{dissertation/references}
+
+	% Подсчёт количества глав
+	\setcounter{totalchapter}{\value{chapter}} 
+
+	% Задание настроек для приложений
+	\appendix
+	\setlength{\midchapskip}{20pt}
+	\renewcommand*{\afterchapternum}{\par\nobreak\vskip \midchapskip}
+	\renewcommand\thechapter{\Asbuk{chapter}} 
+	
+	% Включение приложений
+	%\include{dissertation/appendix}        
+
+	% Подсчёт количества приложений
+	\setcounter{totalappendix}{\value{chapter}} 
+\end{document}

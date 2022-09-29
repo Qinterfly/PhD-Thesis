@@ -1,0 +1,30 @@
+% ------------------------- %
+% --- Список литературы --- %
+% ------------------------- %
+
+% --- Правильный номер страницы в оглавлении --- %
+
+\clearpage
+
+% --- Ссылки URL обычным шрифтом --- %
+
+\urlstyle{rm}               
+
+% --- Отключение микротипографики --- %
+
+\ifdefmacro{\microtypesetup}{\microtypesetup{protrusion=false}}{} 
+
+% --- Подключаем Bib-базы --- %
+
+\insertbibliofull           % Все статьи единым списком    
+%\insertbiblioexternal      % Статьи, не являющиеся статьями автора по теме диссертации
+%\insertbiblioauthor        % Работы автора единым списком 
+%\insertbiblioauthorgrouped % Работы автора сгруппированные (ВАК, WoS, Scopus и т.д.)                       
+
+% --- Включение микротипографики --- %
+
+\ifdefmacro{\microtypesetup}{\microtypesetup{protrusion=true}}{}
+
+% --- Возвращаем установки шрифта ссылок URL --- %
+
+\urlstyle{tt}

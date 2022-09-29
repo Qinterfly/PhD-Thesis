@@ -1,0 +1,66 @@
+% ------------------------------------------------ %
+% --- Титульный лист (ГОСТ Р 7.0.11-2001, 5.1) --- %
+% ------------------------------------------------ %
+
+% --- Название организации --- %
+
+\thispagestyle{empty}
+\begin{center}
+	\thesisFirstOrganization
+	
+	\ifdefined\thesisSecondOrganization
+		\thesisSecondOrganization
+	\fi
+\end{center}
+
+% --- Подпись --- %
+
+% * Число перед fill = кратность относительно некоторого расстояния fill, кусками которого заполнены пустые места
+\vspace{0pt plus4fill} 
+\begin{flushright}
+	На правах рукописи
+\end{flushright}
+
+% --- Данные автора --- %
+
+\vspace{0pt plus6fill} 
+\begin{center}
+	{\large \thesisAuthor}
+\end{center}
+
+% --- Данные диссертации --- %
+
+\vspace{0pt plus1fill} 
+\begin{center}
+	\textbf {\large \MakeUppercase \thesisTitle}
+	
+	\vspace{0pt plus2fill} 
+	Специальность \thesisSpecialtyNumber\ "---
+
+	<<\thesisSpecialtyTitle>>
+	
+	\vspace{0pt plus2fill} 
+	Диссертация на соискание учёной степени
+	
+	\thesisDegree
+\end{center}
+
+% --- Данные научного руководителя --- %
+
+\vspace{0pt plus4fill} 
+\begin{flushright}
+	Научный руководитель:
+
+	\supervisorRegalia
+
+	\ifdefined\supervisorDead
+		\framebox{\supervisorFio}
+	\else
+		\supervisorFio
+	\fi
+\end{flushright}
+
+% --- Данные о защите --- %
+
+\vspace{0pt plus4fill} 
+{\centering\thesisCity\ "--- \thesisYear\par}

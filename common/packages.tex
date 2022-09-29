@@ -1,0 +1,147 @@
+% ---------------------------------------------------------------------- %
+% --- Пакеты, которые являются общими для диссертации и автореферата --- %
+% ---------------------------------------------------------------------- %
+
+% --- Логические условия --- %
+
+\newif\ifsynopsis     % Условие, проверяющее, что документ является авторефератом
+\usepackage{etoolbox}
+
+% --- Комментирование текста --- %
+
+\usepackage{comment}    
+
+% --- Поля и разметка страницы --- %
+
+\usepackage{pdflscape} % Для включения альбомных страниц
+\usepackage{geometry}  % Для последующего задания полей
+
+% --- Математические пакеты --- %
+
+\usepackage{amsthm, amsmath, amscd} % Математические дополнения от AMS
+\usepackage{amsfonts, amssymb}      % Математические дополнения от AMS
+\usepackage{mathtools}              % Добавляет окружение multlined
+\usepackage{xfrac}                  % Красивые дроби
+\usepackage{upgreek}                %  Русская традиция начертания греческих букв
+\usepackage[
+    locale = DE,
+    list-separator       = {;\,},
+    list-final-separator = {;\,},
+    list-pair-separator  = {;\,},
+    list-units           = single,
+    range-units          = single,
+    range-phrase         = {\text{\ensuremath{-}}},
+    fraction-function    = \sfrac,
+    separate-uncertainty,
+    ]{siunitx}[=v2] % Размерности SI
+\sisetup{inter-unit-product = \ensuremath{{}\cdot{}}}
+
+% --- Кодировки и шрифты --- %
+
+% Кириллица в нумерации subequations
+\patchcmd{\subequations}{\def\theequation{\theparentequation\alph{equation}}}
+{\def\theequation{\theparentequation\asbuk{equation}}}
+{\typeout{subequations patched}}{\typeout{subequations not patched}}
+
+% Установки для размера шрифта 14 pt
+\newlength{\curtextsize}
+\newlength{\bigtextsize}
+\setlength{\bigtextsize}{13.9pt}
+\makeatletter
+\setlength{\curtextsize}{\f@size pt}
+\makeatother
+
+% Решение проблемы копирования текста в буфер кракозябрами
+\ifnumequal{\value{usealtfont}}{0}{}{
+    \input glyphtounicode.tex
+    \input glyphtounicode-cmr.tex %from pdfx package
+    \pdfgentounicode=1
+}
+    
+% Улучшенный поиск русских слов в полученном pdf-файле
+\usepackage{cmap}   
+\ifnumequal{\value{usealtfont}}{2}{}{
+    \defaulthyphenchar=127  % Если стоит до fontenc, то переносы
+                            % не впишутся в выделяемый текст при
+                            % копировании его в буфер обмена
+}
+
+% Дополнительные текстовые символы
+\usepackage{textcomp}
+
+% Языковые пакеты
+\usepackage[T1, T2A]{fontenc}        % Поддержка русских букв
+\usepackage[utf8]{inputenc}          % Кодировка utf8
+\usepackage[english, russian]{babel} % Языки: русский, английский
+
+% Подключение русифицированных шрифтов XCharter
+\ifnumequal{\value{usealtfont}}{2}{
+	\usepackage[scaled = 0.914]{XCharter} 
+	\usepackage[charter, vvarbb, scaled = 1.048]{newtxmath}
+	\setDisplayskipStretch{-0.078}
+}{}
+
+% --- Оформление абзацев --- %
+
+\indentafterchapter % Красная строка после заголовков типа chapter
+\usepackage{indentfirst}
+
+% --- Цвета --- %
+
+\usepackage[dvipsnames, table, hyperref]{xcolor}
+
+% --- Таблицы --- %
+
+\usepackage{threeparttable} % Автоматическая ширина подписи таблицы
+
+% --- Общее форматирование --- %
+
+\usepackage{soulutf8} % Поддержка переносоустойчивых подчёркиваний и зачёркиваний
+
+% --- Оптимизация расстановки переносов и длины последней строки абзаца --- %
+
+\usepackage[hyphenation, lastparline]{impnattypo}
+
+% --- Работа со списками --- %
+
+\usepackage{enumitem}
+
+% --- Векторная графика --- %
+
+\usepackage{tikz}
+
+% --- Гиперссылки --- %
+
+\usepackage{hyperref}
+
+% --- Изображения --- %
+
+\usepackage{graphicx}   % Подключаем пакет работы с графикой
+\usepackage{caption}    % Подписи рисунков и таблиц
+\usepackage{subcaption} % Подписи подрисунков и подтаблиц
+\usepackage{pdfpages}   % Добавление внешних pdf файлов
+
+% --- Счётчики --- %
+
+\usepackage{aliascnt}                 % Псевдонимы счетчиков
+\usepackage[figure,table]{totalcount} % Счётчик рисунков и таблиц
+\usepackage{totcount}                 % Пакет создания счётчиков на основе последнего номера
+                                      %  подсчитываемого элемента (может требовать дважды
+                                      %  компилировать документ)
+\usepackage{totpages}                 % Счётчик страниц, совместимый с hyperref (ссылается
+                                      %  на номер последней страницы). Желательно ставить
+                                      %  последним пакетом в преамбуле
+
+% --- Управление групповыми ссылками --- %
+
+\usepackage[russian]{cleveref}
+
+% --- При работе с черновиком --- %
+
+\ifnumequal{\value{draft}}{1}{
+    \usepackage[firstpage]{draftwatermark}
+    \SetWatermarkText{DRAFT}
+    \SetWatermarkFontSize{14pt}
+    \SetWatermarkScale{15}
+    \SetWatermarkAngle{45}
+}{}
