@@ -208,19 +208,22 @@
 \newcommand{\rarr}{$\rightarrow$}             % Стрелка вправо
 \newcommand{\mat}[1]{\mathbf{#1}}             % Жирные матричные символы
 \newcommand{\set}[1]{\mathbb{#1}}             % Множество
-\newcommand{\tr}[1]{#1^\intercal}             % Транспонирование
+\newcommand{\trans}[1]{#1 ^ \mathsf{T}}       % Транспонирование
 \newcommand{\rbrackets}[1]{\left( #1 \right)} % Круглые скобки
 \newcommand{\sbrackets}[1]{\left[ #1 \right]} % Квадратные скобки
 \newcommand{\cbrackets}[1]{\{ #1 \}}		  % Фигурные скобки
+% Частная производная n-го порядка по одному аргументу
+\newcommand{\partDer}[3]{ 
+\ifthenelse{ \equal{#3}{1} \OR \equal{#3}{} }
+	{ \frac{\partial #1}{\partial #2} }
+	{ \frac{\partial^{#3} #1}{\partial #2^{#3}} }
+}
 
 % Рисунки
 \newcommand{\figref}[1]{(рисунок~\ref{#1})} 
 
 % Таблицы
 \newcommand{\tabref}[1]{(таблица~\ref{#1})}
-
-% Листинги
-\newcommand{\listref}[1]{(лист.~\ref{#1}, c.~\pageref{#1})}
 
 % --- Начертание математических выражений --- %
 

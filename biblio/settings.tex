@@ -9,7 +9,8 @@
 % --- Стили --- %
 
 % Оформляем библиографию по ГОСТ 7.1 (ГОСТ Р 7.0.11-2011, 5.6.7)
-\bibliographystyle{utf8gost71u} 
+%\bibliographystyle{biblio/utf8gost71u} 
+\bibliographystyle{ugost2008}
 
 % Заменяем библиографию с квадратных скобок на точку
 \makeatletter
@@ -26,7 +27,7 @@
 
 % --- Создание команд для вывода списка литературы --- %
 
-\newcommand*{\insertbibliofull}{\bibliography{biblio/external,biblio/author}}
+\newcommand*{\insertbibliofull}{\bibliography{biblio/external, biblio/author}}
 \newcommand*{\insertbiblioauthor}{\bibliography{biblio/author}}
 \newcommand*{\insertbiblioexternal}{\bibliography{biblio/external}}
 
