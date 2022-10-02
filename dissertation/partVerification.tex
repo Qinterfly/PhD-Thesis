@@ -114,7 +114,7 @@
 	\label{eq:firstUpdatingIteration}
 \end{equation}
 
-Здесь необходимо отметить, что $ \Delta \mat{K} ^ {(1)} $ является функцией от корректирующих жесткостей $ c_1, c_2 \hdots c_m $. 
+Здесь необходимо отметить, что $ \Delta \mat{K} ^ {(1)} $ является функцией от корректирующих жесткостей $ c_1, c_2, \hdots, c_m $. 
 
 Число корректирующих жесткостей $ m $ в общем случае не меньше числа корректирующих элементов $ e $ и больше размерности матрицы жесткости $ N $, а следовательно, больше числа уравнений в \eqref{eq:firstUpdatingIteration}. Поэтому для решения \eqref{eq:firstUpdatingIteration} необходимо устремить к нулю следующую скалярную величину (невязку):
 \begin{equation}
@@ -254,7 +254,7 @@
 
 При этом $ \lambda ^ {(1)} \neq \lambda ^ \ast $, если $ \Delta \mat{K} ^ {(1)} \neq \Delta \mat{K} $ и $ \mat{Y} ^ {(1)} \neq \mat{Y} ^ \ast $. Сформируем целевую функцию для поиска второго приближения $ \Delta \mat{K} ^ {(2)} $. Невязка будет иметь следующий вид:
 \begin{gather*}
-	f = \sbrackets{\rbrackets{\mat{K} + \Delta \mat{K} ^ {(2)}} - \rbrackets{\lambda ^ {(0)} + \Delta \lambda ^ \ast} \mat{M}} \mat{Y} ^ {(1)}; \\
+	f = \sbrackets{\rbrackets{\mat{K} + \Delta \mat{K} ^ {(2)}} - \rbrackets{\lambda ^ {(0)} + \Delta \lambda ^ \ast} \mat{M}} \mat{Y} ^ {(1)}, \\
 	f = \sbrackets{\rbrackets{\mat{K} + \Delta \mat{K} ^ {(2)}} - \rbrackets{\lambda ^ {(0)} + \Delta \lambda ^ \ast} \mat{M}} \rbrackets{\mat{Y} ^ {(0)} + \Delta \mat{Y} ^ {(1)}}.
 \end{gather*}
 
@@ -352,11 +352,12 @@
 
 \begin{equation}
 	\mathrm{grad}(G) = 
+	\trans{
 	\left\{ 
 	\begin{matrix}
 		\partDer{G}{\alpha}{} & \partDer{G}{\beta}{} 
 	\end{matrix} 
-	\right\}.
+	\right\}}.
 \end{equation}
 
 Для дальнейшей коррекции будем вносить изменения в нулевое приближение матрицы демпфирования следующим образом:
@@ -402,9 +403,9 @@ C точки зрения численной реализации предлаг
 	\label{eq:updatedGenDamping}
 \end{equation}
 
-Алгоритм восстановления матрицы демпфирования заключается в том, чтобы найти такие коэффициенты $ \eta_0, \eta_1 \hdots \eta_n $, которые будут решением следующей недоопределенной системы нелинейных уравнений:
+Алгоритм восстановления матрицы демпфирования заключается в том, чтобы найти такие коэффициенты $ \eta_0, \eta_1, \hdots, \eta_n $, которые будут решением следующей недоопределенной системы нелинейных уравнений:
 \begin{equation}
-	f_i(\eta_0, \eta_1 \hdots \eta_n) = \trans{\rbrackets{\mat{y}_i ^ \ast}}\tilde{\mat{H}} \mat{y}_i ^ \ast - h_i ^ \ast = \tilde{h}_i - h_i ^ \ast, \ i = 1 \hdots s.
+	f_i(\eta_0, \eta_1 \hdots \eta_n) = \trans{\rbrackets{\mat{y}_i ^ \ast}} \tilde{\mat{H}} \mat{y}_i ^ \ast - h_i ^ \ast = \tilde{h}_i - h_i ^ \ast, \ i = 1 \hdots s.
 	\label{eq:systemDampUpdating}
 \end{equation}
 
@@ -415,12 +416,13 @@ C точки зрения численной реализации предлаг
 \end{equation}
 где $ w_i $~---~весовые коэффициенты корректируемых тонов, $ w_c $~---~параметр регуляризации. Из практики применения метода: если модель достаточно хорошо описывает реальный объект, то можно положить $ w_c = 0 $.
 
-Для формирования целевой функции \eqref{eq:objFinalDampFunUpdating} построим аналитические выражения слагаемых в \eqref{eq:updatedGenDamping}: 
+Для формирования целевой функции \eqref{eq:objFinalDampFunUpdating} построим аналитические выражения слагаемых в \eqref{eq:updatedGenDamping} на примере одного тона колебаний: 
 \begin{equation}
 	\begin{gathered}
 		h_1 = \sum \limits_{p\,=\,1} ^ n \sbrackets{\eta_p y_p ^ \ast \rbrackets{\sum \limits_{i\,=\,1} ^ n h_{i, p} y_i ^ \ast + \sum \limits_{i\,=\,1, \ i \neq p} ^ n h_{p, i} y_i ^ \ast}}, \\
 		h_2 = \sum \limits_{p\,=\,1} ^ n \sbrackets{\eta_p y_p ^ \ast \sum \limits_{i\,=\,1, \ i \neq p} ^ n h_{i, p} \eta_i y_i ^ \ast}.
 	\end{gathered}
+	\label{eq:genDampingParts}
 \end{equation}
 
 Аналитические выражения для частных производных по каждому из коэффициентов коррекции, необходимые для решения задачи минимизации \eqref{eq:objFinalDampFunUpdating}, имеют вид: 
@@ -432,7 +434,47 @@ C точки зрения численной реализации предлаг
 \end{equation}
 где $ i = 1 \hdots s $, $ j = 1 \hdots n $.
 
+Будем решать задачу минимизации целевой функции методом сопряженных градиентов. Получим аналитические выражения для компонент вектора-градиента:
+\begin{equation}
+	\mathrm{grad} (F) = 
+	\trans{	
+	\left\{ 
+	\begin{matrix}
+		\partDer{F}{\eta_1}{} & \hdots & \partDer{F}{\eta_n}{} & \partDer{F}{\eta_0}{}
+	\end{matrix}
+	\right\}},
+	\label{eq:gradDampingMatrix}
+\end{equation}
+где
+\begin{equation*}
+	\partDer{F}{\eta_0}{} = 2 \sum \limits_{i\,=\,1} ^ s \rbrackets{w_i f_i \partDer{f_i}{\eta_0}{}}, \
+	\partDer{F}{\eta_j}{} = 2 \sum \limits_{i\,=\,1} ^ s \rbrackets{w_i f_i \partDer{f_i}{\eta_j}{}} + 2 w_c \eta_j, \ j = 1 \hdots n.
+\end{equation*}
 
+Найдем аналитические выражения частных производных от \eqref{eq:genDampingParts}:
+\begin{equation}
+	\begin{gathered}
+		\partDer{h_1}{\eta_j}{} = y_j \rbrackets{\sum \limits_{i\,=\,1} ^ n h_{i, j} y_i + \sum \limits_{i\,=\,1,\ i \neq j} ^ n h_{j, i} y_i}, \\
+		\partDer{h_2}{\eta_j}{} = y_j \rbrackets{\sum \limits_{i\,=\,1} ^ n h_{i, j} \eta_i y_i + \sum \limits_{i\,=\,1,\ i \neq j} ^ n h_{j, i} \eta_i y_i}.
+	\end{gathered}
+	\label{eq:derGenDampingParts}
+\end{equation}
+
+Воспользовавшись симметрией матрицы, из \eqref{eq:genDampingParts} и \eqref{eq:derGenDampingParts} получим:
+\begin{equation}
+	\begin{gathered}
+		h_1 = \sum \limits_{j\,=\,1} ^ n \sbrackets{\eta_j y_j \rbrackets{2 \sum \limits_{i\,=\,1} ^ n h_{i,j} y_i - h_{j, j} y_j}} \\
+		h_2 = \sum \limits_{j\,=\,1} ^ n  \sbrackets{\eta_j y_j \sum \limits_{i\,=\,1, i \neq j} ^ n h_{i, j} \eta_i y_i}, \partDer{h_2}{\eta_j}{} = 2 y_j \sum \limits_{i\,=\,1, i \neq j} ^ n h_{i, j} \eta_i y_i.
+	\end{gathered}
+\end{equation}
+
+В итоге получаем формулы для вычисления градиента \eqref{eq:gradDampingMatrix}:
+\begin{equation}
+	\begin{gathered}
+		\partDer{h_1}{\eta_j}{} = y_j \rbrackets{2 \sum \limits_{i\,=\,1} ^ n h_{i, j} y_i - h_{j, j} y_j}, \\
+		\partDer{h_2}{\eta_j}{} = 2 y_j \rbrackets{\sum \limits_{i\,=\,1} ^ n h_{i, j} \eta_i y_i - h_{j, j} \eta_j y_j}.
+	\end{gathered}
+\end{equation}
 
 Ранее коллективом авторов, включая автора настоящей диссертации, был описан способ коррекции частот для редуцированных КЭ-моделей \cite{lib:reducedUpdating}. Следуя описанной в работе методологии, матрица демпфирования редуцированной модели может быть восстановлена следующим образом:
 \begin{equation}
@@ -445,6 +487,8 @@ C точки зрения численной реализации предлаг
 	\end{pmatrix} 
 	\rbrackets{\mat{Y} ^ \ast} ^ {-1}.
 \end{equation}
+
+Заметим, что обобщенные характеристики, полученные в результате коррекции полноразмерных и редуцированных моделей отмеченными методами, близки между собой. Однако использование скорректированной полноразмерной модели для дальнейшего анализа: нахождения амплитудно-частотных характеристик, освобождения от закреплений и ассемблирования с другими моделями, является предпочтительным в силу того, что она более полно описывает связи между конечными элементами.
 
 \section{Освобождение математических моделей от наложенных связей}
 
@@ -991,7 +1035,7 @@ m_{n,1} & \hdots & m_{n,n} &
 	\label{eq:finalSysSym}
 \end{equation}
 
-Необходимо отметить, что точка $ C $ не обязательно должна располагаться в центре масс, она может находиться в любом месте конструкции. Пусть точка $ C $ находится на расстоянии $ (\Delta_x$, $\Delta_y$, $\Delta_z) $ от центра тяжести, тогда матрица $ \mu $ может быть вычислена следующим образом:
+Необходимо отметить, что точка $ C $ необязательно должна располагаться в центре масс, она может находиться в любом месте конструкции. Пусть точка $ C $ находится на расстоянии $ (\Delta_x$, $\Delta_y$, $\Delta_z) $ от центра тяжести, тогда матрица $ \mu $ может быть вычислена следующим образом:
 \begin{equation}
 	\small
 	\mat{\mu} = m_0
