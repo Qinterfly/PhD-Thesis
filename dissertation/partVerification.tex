@@ -454,8 +454,8 @@ C точки зрения численной реализации предлаг
 Найдем аналитические выражения частных производных от \eqref{eq:genDampingParts}:
 \begin{equation}
 	\begin{gathered}
-		\partDer{h_1}{\eta_j}{} = y_j \rbrackets{\sum \limits_{i\,=\,1} ^ n h_{i, j} y_i + \sum \limits_{i\,=\,1,\ i \neq j} ^ n h_{j, i} y_i}, \\
-		\partDer{h_2}{\eta_j}{} = y_j \rbrackets{\sum \limits_{i\,=\,1} ^ n h_{i, j} \eta_i y_i + \sum \limits_{i\,=\,1,\ i \neq j} ^ n h_{j, i} \eta_i y_i}.
+		\partDer{h_1}{\eta_j}{} = y_j ^ \ast \rbrackets{\sum \limits_{i\,=\,1} ^ n h_{i, j} y_i ^ \ast + \sum \limits_{i\,=\,1,\ i \neq j} ^ n h_{j, i} y_i ^ \ast}, \\
+		\partDer{h_2}{\eta_j}{} = y_j ^ \ast \rbrackets{\sum \limits_{i\,=\,1} ^ n h_{i, j} \eta_i y_i ^ \ast + \sum \limits_{i\,=\,1,\ i \neq j} ^ n h_{j, i} \eta_i y_i ^ \ast}.
 	\end{gathered}
 	\label{eq:derGenDampingParts}
 \end{equation}
@@ -463,16 +463,16 @@ C точки зрения численной реализации предлаг
 Воспользовавшись симметрией матрицы, из \eqref{eq:genDampingParts} и \eqref{eq:derGenDampingParts} получим:
 \begin{equation}
 	\begin{gathered}
-		h_1 = \sum \limits_{j\,=\,1} ^ n \sbrackets{\eta_j y_j \rbrackets{2 \sum \limits_{i\,=\,1} ^ n h_{i,j} y_i - h_{j, j} y_j}} \\
-		h_2 = \sum \limits_{j\,=\,1} ^ n  \sbrackets{\eta_j y_j \sum \limits_{i\,=\,1, i \neq j} ^ n h_{i, j} \eta_i y_i}, \partDer{h_2}{\eta_j}{} = 2 y_j \sum \limits_{i\,=\,1, i \neq j} ^ n h_{i, j} \eta_i y_i.
+		h_1 = \sum \limits_{j\,=\,1} ^ n \sbrackets{\eta_j y_j ^ \ast \rbrackets{2 \sum \limits_{i\,=\,1} ^ n h_{i,j} y_i ^ \ast - h_{j, j} y_j ^ \ast}} \\
+		h_2 = \sum \limits_{j\,=\,1} ^ n  \sbrackets{\eta_j y_j ^ \ast \sum \limits_{i\,=\,1, i \neq j} ^ n h_{i, j} \eta_i y_i ^ \ast}, \partDer{h_2}{\eta_j}{} = 2 y_j ^ \ast \sum \limits_{i\,=\,1, i \neq j} ^ n h_{i, j} \eta_i y_i ^ \ast.
 	\end{gathered}
 \end{equation}
 
 В итоге получаем формулы для вычисления градиента \eqref{eq:gradDampingMatrix}:
 \begin{equation}
 	\begin{gathered}
-		\partDer{h_1}{\eta_j}{} = y_j \rbrackets{2 \sum \limits_{i\,=\,1} ^ n h_{i, j} y_i - h_{j, j} y_j}, \\
-		\partDer{h_2}{\eta_j}{} = 2 y_j \rbrackets{\sum \limits_{i\,=\,1} ^ n h_{i, j} \eta_i y_i - h_{j, j} \eta_j y_j}.
+		\partDer{h_1}{\eta_j}{} = y_j ^ \ast \rbrackets{2 \sum \limits_{i\,=\,1} ^ n h_{i, j} y_i ^ \ast - h_{j, j} y_j ^ \ast}, \\
+		\partDer{h_2}{\eta_j}{} = 2 y_j ^ \ast \rbrackets{\sum \limits_{i\,=\,1} ^ n h_{i, j} \eta_i y_i ^ \ast - h_{j, j} \eta_j y_j ^ \ast}.
 	\end{gathered}
 \end{equation}
 
@@ -1288,5 +1288,41 @@ m_{n,1} & \hdots & m_{n,n} &
 \end{longtblr}
 
 \section{Определение модальных характеристик крупногабаритных конструкций}
+
+Модальные испытания крупногабаритных трансформируемых конструкций сопряжены с определенными трудностями. Отметим основные из них. Поскольку эти конструкции могут иметь большую протяженность (порядка 100 метров), то для их испытаний необходимо помещение соответствующих размеров. Кроме того, для выделения собственных тонов колебаний (реализация режима фазового резонанса) протяженной конструкции необходима система возбуждения колебаний с большим числом силовозбудителей, управление которой является достаточно сложной задачей. КТК не рассчитаны на эксплуатацию под воздействием гравитации, поэтому при проведении испытаний необходима многоканальная система компенсации веса, которая не должна искажать динамические характеристики объекта испытаний. КТК имеют, как правило, низкие (до одной десятой доли герца) собственные частоты упругих колебаний, поэтому затруднительны измерения колебаний датчиками ускорений, обычно используемыми в модальных испытаниях. Измерения же перемещений требуют базу для отсчета, что усложняет процесс испытаний. И, наконец, на модальные характеристики тонов колебаний с низкими частотами повышенное влияние оказывает воздушная среда. 
+
+Решением отмеченных проблем видится в проведении испытаний таких конструкций по частям \figref{fig:schemeDecomposition}, которые имеют меньшие габариты и значительно более высокие частоты собственных колебаний. 
+
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}[b]{0.45\textwidth}
+		\includegraphics[width = \textwidth]{decomposition}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.45\textwidth}
+	     % Определение стиля
+        \tikzstyle{blockWide} = [rectangle, draw = black, fill = blue!15, rounded corners, text width = 22em, text centered, minimum height = 1.5em, drop shadow] 
+        \tikzstyle{blockWideC} = [blockWide, fill = red!20]
+        \tikzstyle{arrow} = [draw, thick, color = black!90, -latex'] 
+        \scriptsize 
+        % Задание перменных
+        \def\nodeDist{0.4cm}
+        % Отрисовка блок-схемы
+        \begin{tikzpicture}[scale = 1, transform shape]
+            % Задание узлов		
+            \node (modalTests) [blockWide] {Модальные испытания \\ составных частей конструкции};
+            \node (modelUpdating) [blockWide, below = \nodeDist of modalTests] {Коррекция математических моделей составных частей \\ конструкции по результатам испытаний};
+            \node (checkInfluence) [blockWide, below = \nodeDist of modelUpdating] {Освобождение математических моделей \\ составных частей конструкции};
+            \node (buildRealModel) [blockWide, below = \nodeDist of checkInfluence] {Синтез математической модели полной \\ конструкции из её составных частей};
+            \node (buildMathModel) [blockWide, below = \nodeDist of buildRealModel] {Определение динамических характеристик полной математической модели};
+            % Соединение узлов
+            \draw [arrow] (modalTests.south) -- (modelUpdating.north);
+            \draw [arrow] (modelUpdating.south) -- (checkInfluence.north);
+            \draw [arrow] (checkInfluence.south) -- (buildRealModel.north);
+            \draw [arrow] (buildRealModel.south) -- (buildMathModel.north);
+        \end{tikzpicture}
+	\end{subfigure}
+    \caption{Схема методики верификации крупногабаритных трансформируемых конструкций} \label{fig:schemeDecomposition}
+\end{figure}
 
 \section{Выводы по главе \thechapter}
