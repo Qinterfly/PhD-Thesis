@@ -4,7 +4,7 @@
 
 % --- Путь к изображениям --- %
 
-\graphicspath{{images/}}
+\graphicspath{{images/partVerification/}{images/partAprobation/}}
 
 % --- Интервалы --- %
 
@@ -218,6 +218,9 @@
 	{ \frac{\partial #1}{\partial #2} }
 	{ \frac{\partial^{#3} #1}{\partial #2^{#3}} }
 }
+
+% Названия
+\newcommand{\name}[1]{\texttt{#1}} 
 
 % Рисунки
 \newcommand{\figref}[1]{(рисунок~\ref{#1})} 

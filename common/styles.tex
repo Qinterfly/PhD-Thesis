@@ -29,9 +29,18 @@
 % --- Форматирование таблиц с гибкими настройками --- %
 
 % Стиль
-\SetTblrStyle{caption-tag}{font = \itshape}
-\SetTblrStyle{caption-text}{font = \itshape}
 \UseTblrLibrary{varwidth}
+
+\captionsetup[longtblr]{
+    format = \tabformat,                % Формат подписи (plain|hang)
+    font = normal,                      % Нормальные размер, цвет, стиль шрифта
+    skip = .0pt,                        % Отбивка под подписью
+    parskip = .0pt,                     % Отбивка между параграфами подписи
+    position = above,                   % Положение подписи
+    justification = \tabjust,           % Центровка
+    indent = \tabindent,                % Смещение строк после первой
+    singlelinecheck = \tabsinglecenter, % Не выравнивать по центру, если умещается в одну строку
+}
 
 % Настройки заголовка первого блока таблиц
 \DefTblrTemplate{caption-sep}{default}{}
@@ -55,7 +64,7 @@
 
 \captionsetup[figure]{
     format = plain,             % Формат подписи (plain|hang)
-    font = it,                  % Нормальные размер, цвет, стиль шрифта
+    font = normal,              % Нормальные размер, цвет, стиль шрифта
     skip = .0pt,                % Отбивка под подписью
     parskip = .0pt,             % Отбивка между параграфами подписи
     position = below,           % Положение подписи
