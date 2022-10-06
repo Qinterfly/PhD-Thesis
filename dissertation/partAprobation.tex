@@ -144,7 +144,7 @@
 		\includegraphics[width = \textwidth]{tu-204-mode-6}
 		\caption{ВИФ2} 
 	\end{subfigure}
-	\caption{Формы колебаний до и после коррекции} \label{fig:tu-204-modes}
+	\caption{Формы колебаний ДПМ до и после коррекции} \label{fig:tu-204-modes}
 \end{figure}
 
 \section{Верификация имитационной модели каркаса зонтичной антенны космического аппарата}
@@ -410,5 +410,174 @@
 Можно видеть, что наибольшее влияние на частоты ассемблированной модели оказывает коррекция штанги, в то время как коррекция зонтичного каркаса приводит лишь к небольшому снижению результирующих погрешностей.
 
 \section{Коррекция расчетной модели отъемной части крыла изделия С-70 <<Охотник>>}
+
+Кроме того, метод коррекции был применен к композитной консоли крыла изделия С-70 <<Охотник>>.
+
+\subsection{Экспериментальный модальный анализ}
+
+Для проведения экспериментального модального анализа, консоль была вывешена посредством траверсы \figref{fig:wing-experiment}.
+
+\begin{figure}[H]
+	\centerfloat
+	\includegraphics[width = 0.75\linewidth]{wing-experiment}
+	\caption{Общий вид консоли крыла изделия С-70 <<Охотник>> на упругой подвеске} \label{fig:wing-experiment}
+\end{figure}
+
+\subsection{Построение конечно-элементной модели}
+
+В связи с геометрической разнесенностью основных структурных элементов отъемной части крыла (ОЧК) необходимо установить контактное взаимодействие между ними. Для формирования линий контактного взаимодействия спроецируем балочный каркас на обшивку \figref{wing-intersection-isometric}. Для обеспечения совместности перемещений элементов обшивки составим таблицу соответствия ребер отсеченных панелей, которые примыкают друг к другу плоскости $ OXZ $. Массы предлагается размещать на ближайших точках балочного каркаса. При этом компоненты тензора инерции пересчитываются пропорционально относительному удалению массы от точки размещения. 
+
+\begin{figure}[!htb]
+	\centerfloat
+	\includegraphics[width = \linewidth]{wing-intersection-isometric}
+	\caption{Проецирование балочного каркаса и масс на обшивку} \label{wing-intersection-isometric}
+\end{figure}
+
+Посредством системы макросов \name{Ansys Mechanical APDL} была создана программа, позволяющая автоматически формировать конечно-элементную модель при изменении исходных данных. Геометрические модели панелей и балочного каркаса приведены на рисунках~\ref{fig:wing-geometry-beams} и \ref{fig:wing-geometry-panels} соответственно. Число степеней свободы в модели составило $ 19710 $. Для сшивки панелей как между собой, так и с балочным каркасом, использовались абсолютно жесткие балки. Стоит отметить, что между некоторыми панельными элементами были обнаружены существенные зазоры по высоте \figref{fig:wing-rootSection}. Результирующая конечно-элементная модель приведена на рисунке~\ref{fig:wing-mesh}. Упругие формы собственных колебаний срединной поверхности модели приведены на рисунках \ref{InitMode1}~--~\ref{InitMode8}. Здесь и далее нумерация тонов колебаний начинается с первого тона упругих колебаний. 
+
+\begin{figure}[!htb]
+	\centerfloat
+	\includegraphics[width = 1\linewidth]{wing-geometry-beams}
+	\caption{Геометрическая модель балочного каркаса}\label{fig:wing-geometry-beams}
+\end{figure}
+
+\begin{figure}[!htb]
+	\centerfloat
+	\includegraphics[width = 1\linewidth]{wing-geometry-panels}
+	\caption{Геометрическая модель панелей}\label{fig:wing-geometry-panels}
+\end{figure}
+
+\begin{figure}[!htb]
+	\centerfloat
+	\includegraphics[width = 0.8\linewidth]{wing-rootSection}
+	\caption{Корневое сечение конечно-элементной модели ОЧК}\label{fig:wing-rootSection}
+\end{figure}
+
+\begin{figure}[!htb]
+	\centerfloat
+	\includegraphics[width = 1\linewidth]{wing-mesh}
+	\caption{Конечно-элементная модель ОЧК}\label{fig:wing-mesh}
+\end{figure}
+
+\def\sfWing{0.48\textwidth}
+
+\begin{figure}[!htb]
+	\centering
+	\begin{subfigure}[t]{\sfWing}
+		\centering
+		\includegraphics[width = \textwidth]{wing-initial-mode-1}
+		\caption{} \label{subfig:wing-initial-mode-1} 
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[t]{\sfWing}
+		\centering
+		\includegraphics[width = \textwidth]{wing-initial-mode-2}
+		\caption{} 
+	\end{subfigure}	
+	\begin{subfigure}[t]{\sfWing}
+		\centering
+		\includegraphics[width = \textwidth]{wing-initial-mode-3}
+		\caption{} 
+	\end{subfigure}	
+	\hfill
+	\begin{subfigure}[t]{\sfWing}
+		\centering
+		\includegraphics[width = \textwidth]{wing-initial-mode-4}
+		\caption{} 
+	\end{subfigure}	
+	\begin{subfigure}[t]{\sfWing}
+		\centering
+		\includegraphics[width = \textwidth]{wing-initial-mode-5}
+		\caption{} 
+	\end{subfigure}	
+	\hfill
+	\begin{subfigure}[t]{\sfWing}
+		\centering
+		\includegraphics[width = \textwidth]{wing-initial-mode-6}
+		\caption{} \label{subfig:wing-initial-mode-6} 
+	\end{subfigure}	
+	\caption{Первые шесть формы колебаний консоли крыла до коррекции}
+\end{figure}
+
+\subsection{Коррекция конечно-элементной модели}
+
+Коррекция КЭ-модели проводилась по пяти наборам экспериментально определенных частот. Каждый последующий набор дополняет одним тоном колебаний предыдущий набор. Например, сначала коррекция была проведена только по изгибу ОЧК I тона, а затем еще и изгибу ОЧК II тона. В конечном итоге была осуществлена одновременная коррекция 5 тонов колебаний. 
+
+В связи с тем, что в данной работе не учитывались экспериментальные погрешности определения динамических характеристик, итерационный процесс коррекции считался завершенным при достижении целевых значений частот с точностью 0.0001\%. 
+
+%\begin{frame}{Результаты применения метода коррекции} 
+%	\begin{table}[!htb]
+%		\centering
+%		\footnotesize
+%		\caption{Результаты коррекции композитной консоли крыла летательного аппарата}
+%		\resizebox{\textwidth}{!}{%
+%		\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+%			\hline
+%			\multirow{3}{*}{Тон} & \multicolumn{2}{|c|}{Приведенная частота} & \multicolumn{6}{|c|}{Погрешность до и после коррекции, \%} \\ \cline{2-9}
+%			& \multirow{2}{*}{Эксперимент} & \multirow{2}{*}{Исходная модель} & \multirow{2}{*}{До} & \multicolumn{5}{|c|}{После} \\ \cline{5-9}  
+%			& & & & 1 & 2 & 3 & 4 & 5 \\ \hline
+%			1 & 1.00 & 1.51 & 50.7 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 \\ \hline
+%			2 & 2.28 & 3.18 & 39.5 & -7.4 & 0.0 & 0.0 & 0.0 & 0.0 \\ \hline
+%			3 & 3.37 & 4.13 & 22.6 & -18.6 & -13.8 & 0.0 & 0.0 & 0.0 \\ \hline
+%			4 & 3.95 & 4.82 & 21.8 & -19.1 & -17.8 & -8.2 & 0.0 & 0.0 \\ \hline
+%			5 & 4.87 & 6.15 & 26.2 & -16.2 & -21.8 & -2.6 & -4.4 & 0.0 \\ \hline
+%		\end{tabular}}
+%	\end{table}
+%\end{frame}
+
+Распределения изменений узловых жестокостей по всем линейным степеням свободы КЭ-модели до и после коррекции по первому тону и пяти тонам колебаний приведены на рисунках \ref{coeffs0-1} и \ref{coeffs1-6} соответственно. Необходимо отметить, что изменения узловых жесткостей при коррекции по пяти тонам посчитаны относительно жесткостей, полученных в результате коррекции по первому тону. Синяя цветовая гамма на рисунках соответствует областям понижения исходной жесткости, а красная~--~областям повышения исходной жесткости. Черному цвету соответствуют области, жесткость которых в ходе коррекции осталась неизменной. 
+
+\begin{figure}[!htb]
+	\centerfloat
+	\includegraphics[width = 0.75\linewidth]{coeffs0-1}
+	\caption{Распределения изменений узловых жестокостей по всем линейным степеням свободы КЭ-модели до и после коррекции по первому тону} \label{coeffs0-1}
+\end{figure}
+
+\begin{figure}[!htb]
+	\centerfloat
+	\includegraphics[width = 0.75\linewidth]{coeffs1-6}
+	\caption{Распределения изменений узловых жестокостей по всем линейным степеням свободы КЭ-модели до и после коррекции по пяти тонам} \label{coeffs1-6}
+\end{figure}
+
+Вследствие изменения упругости корректируемой модели происходит изменение частот и форм колебаний. Нормированные к массе формы колебаний срединной поверхности модели до (черным цветом) и после коррекции (красным цветом) по пяти частотам собственных колебаний приведены на рисунках~\ref{fig:wing-compare-mode-1}~--~\ref{fig:wing-compare-mode-5}.
+
+\begin{figure}[!htb]
+	\centerfloat
+	\includegraphics[width = 1\linewidth]{wing-compare-mode-1}
+	\caption{Сопоставление первого тона колебаний до и после коррекции} \label{fig:wing-compare-mode-1}
+\end{figure}
+
+\begin{figure}[!htb]
+	\centerfloat
+	\includegraphics[width = 1\linewidth]{wing-compare-mode-2}
+	\caption{Сопоставление второго тона колебаний до и после коррекции} \label{fig:wing-compare-mode-2}
+\end{figure}
+
+\begin{figure}[!htb]
+	\centerfloat
+	\includegraphics[width = 1\linewidth]{wing-compare-mode-3}
+	\caption{Сопоставление третьего тона колебаний до и после коррекции} \label{fig:wing-compare-mode-3}
+\end{figure}
+
+\begin{figure}[!htb]
+	\centerfloat
+	\includegraphics[width = 0.8\linewidth]{wing-compare-mode-4}
+	\caption{Сопоставление четвертого тона колебаний до и после коррекции} \label{fig:wing-compare-mode-4}
+\end{figure}
+
+\begin{figure}[H]
+	\centerfloat
+	\includegraphics[width = 1\linewidth]{wing-compare-mode-5}
+	\caption{Сопоставление пятого тона колебаний до и после коррекции} \label{fig:wing-compare-mode-5}
+\end{figure}
+
+Таблица соответствия форм колебаний до и после коррекции по MAC-критерию~\eqref{} приведена на рисунке~\ref{fig:wing-MAC}. 
+
+\begin{figure}[!htb]
+	\centerfloat
+	\includegraphics[width = 0.74\linewidth]{wing-MAC}
+	\caption{Таблица соответствия форм колебаний до и после коррекции} \label{fig:wing-MAC}
+\end{figure}
+
 
 \section{Выводы по главе \thechapter}
