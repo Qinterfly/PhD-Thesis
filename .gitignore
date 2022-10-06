@@ -4,6 +4,7 @@ examples
 program
 test
 images
+documents
 TODO.txt
 *.aux
 *.log
