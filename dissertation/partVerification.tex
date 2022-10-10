@@ -77,15 +77,15 @@
 		\pgfmathsetmacro{\nodeDist}{0.2}
 		\pgfmathsetmacro{\shiftText}{0.0}
 		% Исходная модель
-		\node[inner sep = 0pt] (initial) at (0, 0) {\includegraphics[width = 0.4\textwidth]{initialSimpleModel}};
+		\node[inner sep = 0pt] (initial) at (0, 0) {\includegraphics[width = 0.4\textwidth]{simple-model-initial}};
 		\node[inner sep = 0pt, below = \shiftText of initial.south] (textInitial) {Исходная модель};
 		% Знак
 		\node [below = \nodeDist of textInitial.south, color = blue] (sumSign) {\Huge \bfseries +};
 		% Коррректирующие элементы
-		\node[inner sep = 0pt, below = -\nodeDist of sumSign.south] (elements) {\includegraphics[width = 0.4\textwidth]{elementsSimpleModel}};
+		\node[inner sep = 0pt, below = -\nodeDist of sumSign.south] (elements) {\includegraphics[width = 0.4\textwidth]{simple-model-elements}};
 		\node[inner sep = 0pt, below = \shiftText of elements.south] (textElements) {Корректирующие элементы};
 		% Скорректированная модель
-		\draw [-{Latex[length = 4mm]}, color = red, ultra thick](sumSign.east) ++ (3, 0) --++ (1, 0) node [right] (updated) {\includegraphics[width = 0.5\textwidth]{updatedSimpleModel}};
+		\draw [-{Latex[length = 4mm]}, color = red, ultra thick](sumSign.east) ++ (3, 0) --++ (1, 0) node [right] (updated) {\includegraphics[width = 0.5\textwidth]{simple-model-updated}};
 		\node[inner sep = 0pt, below = \shiftText of updated.south] (textUpdated) {Скорректированная модель};
 	\end{tikzpicture}
 	\caption{Принципиальная схема коррекции} \label{fig:principalSchemeUpdating}

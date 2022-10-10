@@ -38,11 +38,579 @@
 
 \subsection{Тестовые примеры}
 
-\fixme{Применение SSI-COV, SSI-DD, ADA и N4SID к упруго-массовой системе и модели самолета} 
+\subsubsection{Упруго-массовая система}
+
+\begin{figure}[H]
+	\centerfloat
+	\includegraphics[width = 0.7\linewidth]{6DOF-test}
+	\caption{Механическая система с шестью степенями свободы} \label{6DOF-test}
+\end{figure}
+
+Матрицы жесткости, масс и демпфирования в этом случае равны:
+\begin{gather}
+	\mat{K} = 
+	\begin{pmatrix}
+		k_1 + k_2 & -k_2 & 0 & 0 & 0 & 0 \\
+		-k_2 & k_2 + k_3 + k_8 + k_9 & -k_3 & -k_9 & 0 & 0 \\
+		0 & -k_3 & k_3 + k_4 & -k_4 & 0 & 0 \\
+		0 & -k_9 & -k_4 & k_4 + k_5 + k_9 & -k_5 & 0 \\
+		0 & 0 & 0 & -k_5 & k_5 + k_6 & 0 \\
+		0 & 0 & 0 & 0 & 0 & k_6 + k_7 \\
+	\end{pmatrix}, \\
+	\mat{M} = 
+	\begin{pmatrix}
+		m_1 & 0 & 0 & 0 & 0 & 0 \\
+		0 & m_2 & 0 & 0 & 0 & 0 \\
+		0 & 0 & m_3 & 0 & 0 & 0 \\
+		0 & 0 & 0 & m_4 & 0 & 0 \\
+		0 & 0 & 0 & 0 & m_5 & 0 \\
+		0 & 0 & 0 & 0 & 0 & m_6 \\	
+	\end{pmatrix}, \
+	\mat{C} = 
+	\begin{pmatrix}
+		c_1 & 0 & 0 & 0 & 0 & 0 \\
+		0 & c_3 & 0 & 0 & 0 & -c_3 \\
+		0 & 0 & c_2 & 0 & -c_2 & 0 \\
+		0 & 0 & 0 & 0 & 0 & 0 \\
+		0 & 0 & 0 & -c_2 & c_2 & 0 \\
+		0 & 0 & -c_3 & 0 & 0 & c_3 \\	
+	\end{pmatrix}.
+\end{gather}
+
+Примем физические параметры системы равными: 
+\begin{itemize}[noitemsep]
+	\item $ m_1 = m_2 = m_5 = 2 $ кг,
+	\item $ m_3 = m_4 = m_6 = 1 $ кг,
+	\item $ k_5 = k_8 = k_9 = 2.01 \ \sfrac{\text{кН}}{\text{м}} $,
+	\item $ k_1 = k_2 = k_3 = k_4 = k_5 = k_6 = k_7 = 1 \ \sfrac{\text{кН}}{\text{м}} $,
+	\item $ c_1 = c_3 = 400 \ \sfrac{(\text{Н} \cdot \text{с})}{\text{м}} $,
+	\item $ c_2 = 200 \ \sfrac{(\text{Н} \cdot \text{с})}{\text{м}} $.
+\end{itemize}
+
+Будем моделировать динамический отклик \figref{6DOF-signals} невозмущенной механической системы ($ \eta = 0 $) на случайные внешние воздействия ($ f_a = 0.5 $ Н), приложенные к каждой из масс. Шаг дискретизации составляет $ 1 $ мс, а общее время моделирования~--~$ 1000 $ c.
+
+Спектральная плотность мощности, построенная на основе откликов каждой массы, приведена на рисунке~\ref{6DOF-spectrums}.
+
+\begin{figure}[!htb]
+	\centerfloat
+	\includegraphics[width = 1\linewidth]{6DOF-signals}
+	\caption{Временные сигналы ускорений каждой из масс} \label{6DOF-signals}
+\end{figure}
+
+\begin{figure}[!htb]
+	\centerfloat
+	\includegraphics[width = 1\linewidth]{6DOF-spectrums}
+	\caption{Спектральная плотность мощности по всем каналам измерений} \label{6DOF-spectrums}
+\end{figure}
+
+Теоретические и определенные частоты собственных колебаний и относительные коэффициенты демпфирования сведены в таблицах~\ref{tab6DOFsFrequencies} и \ref{tab6DOFsDampingRatios}. Стабилизационная диаграмма, построенная по методу SSI-COV, приведена на рисунке~\ref{6DOF-SSI-COV}.
+
+%\begin{table}[!htb]
+%	\caption{Результаты определения частот собственных колебаний механической системы с шестью степенями свободы} \label{tab6DOFsFrequencies}
+%	\centering
+%	\begin{tblr}{colspec={|c|c|c|c|c|c|}, hlines}
+%		\SetCell[r=2]{c} Тон & \SetCell[c=5]{c} Частота, Гц &&&& \\
+%		& Теория & SSI-COV & SSI-DD & LSCE & ERA \\ \hline
+%		1 & 93.1856 & 93.1873 & 93.1851 & 93.1979 & 93.1737 \\
+%		2 & 149.6246 & 149.5825 & 149.6334 & 149.5321 & 149.2415 \\
+%		3 & 187.9729 & 188.1742 & 188.1098 & 187.5424 & 187.2981 \\
+%		4 & 246.0442 & 246.0608 & 246.1392 & - & - \\
+%		5 & 289.0728 & 289.1116 & 289.0207 & 289.2388 & 288.8544 \\
+%		6 & 395.9591 & 395.9343 & 395.9575 & 395.9110 & 395.9927 \\
+%	\end{tblr}
+%\end{table}
+
+%\begin{table}[!htb]
+%	\caption{Результаты определения относительных коэффициентов демпфирования механической системы с шестью степенями свободы} \label{tab6DOFsDampingRatios}
+%	\centering
+%	\begin{tblr}{colspec={|c|c|c|c|c|c|}, hlines}
+%		\SetCell[r=2]{c} Тон & \SetCell[c=5]{c} Коэффициент демпфирования, \% &&&& \\
+%		& Теория & SSI-COV & SSI-DD & LSCE & ERA \\ \hline
+%		1 & 1.3844 & 1.3768 & 1.3860 & 1.3784 & 1.4192 \\
+%		2 & 12.4453 & 12.3011 & 12.3983 & 12.4082 & 12.1034 \\
+%		3 & 14.7696 & 14.7151 & 14.8216 & 14.1395 & 14.0355 \\
+%		4 & 10.9748 & 10.9288 & 10.9691 & - & - \\
+%		5 & 3.4296 & 3.4147 & 3.4093 & 3.4559 & 3.4397 \\
+%		6 & 0.7436 & 0.7521 & 0.7483 & 0.7531 & 0.7493 \\
+%	\end{tblr}
+%\end{table}
+
+\begin{figure}[H]
+	\centerfloat
+	\includegraphics[width = 1\linewidth]{6DOF-SSI-COV}
+	\caption{Стабилизационная диаграмма (SSI-COV) для механической системы с шестью степенями свободы} \label{6DOF-SSI-COV}
+\end{figure}
+
+\section{Имитационная модель беспилотного летательного аппарата}
+
+Рассмотрим имитационную модель беспилотного летательного аппарата \name{XQ-58 Valkyrie} \figref{x58-geometry} \cite{XQ58-info}. На основании геометрической модели планера была создана конечно-элементная модель \name{Ansys} \figref{x58-mesh}. При этом жесткостные характеристики элементов планера подбирались таким образом, чтобы приблизить спектр частот собственных колебаний к тому, который наблюдается на летательных аппаратах схожей компоновки.
+
+\begin{figure}[!htb]
+	\centerfloat
+	\includegraphics[width = 0.75\linewidth]{x58-geometry}
+	\caption{Геометрическая модель БПЛА} \label{x58-geometry}
+\end{figure}
+
+На каждом из элементов планера была размещена сеть виртуальных датчиков, связанных между собой треугольными полигонами. Пространственная схема расположения датчиков, общее количество которых составило $ 101 $, приведена на рисунке \ref{x58-sensors}.
+
+Для определения модальных характеристик планера к законцовкам крыла было приложено однократное импульсное воздействие длительностью $ 0.04 $ с. Данные динамических откликов записывались с частотой дискретизации $ 2 $ кГц по каждому пространственному направлению во всех датчиках в течение $ 5 $ с. Временные зависимости ускорений вдоль направления Y, полученные в нескольких точках левой консоли крыла, приведены на рисунке \ref{x58-signals}. Распределение спектральной плотности мощности, соответствующей этим сигналам, показано на рисунке \ref{x58-spectrums}.
+
+\begin{figure}[!htb]
+	\centerfloat
+	\includegraphics[width = 0.75\linewidth]{x58-mesh}
+	\caption{Конечно-элементная модель БПЛА} \label{x58-mesh}
+\end{figure}
+
+\begin{figure}[!htb]
+	\centerfloat
+	\includegraphics[width = 0.75\linewidth]{x58-sensors}
+	\caption{Схема размещения датчиков} \label{x58-sensors}
+\end{figure}
+
+\begin{figure}[!htb]
+	\centerfloat
+	\includegraphics[width = 1\linewidth]{x58-signals}
+	\caption{Временные сигналы ускорений в нескольких точках левой консоли крыла} \label{x58-signals}
+\end{figure}
+
+\begin{figure}[!htb]
+	\centerfloat
+	\includegraphics[width = 1\linewidth]{x58-spectrums}
+	\caption{Спектральная плотность мощности в нескольких точках левой консоли крыла} \label{x58-spectrums}
+\end{figure}
+
+Необходимо заметить, что не все методы операционного модального анализа, которые рассматриваются в настоящей работе, достаточно эффективны с численной точки зрения для одновременной обработки всего массива данных откликов. Так, посредством метода \name{ERA} удается обработать лишь один элемент планера одномоментно. Наиболее высокопроизводительным и точным применительно к рассматриваемой задачи оказался метод \name{SSI-COV}. В таблице \ref{tabX58SSICOV} сведены частоты $ f $ и логарифмические декременты колебаний $ \delta $, определенные по конечно-элементной модели и методом \name{SSI-COV}. По этим данным вычислены погрешности определения модальных характеристик, которые приведены в двух последних столбцах. При этом определенные формы колебаний \name{SSI-COV} совпадают с расчетными \name{Ansys}. Сравнение форм колебаний на примере пятого тона собственных колебаний приведено на рисунке~\ref{x58-mode-compare}. 
+
+%\begin{longtblr}[
+%caption = {Результат определения модальных характеристик методом SSI-COV}, label = {tabX58SSICOV}, theme = regularTable]{colspec={|c|c|c|c|c|c|c|}, columns = {leftsep=5pt, rightsep=5pt}, hlines}
+%	\SetCell[r=2]{c} Тон & \SetCell[c=2]{c} Ansys && \SetCell[c=2]{c} SSI-COV && \SetCell[c=2]{c} Погрешность, \% & \\
+%	& $ f $, Гц & $ \delta $ & $ f $, Гц & $ \delta $ & $ \Delta \overline{f} $ & $ \Delta \overline{\delta} $ \\ \hline
+%	1 & 1.8343 & \SetCell[r=11]{c} 0.0628 & 1.8343 & 0.0628 & -0.0018 & 0.0018 \\ 
+%	2 & 7.0324 & & 7.0322 & 0.0628 & -0.0035 & 0.0050 \\ 
+%	3 & 10.2304 & & 10.2300 & 0.0628 & -0.0042 & -0.0141 \\ 
+%	4 & 21.7268 & & 21.7180 & 0.0628 & -0.0405 & -0.0730 \\ 
+%	5 & 25.9578 & & 25.9430 & 0.0628 & -0.0571 & -0.1016 \\ 
+%	6 & 30.8802 & & 30.8560 & 0.0627 & -0.0784 & -0.1732 \\ 
+%	7 & 35.5900 & & 35.5530 & 0.0627 & -0.1039 & -0.2035 \\ 
+%	8 & 38.4500 & & 38.4030 & 0.0627 & -0.1223 & -0.2369 \\ 
+%	9 & 40.3791 & & 40.3250 & 0.0626 & -0.1340 & -0.2942 \\ 
+%	10 & 40.4966 & & 40.4420 & 0.0627 & -0.1348 & -0.2608 \\ 
+%	11 & 52.6507 & & 52.5310 & 0.0626 & -0.2274 & -0.4486 \\ 
+%\end{longtblr}
+
+\begin{figure}[!htb]
+	\centering
+	\begin{subfigure}{0.49\textwidth}
+		\includegraphics[width = 1\textwidth]{x58-ansys-mode-5}
+		\caption{Ansys}
+	\end{subfigure}
+	\begin{subfigure}{0.49\textwidth}
+		\includegraphics[width = 1\textwidth]{x58-ssi-cov-mode-5}
+		\caption{SSI-COV}
+	\end{subfigure}
+     \caption{Сравнение форм колебаний тона №5} \label{x58-mode-compare}
+\end{figure}
+
+Остальные формы колебаний, определенные методом \name{SSI-COV}, приведены на рисунках~\ref{x58-ssi-cov-mode-1}~---~\ref{x58-ssi-cov-mode-11}.
+
+\begin{figure}[H]
+	\centerfloat
+	\includegraphics[width = 0.575\linewidth]{x58-ssi-cov-mode-1}
+	\caption{Первая (траекторная) форма колебаний БПЛА (1.83 Гц)} \label{x58-ssi-cov-mode-1}
+\end{figure}
+
+\begin{figure}[H]
+	\centerfloat
+	\includegraphics[width = 0.575\linewidth]{x58-ssi-cov-mode-2}
+	\caption{Вторая форма колебаний БПЛА (7.03 Гц)} \label{x58-ssi-cov-mode-2}
+\end{figure}
+
+\begin{figure}[H]
+	\centerfloat
+	\includegraphics[width = 0.575\linewidth]{x58-ssi-cov-mode-3}
+	\caption{Третья форма колебаний БПЛА (10.23 Гц)} \label{x58-ssi-cov-mode-3}
+\end{figure}
+
+\begin{figure}[H]
+	\centerfloat
+	\includegraphics[width = 0.575\linewidth]{x58-ssi-cov-mode-4}
+	\caption{Четвертая форма колебаний БПЛА (21.71 Гц)} \label{x58-ssi-cov-mode-4}
+\end{figure}
+
+\begin{figure}[H]
+	\centerfloat
+	\includegraphics[width = 0.575\linewidth]{x58-ssi-cov-mode-6}
+	\caption{Шестая форма колебаний БПЛА (30.86 Гц)} \label{x58-ssi-cov-mode-6}
+\end{figure}
+
+\begin{figure}[H]
+	\centerfloat
+	\includegraphics[width = 0.575\linewidth]{x58-ssi-cov-mode-7}
+	\caption{Седьмая форма колебаний БПЛА (35.55 Гц)} \label{x58-ssi-cov-mode-7}
+\end{figure}
+
+\begin{figure}[H]
+	\centerfloat
+	\includegraphics[width = 0.575\linewidth]{x58-ssi-cov-mode-8}
+	\caption{Восьмая форма колебаний БПЛА (38.40 Гц)} \label{x58-ssi-cov-mode-8}
+\end{figure}
+
+\begin{figure}[H]
+	\centerfloat
+	\includegraphics[width = 0.575\linewidth]{x58-ssi-cov-mode-9}
+	\caption{Девятая форма колебаний БПЛА (40.33 Гц)} \label{x58-ssi-cov-mode-9}
+\end{figure}
+
+\begin{figure}[H]
+	\centerfloat
+	\includegraphics[width = 0.52\linewidth]{x58-ssi-cov-mode-10}
+	\caption{Десятая форма колебаний БПЛА (40.44 Гц)} \label{x58-ssi-cov-mode-10}
+\end{figure}
+
+\begin{figure}[H]
+	\centerfloat
+	\includegraphics[width = 0.575\linewidth]{x58-ssi-cov-mode-11}
+	\caption{Одиннадцатая форма колебаний БПЛА (52.53 Гц)} \label{x58-ssi-cov-mode-11}
+\end{figure}
+
+Стабилизационная диаграмма, построенная по методу \name{SSI-COV}, показана на рисунке~\ref{x58-SSI-COV}.
+
+\begin{figure}[H]
+	\centerfloat
+	\includegraphics[width = 1\linewidth]{x58-SSI-COV}
+	\caption{Стабилизационная диаграмма (SSI-COV) для БПЛА} \label{x58-SSI-COV}
+\end{figure}
+
+Для количественной оценки соответствия определенных форм колебаний их расчетным аналогам, воспользуемся критерием модального соответствия. Численная оценка качества выделения форм колебаний методом \name{SSI-COV} для первых двенадцати тонов колебаний приведена на рисунке~\ref{x58-mac}. Из рисунка видно, что определенные формы колебаний практически совпадают с расчетными.
+
+\begin{figure}[!htb]
+	\centerfloat
+	\includegraphics[width = 1\linewidth]{x58-mac}
+	\caption{Критерий модального соответствия расчетных форм колебаний их определенным аналогам} \label{x58-mac}
+\end{figure}
 
 \subsection{Определение модальных характеристик по результатам акустических испытаний}
 
-\fixme{Все результаты по рефлектору}
+Определим модальные характеристики рефлектора \figref{experiment-satellite-assembly} по результатам отклика на шумовое акустическое воздействие. Для записи откликов использовались акселерометры~\figref{satellite-sensors}, размещенные на поверхности рефлектора в соответствии со схемой, приведенной на рисунке~\ref{satellite-scheme}.
+
+\begin{figure}[!htb]
+	\centerfloat
+	\includegraphics[width = 1\linewidth]{experiment-satellite-assembly}
+	\caption{Рефлектор в сборе с испытательной оснасткой} \label{experiment-satellite-assembly}
+\end{figure}
+
+\begin{figure}[!htb]
+	\centerfloat
+	\includegraphics[width = 1\linewidth]{satellite-sensors}
+	\caption{Датчики ускорения, размещенные на поверхности рефлектора} \label{satellite-sensors}
+\end{figure}
+
+\begin{figure}[!htb]
+	\centerfloat
+	\includegraphics[width = 0.95\linewidth]{satellite-scheme}
+	\caption{Схема расстановки датчиков по рефлектору} \label{satellite-scheme}
+\end{figure}
+
+Длительность шумового воздействия составила $ 53 $ секунды при частоте дискретизации сигналов равной 12800 Гц. Пример временных сигналов акселерометров вдоль направления Y показан на рисунке~\ref{satellite-signals}. Спектральная плотность мощности исследуемых сигналов приведена на рисунке~\ref{satellite-spectrums}. Обработка сигналов осуществлялась последовательно вдоль каждого из пространственных направлений тремя методами операционного модального анализа: \name{SSI-COV}, \name{ERA} и \name{SSI-DD}. При этом сигнал шумового воздействия не использовался. Частоты и логарифмические декременты колебаний, полученные посредством каждого из методов, сведены в таблице~\ref{tabSatelliteCompare}.
+
+Для верификации результатов операционного модального анализа была использована конечно-элементная модель рефлектора, приведенная на рисунке~\ref{satellite-fem}. В результате решения обобщенной проблемы собственных значений были получены формы и частоты собственных колебаний. Последние были сопоставлены с частотами, которые определены методами операционного модального анализа~\tabref{tabSatelliteCheck}. 
+
+Формы колебаний, соответствующие конечно-элементной модели, поперемено сравниваются с формами колебаний, вычисленными методами операционного модального анализа, на рисунках~\ref{satellite-fem-mode-1}~---~\ref{satellite-ssi-cov-mode-16}.
+
+\begin{figure}[!htb]
+	\centerfloat
+	\includegraphics[width = 0.9\linewidth]{satellite-signals}
+	\caption{Временные сигналы акселерометров вдоль направления Y} \label{satellite-signals}
+\end{figure}
+
+\begin{figure}[!htb]
+	\centerfloat
+	\includegraphics[width = 0.9\linewidth]{satellite-spectrums}
+	\caption{Спектральная плотность мощности временных сигналов акселерометров вдоль направления Y} \label{satellite-spectrums}
+\end{figure}
+
+\begin{figure}[!htb]
+	\centerfloat
+	\includegraphics[width = 0.9\linewidth]{satellite-fem}
+	\caption{Конечно-элементная модель рефлектора} \label{satellite-fem}
+\end{figure}
+
+\begin{table}[H]
+	\caption{Результаты определения частот и логарифмических декрементов колебаний методами операционного модального анализа} \label{tabSatelliteCompare}
+	\centering
+	\begin{tblr}{colspec={|c|c|c|c||c|c|c|}, hlines}
+		\SetCell[r=2]{c} Тон & \SetCell[c=3]{c} Частота, Гц && & \SetCell[c=3]{c} Логарифмический декремент && \\
+		& SSI-COV & ERA & SSI-DD & SSI-COV & ERA & SSI-DD \\ \hline
+		1 & 66.052 & 65.962 & 66.403 & 0.054 & 0.042 & 0.045 \\
+		2 & 91.287 & 90.910 & 91.843 & 0.030 & 0.052 & 0.042 \\
+		3 & 102.540 & --- & --- & 0.056 & --- & --- \\
+		4 & 114.770 & --- & --- & 0.063 & --- & --- \\
+		5 & 122.370 & --- & --- & 0.094 & --- & --- \\
+		6 & 127.850 & --- & --- & 0.049 & --- & --- \\
+		7 & 157.560 & --- & --- & 0.121 & --- & --- \\
+		8 & 203.850 & --- & --- & 0.060 & --- & --- \\
+		9 & 208.270 & --- & --- & 0.062 & --- & --- \\
+		10 & 227.700 & --- & --- & 0.057 & --- & --- \\
+		11 & 243.360 & --- & --- & 0.048 & --- & --- \\
+		12 & 273.450 & 273.310 & --- & 0.033 & 0.026 & --- \\
+		13 & 283.300 & --- & 281.990 & 0.040 & --- & 0.033 \\
+		14 & 325.360 & --- & 324.020 & 0.034 & --- & 0.056 \\
+	\end{tblr}
+\end{table}
+
+\begin{table}[!htb]
+	\caption{Сравнение частот собственных колебаний, полученных в результате конечно-элементного расчета и операционного модального анализа} \label{tabSatelliteCheck}
+	\centering
+	\begin{tblr}{colspec={|c|c|c|c|c|}, hlines}
+		Тон & Femap & SSI-COV & ERA & SSI-DD \\ \hline
+		1 & 71.034 & 66.052 & 65.962 & 66.403 \\
+		2 & 102.892 & 91.287 & 90.910 & 91.843 \\
+		3 & 126.35 & 102.540 & --- & --- \\
+		4 & --- & 114.770 & --- & --- \\
+		5 & 122.093 & 122.370 & --- & --- \\
+		6 & 115.74 & 127.850 & --- & --- \\
+		7 & 159.036 & 157.560 & --- & --- \\
+		8 & --- & 203.850 & --- & --- \\
+		9 & 209.456 & 208.270 & --- & --- \\
+		10 & --- & 227.700 & --- & --- \\
+		11 & --- & 243.360 & --- & --- \\
+		12 & 274.476 & 273.450 & 273.310 & --- \\
+		13 & 283.069 & 283.300 & --- & 281.990 \\
+		14 & 329.535 & 325.360 & --- & 324.020 \\		
+	\end{tblr}
+\end{table}
+
+\begin{figure}[H]
+	\centerfloat
+	\includegraphics[width = 0.85\linewidth]{satellite-fem-mode-1}
+	\caption{Форма колебаний конечно-элементной модели рефлектора (71.034 Гц)} \label{satellite-fem-mode-1}
+\end{figure}
+
+\begin{figure}[H]
+	\centerfloat
+	\includegraphics[width = 0.95\linewidth]{satellite-ssi-cov-mode-1}
+	\caption{Форма колебаний, вычисленная методом SSI-COV (66.052 Гц)} \label{satellite-ssi-cov-mode-1}
+\end{figure}
+
+\begin{figure}[H]
+	\centerfloat
+	\includegraphics[width = 0.85\linewidth]{satellite-fem-mode-2}
+	\caption{Форма колебаний конечно-элементной модели рефлектора (102.892 Гц)} \label{satellite-fem-mode-2}
+\end{figure}
+
+\begin{figure}[H]
+	\centerfloat
+	\includegraphics[width = 0.95\linewidth]{satellite-ssi-cov-mode-2}
+	\caption{Форма колебаний, вычисленная методом SSI-COV (91.287 Гц)} \label{satellite-ssi-cov-mode-2}
+\end{figure}
+
+\begin{figure}[H]
+	\centerfloat
+	\includegraphics[width = 0.85\linewidth]{satellite-fem-mode-3}
+	\caption{Форма колебаний конечно-элементной модели рефлектора (126.35 Гц)} \label{satellite-fem-mode-3}
+\end{figure}
+
+\begin{figure}[H]
+	\centerfloat
+	\includegraphics[width = 0.95\linewidth]{satellite-ssi-cov-mode-3}
+	\caption{Форма колебаний, вычисленная методом SSI-COV (102.540 Гц)} \label{satellite-ssi-cov-mode-3}
+\end{figure}
+
+\begin{figure}[H]
+	\centerfloat
+	\includegraphics[width = 0.85\linewidth]{satellite-fem-mode-5}
+	\caption{Форма колебаний конечно-элементной модели рефлектора (122.093 Гц)} \label{satellite-fem-mode-5}
+\end{figure}
+
+\begin{figure}[H]
+	\centerfloat
+	\includegraphics[width = 0.95\linewidth]{satellite-ssi-cov-mode-5}
+	\caption{Форма колебаний, вычисленная методом SSI-COV (122.370 Гц)} \label{satellite-ssi-cov-mode-5}
+\end{figure}
+
+\begin{figure}[H]
+	\centerfloat
+	\includegraphics[width = 0.85\linewidth]{satellite-fem-mode-6}
+	\caption{Форма колебаний конечно-элементной модели рефлектора (115.74 Гц)} \label{satellite-fem-mode-6}
+\end{figure}
+
+\begin{figure}[H]
+	\centerfloat
+	\includegraphics[width = 0.95\linewidth]{satellite-ssi-cov-mode-6}
+	\caption{Форма колебаний, вычисленная методом SSI-COV (127.850 Гц)} \label{satellite-ssi-cov-mode-6}
+\end{figure}
+
+\begin{figure}[H]
+	\centerfloat
+	\includegraphics[width = 0.85\linewidth]{satellite-fem-mode-7}
+	\caption{Форма колебаний конечно-элементной модели рефлектора (159.036 Гц)} \label{satellite-fem-mode-7}
+\end{figure}
+
+\begin{figure}[H]
+	\centerfloat
+	\includegraphics[width = 0.95\linewidth]{satellite-ssi-cov-mode-7}
+	\caption{Форма колебаний, вычисленная методом SSI-COV (157.560 Гц)} \label{satellite-ssi-cov-mode-7}
+\end{figure}
+
+\begin{figure}[H]
+	\centerfloat
+	\includegraphics[width = 0.85\linewidth]{satellite-fem-mode-9}
+	\caption{Форма колебаний конечно-элементной модели рефлектора (209.456 Гц)} \label{satellite-fem-mode-9}
+\end{figure}
+
+\begin{figure}[H]
+	\centerfloat
+	\includegraphics[width = 0.95\linewidth]{satellite-ssi-cov-mode-9}
+	\caption{Форма колебаний, вычисленная методом SSI-COV (208.270 Гц)} \label{satellite-ssi-cov-mode-9}
+\end{figure}
+
+\begin{figure}[H]
+	\centerfloat
+	\includegraphics[width = 0.85\linewidth]{satellite-fem-mode-13}
+	\caption{Форма колебаний конечно-элементной модели рефлектора (274.476 Гц)} \label{satellite-fem-mode-13}
+\end{figure}
+
+\begin{figure}[H]
+	\centerfloat
+	\includegraphics[width = 0.95\linewidth]{satellite-ssi-cov-mode-13}
+	\caption{Форма колебаний, вычисленная методом SSI-COV (273.450 Гц)} \label{satellite-ssi-cov-mode-13}
+\end{figure}
+
+\begin{figure}[H]
+	\centerfloat
+	\includegraphics[width = 0.85\linewidth]{satellite-fem-mode-15}
+	\caption{Форма колебаний конечно-элементной модели рефлектора (283.069 Гц)} \label{satellite-fem-mode-15}
+\end{figure}
+
+\begin{figure}[H]
+	\centerfloat
+	\includegraphics[width = 0.95\linewidth]{satellite-ssi-cov-mode-15}
+	\caption{Форма колебаний, вычисленная методом SSI-COV (283.300 Гц)} \label{satellite-ssi-cov-mode-15}
+\end{figure}
+
+\begin{figure}[H]
+	\centerfloat
+	\includegraphics[width = 0.85\linewidth]{satellite-fem-mode-16}
+	\caption{Форма колебаний конечно-элементной модели рефлектора (329.535 Гц)} \label{satellite-fem-mode-16}
+\end{figure}
+
+\begin{figure}[H]
+	\centerfloat
+	\includegraphics[width = 0.93\linewidth]{satellite-ssi-cov-mode-16}
+	\caption{Форма колебаний, вычисленная методом SSI-COV (325.360 Гц)} \label{satellite-ssi-cov-mode-16}
+\end{figure}
+
+На основе таблицы~\ref{tabSatelliteCompare} можем заключить, что метод \name{SSI-COV} позволяет выделить наибольшее число тонов колебаний. Оценим сходимость модальных характеристик, определяемых этим методом: частот \tabref{tabSatelliteConvTimeFrequency} и логарифмических декрементов колебаний \tabref{tabSatelliteConvTimeDecrement}, варьируя длительность временных сигналов от $ 5 $ до $ 50 $ секунд. 
+
+\begin{longtblr}[
+	caption = {Cходимость частот собственных колебаний в зависимости от длины временного сегмента}, 
+	label = {tabSatelliteConvTimeFrequency}
+]{
+	colspec = {|c|c|c|c|c|c|c|},
+	columns = {leftsep = 5pt, rightsep = 5pt}, 
+	hlines
+}
+	\SetCell[r=2]{c} Тон & \SetCell[c=6]{c} Длительность сегмента, c &&&&& \\
+	& 5 & 10 & 20 & 30 & 40 & 50 \\ \hline
+	1 & 66.096 & 65.993 & 66.102 & 66.04 & 66.042 & 66.052 \\
+	2 & 91.335 & 91.193 & 91.174 & 91.259 & -- & 91.287 \\
+	3 & -- & -- & -- & 102.87 & 102.64 & 102.54 \\
+	4 & 115.25 & -- & 114.79 & 114.97 & 114.21 & 114.77 \\
+	5 & 124.26 & 119.06 & 122.3 & 122.09 & 122.24 & 122.37 \\
+	6 & -- & -- & 130.13 & -- & 128.34 & 127.85 \\
+	7 & 156.5 & 157.36 & 157.1 & 156.95 & 157.52 & 157.56 \\
+	8 & -- & -- & 206.16 & 205.18 & 204.62 & 203.85 \\
+	9 & -- & -- & -- & -- & -- & 208.27 \\
+	10 & 228.3 & 227.77 & 227.79 & 227.73 & 227.79 & 227.7 \\
+	11 & -- & -- & -- & -- & -- & 243.36 \\
+	12 & 273.82 & 273.64 & 273.77 & 273.56 & 273.47 & 273.45 \\
+	13 & 283.7 & 282.99 & 282.23 & 283.25 & 283.44 & 283.3 \\
+	14 & 326.19 & 326.42 & 325.55 & 325.4 & 325.32 & 325.36 \\
+\end{longtblr}
+
+\begin{longtblr}[
+	caption = {Cходимость логарифмического декремента колебаний в зависимости от длины временного сегмента}, 
+	label = {tabSatelliteConvTimeDecrement}
+]{
+	colspec = {|c|c|c|c|c|c|c|}, 
+	columns = {leftsep = 5pt, rightsep = 5pt}, 
+	hlines
+}
+	\SetCell[r=2]{c} Тон & \SetCell[c=6]{c} Длительность сегмента, c &&&&& \\
+	& 5 & 10 & 20 & 30 & 40 & 50 \\ \hline
+	1 & 0.060 & 0.041 & 0.052 & 0.052 & 0.051 & 0.054 \\
+	2 & 0.027 & 0.027 & 0.025 & 0.027 & -- & 0.030 \\
+	3 & --- & --- & --- & 0.060 & 0.057 & 0.056 \\
+	4 & 0.081 & --- & 0.070 & 0.073 & 0.068 & 0.063 \\
+	5 & 0.086 & 0.090 & 0.098 & 0.101 & 0.096 & 0.094 \\
+	6 & --- & --- & 0.022 & --- & 0.043 & 0.049 \\
+	7 & 0.089 & 0.107 & 0.113 & 0.118 & 0.120 & 0.121 \\
+	8 & --- & --- & 0.054 & 0.059 & 0.062 & 0.060 \\
+	9 & --- & --- & --- & --- & --- & 0.062 \\
+	10 & 0.062 & 0.079 & 0.062 & 0.057 & 0.055 & 0.057 \\
+	11 & --- & --- & --- & --- & --- & 0.048 \\
+	12 & 0.031 & 0.036 & 0.035 & 0.031 & 0.032 & 0.033 \\
+	13 & 0.038 & 0.037 & 0.036 & 0.042 & 0.041 & 0.040 \\
+	14 & 0.039 & 0.037 & 0.034 & 0.033 & 0.033 & 0.034 \\
+\end{longtblr}
+
+Дополнительно оценим влияния частоты дискретизации на устойчивость численных значений модальных характеристик, определяемых методом \name{SSI-COV}. Для этого временные отклики прореживаются с интервалами, которые соответствует диапазону частот дискретизации от $ 12800 $ до $ 2560 $ Гц. Результаты по частотам и логарифмическим декрементам сведены в таблицах~\ref{tabSatelliteConvSampleFrequency} и \ref{tabSatelliteConvSampleDecrement} соответственно. 
+
+\begin{longtblr}[
+	caption = {Cходимость частот собственных колебаний в зависимости от частоты дискретизации}, 
+	label = {tabSatelliteConvSampleFrequency}
+]{
+	colspec = {|c|c|c|c|c|c|}, 
+	columns = {leftsep = 5pt, rightsep = 5pt}, 
+	hlines
+}
+	\SetCell[r=2]{c} Тон & \SetCell[c=5]{c} Частота дискретизации, Гц &&&& \\
+	& 12800 & 6400 & 4267 & 3200 & 2560 \\ \hline
+	1 & 66.052 & 65.874 & 65.933 & 65.891 & 65.841 \\
+	2 & 91.287 & 91.292 & 91.201 & 91.136 & 91.049 \\
+	3 & 102.539 & 102.476 & 102.458 & 102.763 & 103.266 \\
+	4 & 114.772 & 114.007 & 114.044 & 114.134 & 114.196 \\
+	5 & 122.375 & 123.003 & 123.034 & 123.123 & 123.257 \\
+	6 & 127.851 & 129.596 & 129.586 & 129.580 & 129.599 \\
+	7 & 157.557 & 156.594 & 156.605 & 156.429 & --- \\
+	8 & 203.854 & --- & --- & --- & --- \\
+	9 & 208.266 & --- & --- & --- & --- \\
+	10 & 227.704 & 228.089 & 228.332 & 228.354 & --- \\
+	11 & 243.356 & 242.329 & 242.125 & --- & --- \\
+	12 & 273.450 & --- & --- & 273.791 & 273.793 \\
+	13 & 283.299 & 282.292 & 281.524 & 281.147 & --- \\
+	14 & 325.365 & 325.887 & 325.637 & --- & 324.958 \\
+\end{longtblr}
+
+\begin{longtblr}[
+	caption = {Cходимость логарифмического декремента колебаний в зависимости от частоты дискретизации}, 
+	label = {tabSatelliteConvSampleDecrement}, 
+]{
+	colspec = {|c|c|c|c|c|c|}, 
+	columns = {leftsep = 5pt, rightsep = 5pt}, 
+	hlines
+}
+	\SetCell[r=2]{c} Тон & \SetCell[c=5]{c} Частота дискретизации, Гц &&&& \\
+	& 12800 & 6400 & 4267 & 3200 & 2560 \\ \hline
+	1 & 0.054 & 0.034 & 0.030 & 0.032 & 0.029 \\
+	2 & 0.030 & 0.025 & 0.031 & 0.035 & 0.037 \\
+	3 & 0.056 & 0.062 & 0.068 & 0.064 & 0.055 \\
+	4 & 0.063 & 0.053 & 0.052 & 0.052 & 0.053 \\
+	5 & 0.094 & 0.061 & 0.057 & 0.056 & 0.050 \\
+	6 & 0.049 & 0.020 & 0.021 & 0.022 & 0.022 \\
+	7 & 0.121 & 0.067 & 0.054 & 0.055 & --- \\
+	8 & 0.060 & --- & --- & --- & --- \\
+	9 & 0.062 & --- & --- & --- & --- \\
+	10 & 0.057 & 0.027 & 0.019 & 0.011 & --- \\
+	11 & 0.048 & 0.034 & 0.025 & --- & --- \\
+	12 & 0.033 & --- & --- & 0.015 & 0.017 \\
+	13 & 0.040 & 0.023 & 0.021 & 0.020 & --- \\
+	14 & 0.034 & 0.032 & 0.029 & --- & 0.005 \\
+\end{longtblr}
+
+Можем видеть, что временного сегмента длительностью $ 20 $ секунд достаточно для стабилизации численных значений определяемых модальных характеристик.
+
+В случае изменения частоты дискретизации частота собственных колебаний меняется незначительно, в то время как логарифмический декрементам колебаний меняется в разы. 
 
 \subsection{Оценка модальных параметров летательных аппаратов по результатам полетов в неспокойной атмосфере}
 
