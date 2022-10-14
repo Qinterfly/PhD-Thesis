@@ -204,7 +204,6 @@
 % --- Определение новых сокращений --- %
 
 % Формулы
-\newcommand{\nfrac}{\nicefrac}                % Однострочная дробь
 \newcommand{\rarr}{$\rightarrow$}             % Стрелка вправо
 \newcommand{\mat}[1]{\mathbf{#1}}             % Жирные матричные символы
 \newcommand{\set}[1]{\mathbb{#1}}             % Множество
@@ -212,6 +211,8 @@
 \newcommand{\rbrackets}[1]{\left( #1 \right)} % Круглые скобки
 \newcommand{\sbrackets}[1]{\left[ #1 \right]} % Квадратные скобки
 \newcommand{\cbrackets}[1]{\{ #1 \}}		  % Фигурные скобки
+\newcommand{\imag}{\operatorname{Im}}         % Мнимая часть числа
+\newcommand{\real}{\operatorname{Re}}         % Действительная часть числа
 % Частная производная n-го порядка по одному аргументу
 \newcommand{\partDer}[3]{ 
 \ifthenelse{ \equal{#3}{1} \OR \equal{#3}{} }
