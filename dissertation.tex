@@ -1,4 +1,4 @@
-
+%&dissertation-preformat
 % --------------------------------- %
 % --- Сборка текста диссертации --- %
 % --------------------------------- %
@@ -36,6 +36,10 @@
 
 \input{biblio/settings}
 
+% --- Метка окончания предкомпиляции --- %
+
+\csname endofdump\endcsname
+
 % --- Вывод отладочной информации --- %
 
 \typeout{Selected options:}
@@ -47,7 +51,7 @@
 % --- Формирование документа --- %
 
 %\includeonly{dissertation/partModalAnalysis, dissertation/references}
-%\includeonly{dissertation/partVerification}
+\includeonly{dissertation/partVerification, dissertation/references}
 
 \begin{document}
 
