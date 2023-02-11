@@ -170,24 +170,12 @@
     \caption{Графический интерфейс программы} 
 \end{figure}
 
-Для сохранения результирующих форм~\figref{fig:finder-results-distribution} и портретов колебаний~\figref{fig:finder-results-portrait} в навигаторе рабочего проекта~\figref{fig:finder-results-structure}, программа использует интерфейс \name{Testlab Automation}.
+Для сохранения результирующих форм и портретов колебаний в навигаторе рабочего проекта~\figref{fig:finder-results-structure}, программа использует интерфейс \name{Testlab Automation}.
 
 \begin{figure}[H]
 	\centerfloat
 	\includegraphics[width = 0.8\linewidth]{finder-results-structure}
 	\caption{Расположение результатов работы программы в дереве навигатора проекта \name{Simcenter Testlab}} \label{fig:finder-results-structure}
-\end{figure}
-
-\begin{figure}[H]
-	\centerfloat
-	\includegraphics[width = 0.6\linewidth]{finder-results-distribution}
-	\caption{Распределения параметра искажения $ \xi $ по поверхности нервюры} \label{fig:finder-results-distribution}
-\end{figure}
-
-\begin{figure}[H]
-	\centerfloat
-	\includegraphics[width = 0.6\linewidth]{finder-results-portrait}
-	\caption{Портрет колебаний в точке нервюры, где параметр искажений $ \xi $ достигает максимального значения} \label{fig:finder-results-portrait}
 \end{figure}
 
 \subsection{Применение методики для диагностирования зазоров и люфтов}
@@ -491,18 +479,18 @@
 
 Для количественной оценки соответствия определенных форм колебаний их расчетным аналогам, воспользуемся критерием модального соответствия. Численная оценка качества выделения форм колебаний методом \name{SSI-COV} для первых двенадцати тонов колебаний приведена на рисунке~\ref{fig:x58-mac}. Из рисунка видно, что определенные формы колебаний практически совпадают с расчетными.
 
-\begin{figure}[!htb]
-	\centerfloat
-	\includegraphics[width = 1\linewidth]{x58-mac}
-	\caption{Критерий модального соответствия расчетных форм колебаний их определенным аналогам} \label{fig:x58-mac}
-\end{figure}
-
 Стабилизационная диаграмма, построенная по методу \name{SSI-COV}, показана на рисунке~\ref{fig:x58-ssi-cov}.
 
 \begin{figure}[H]
 	\centerfloat
 	\includegraphics[width = 1\linewidth]{x58-ssi-cov}
 	\caption{Стабилизационная диаграмма по методу \name{SSI-COV}} \label{fig:x58-ssi-cov}
+\end{figure}
+
+\begin{figure}[!htb]
+	\centerfloat
+	\includegraphics[width = 1\linewidth]{x58-mac}
+	\caption{Критерий модального соответствия расчетных форм колебаний их определенным аналогам} \label{fig:x58-mac}
 \end{figure}
 
 \subsection{Определение модальных характеристик по результатам акустических испытаний}
