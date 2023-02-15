@@ -1545,9 +1545,9 @@ m_{n,1} & \hdots & m_{n,n}
 Распределение изменений узловых жесткостей по всем линейным степеням свободы для орбитального модуля и панелей солнечный батарей показано на рисунках~\ref{subfig:test-orbital-distribution}~и~\ref{subfig:test-panel-distribution} соответственно. При этом минимальный критерий модального соответствия, связывающий формы собственных колебаний синтезированной модели до и после коррекции, составил $ 0.9996 $.
 
 Сходимость процедуры коррекции показана на рисунке~\ref{fig:test-spacecraft-convergence}. Она оценивалась посредством частотного критерия $ \lVert \mat{\alpha} \rVert_{\max} $:
-\begin{equation*}
-	\alpha_{i, j} = \abs{1 - \frac{f ^ \ast_{i, j}}{f_{i, j}}}, \ i = 1 \hdots s, \ j = 1 \hdots r,
-\end{equation*}
+\begin{equation}
+	\alpha_{i, j} = \abs{1 - \frac{f ^ \ast_{i, j}}{f_{i, j}}}, \ i = 1 \hdots s, \ j = 1 \hdots r, \label{eq:convergenceCriterion}
+\end{equation}
 где $ s $~---~число корректируемых тонов колебаний, $ r $~---~число испытаний (моделей) для коррекции, $ f $ и $ f ^ \ast $~---~текущие и целевые значения частот. 
 
 \begin{figure}[!htb]

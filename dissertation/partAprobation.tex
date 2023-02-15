@@ -581,7 +581,7 @@
 
 \begin{figure}[!htb]
 	\centering
-	\includegraphics[width = 0.9\linewidth]{girder-supports}
+	\includegraphics[width = 0.7\linewidth]{girder-supports}
 	\caption{Регулируемые опоры гирдера} \label{fig:girder-supports}
 \end{figure}
 
@@ -595,7 +595,7 @@
 
 \begin{figure}[!htb]
 	\centering
-	\includegraphics[width = 0.8\linewidth]{girder-full-system}
+	\includegraphics[width = 0.7\linewidth]{girder-full-system}
 	\caption{Совместная геометрическая модель гирдера и магнитов} \label{fig:girder-full-system}
 \end{figure}
 
@@ -617,6 +617,68 @@
 	\caption{Модальные испытания гирдера без магнитов} \label{fig:girder-experiment}
 \end{figure}
 
-По результатам экспериментальных исследований было установлено, что формы собственных колебаний, соответствующие низшим тонам, происходят при совместном перемещении гирдера и блока фундамента, на который опираются регулируемые опоры~\figref{}. Такое упругое поведение фундамента существенно отличается от модели жесткого закрепления, использованной в предварительных расчетах. Было принято решение построить модель упругого основания~\figref{}, используя пружины, жесткости которых определялись автоматически по результатам решения задачи коррекции для первых пяти частот собственных колебаний, отвечающих этим движениям. 
+По результатам экспериментальных исследований было установлено, что формы собственных колебаний, соответствующие низшим тонам, происходят при совместном перемещении гирдера и блока фундамента, на который опираются регулируемые опоры~\figref{subfig:girder-spring-mode}. Такое упругое поведение фундамента существенно отличается от модели жесткого закрепления, использованной в предварительных расчетах. Было принято решение построить модель упругого основания~\figref{fig:girder-mesh}, используя пружины, жесткости которых определялись автоматически по результатам решения задачи коррекции для первых пяти частот собственных колебаний, отвечающих этим движениям. Целевые значения частот достигнуты со степенью точности $ 2 \cdot 10 ^ {-8} $ по критерию~\eqref{eq:convergenceCriterion}.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width = 0.6\linewidth]{girder-mesh}
+	\caption{Конечно-элементная модель гирдера на упругом основании} \label{fig:girder-mesh}
+\end{figure}
+
+\def\sfGirder{0.48\textwidth}
+
+\begin{figure}[!htb]
+	\centering
+	\begin{subfigure}[t]{\sfGirder}
+		\centering
+		\includegraphics[width = \linewidth]{girder-spring-mode}
+		\caption{На упругом основании} \label{subfig:girder-spring-mode}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[t]{\sfGirder}
+		\centering
+		\includegraphics[width = \textwidth]{girder-elastic-mode}
+		\caption{В поперечном направлении} \label{subfig:girder-elastic-mode}
+	\end{subfigure}	
+	\caption{Пример форм колебаний гирдера} 
+\end{figure}
+
+Полученная модель гирдера на фундаменте использовалась для осуществления одновременной коррекции по шести частотам упругих тонов собственных колебаний~\figref{subfig:girder-elastic-mode}. Коррекция КЭ-модели производилась без удержания частот собственных колебаний, соответствующих движениям на упругом основании. Это объясняется отсутствием  экспериментальных данных о характере зависимости частот от уровня приложенных нагрузок. Целевые значения коррекции были достигнуты с высокой степенью точности~\tabref{tab:girder-results}.
+
+\begin{longtblr}[
+	caption = {Результаты коррекции гирдера}, 
+	label = {tab:girder-results}
+]{
+	colspec = {|X[c, -1]|X[c]|X[c]|X[c]|X[c]|}, 
+	width = \textwidth, 
+	hlines
+}
+	\SetCell[r = 2]{c} Тон & \SetCell[c = 2]{c} Частота, Гц && \SetCell[c = 2]{c} Погрешность, \% \\
+	& Эксперимент & Исходная модель & До коррекции & После коррекции \\ \hline
+	6 & 119.51 & 135.08 & 13.03 & \SetCell[r = 6]{c} \textbf{0.00} \\
+	7 & 140.97 & 146.46 & 3.89 &  \\
+	8 & 148.13 & 160.07 & 8.06 &  \\
+	9 & 189.65 & 210.48 & 10.98 & \\
+	10 & 197.53 & 214.18 & 8.43 & \\
+	11 & 242.24 & 253.51 & 4.65 & \\
+\end{longtblr}
+
+Наибольшие изменения узловых жесткостей~\figref{fig:girder-coeffs} достигаются в местах сопряжения конструктивных элементов гирдера. Минимальный критерий модального соответствия, связывающий формы колебания до и после коррекции, составил $ 0.9411 $. 
+
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}[t]{\sfGirder}
+		\centering
+		\includegraphics[width = \textwidth]{girder-coeffs-0-6} 
+		\caption{Относительно исходной модели} 
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[t]{\sfGirder}
+		\centering
+		\includegraphics[width = \textwidth]{girder-coeffs-1-6}
+		\caption{Относительно коррекции по одной частоте} 
+	\end{subfigure}	
+	\caption{Распределения изменений узловых жестокостей по всем линейным степеням свободы КЭ-модели до и после коррекции по шести упругим тонам собственных колебаний} \label{fig:girder-coeffs}
+\end{figure}
 
 \section{Выводы по главе \thechapter}
