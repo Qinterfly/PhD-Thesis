@@ -340,9 +340,9 @@
 \begin{equation}
 	\partDer{f}{c_p}{} = 
 	\begin{cases}
-		\sum\limits_{k\,=\,1} ^ {L(p)} \beta_k \rbrackets{y_i + \Delta y_i} \sbrackets{v_{i, j} \rbrackets{y_i + \Delta y_i} + 2 \tilde{v}_{i, j} \rbrackets{y_j + \Delta y_j}}, \ p \leq e \\
-		\rbrackets{y_i + \Delta y_i} ^ 2, \ p > e
-	\end{cases} \label{eq:derFinal}.
+		\sum\limits_{k\,=\,1} ^ {L(p)} \beta_k \rbrackets{y_i + \Delta y_i} \sbrackets{v_{i, j} \rbrackets{y_i + \Delta y_i} + 2 \tilde{v}_{i, j} \rbrackets{y_j + \Delta y_j}}, \ p \leq e, \\
+		\rbrackets{y_i + \Delta y_i} ^ 2, \ p > e,
+	\end{cases} \label{eq:derFinal}
 \end{equation}
 где $ y $~---~компоненты вектора $ \mat{Y} ^ {(0)} $, а $ \Delta y $~---~компоненты вектора $ \Delta Y ^ {(i)} $.
 
@@ -352,7 +352,7 @@
 
 Сходимость представленного итерационного алгоритма существенно зависит от геометрии и физического соответствия расчетной модели реальной конструкции, поэтому она определяется практическим путем в каждом конкретном случае на основе требований, предъявляемых к расчетной модели летательного аппарата. Так, например, если назначением модели является оценка эксплуатационной нагруженности летательного аппарата, то, как правило, коррекция расчетной модели призвана обеспечивать соответствие с заданной точностью расчетных значений собственных частот низших тонов колебаний их экспериментальным значениям. В то же время решение проблемы аэроупругой устойчивости самолетов требует сохранения в расчетной модели собственных частот таких тонов, которые оказывают первостепенное влияние на исследуемое явление. И степень соответствия модели реальной конструкции здесь определяется ограничениями максимальной скорости летательного аппарата.
 
-Ранее коллективом авторов, включая автора настоящей диссертации, был описан способ коррекции частот для редуцированных КЭ-моделей \cite{lib:author:reducedUpdating}: обобщенные жесткости и массы корректируемых тонов изменялись по следующим формулам:
+Ранее коллективом авторов, включая автора настоящей диссертации, был описан способ коррекции частот для редуцированных КЭ-моделей \cite{lib:author:reducedUpdating}. Обобщенные жесткости и массы корректируемых тонов изменялись по следующим формулам:
 \begin{equation}
 	\kappa_i ^ * = \kappa_i (1 + \chi_i), \ \mu_i ^ * = \mu_i (1 - \chi_i), \ \chi_i = \frac{\omega_i ^ 2 \mu_i - \kappa_i}{\omega_i ^ 2 \mu_i + \kappa_i}, \ i = 1 \hdots s, \label{eq:reducedGenParametersUpdating}
 \end{equation}
@@ -393,10 +393,10 @@
 \end{equation}
 где $ \mat{K} ^ \ast = \mat{K} + \Delta \mat{K} ^ \ast $~---~скорректированная матрица жесткости, $ \alpha $~---~коэффициент конструкционного демпфирования, $ \beta $~---~коэффициент инерционного демпфирования.
 
-В результате решения обобщенной проблемы~\eqref{eq:targetEigProblem} найдены собственные частоты и формы колебаний $ \mat{y}_i ^ \ast $ ($ i = 1 \hdots s $), которые остаются неизменными в процессе восстановления матрицы демпфирования. Обобщенные жесткости и массы собственных тонов колебаний, для которых известны обобщенные коэффициенты демпфирования, запишутся:
+В результате решения обобщенной проблемы~\eqref{eq:targetEigProblem} найдены собственные частоты и формы колебаний $ \mat{Y} ^ \ast $, которые остаются неизменными в процессе восстановления матрицы демпфирования. Обобщенные жесткости и массы собственных тонов колебаний, для которых известны обобщенные коэффициенты демпфирования, запишутся:
 \begin{equation}
 	\kappa_i = \trans{\rbrackets{\mat{y}_i ^ \ast}} \mat{K} ^ \ast \mat{y}_i ^ \ast, \
-	\mu_i = \trans{\rbrackets{\mat{y}_i ^ \ast}} \mat{M} \mat{y}_i ^ \ast.
+	\mu_i = \trans{\rbrackets{\mat{y}_i ^ \ast}} \mat{M} \mat{y}_i ^ \ast, \ i = 1 \hdots s. 
 \end{equation}
 
 Для нахождения коэффициентов $ \alpha $ и $ \beta $ решаем задачу минимизации целевой функции:
@@ -430,7 +430,7 @@
 
 Тогда для новой матрицы демпфирования $ \tilde{\mat{H}} $, используя~\eqref{eq:dampMatrixDecomposition}, можно записать обобщенные коэффициенты демпфирования в следующем виде (индекс тона опущен):
 \begin{equation}
-	\tilde{h} = h + \internal{h} + \external{h}.
+	\tilde{h} = h + \Delta \internal{h} + \Delta \external{h}.
 	\label{eq:updatedGenDamping}
 \end{equation}
 
@@ -450,15 +450,15 @@
 Для формирования целевой функции \eqref{eq:objFinalDampFunUpdating} построим аналитические выражения слагаемых в \eqref{eq:updatedGenDamping} на примере одного тона колебаний: 
 \begin{equation}
 	\begin{gathered}
-		\internal{h} = \sum\limits_{p\,=\,1} ^ e \sbrackets{\eta_p \sum\limits_{k\,=\,1} ^ {L(p)} \beta_k y_i \rbrackets{v_{i, j} y_i + 2 \tilde{v}_{i, j} y_j}}, \\
-		\external{h} = \sum\limits_{p\,=\,e + 1} ^ m \eta_p y_p ^ 2.
+		\Delta \internal{h} = \sum\limits_{p\,=\,1} ^ e \sbrackets{\eta_p \sum\limits_{k\,=\,1} ^ {L(p)} \beta_k y_i \rbrackets{v_{i, j} y_i + 2 \tilde{v}_{i, j} y_j}}, \\
+		\Delta \external{h} = \sum\limits_{p\,=\,e + 1} ^ m \eta_p y_p ^ 2.
 	\end{gathered}
 	\label{eq:genDampingParts}
 \end{equation}
 
 Аналитические выражения для частных производных по каждой из корректирующих коэффициентов демпфирования, необходимые для решения задачи минимизации~\eqref{eq:objFinalDampFunUpdating}, имеют вид: 
 \begin{equation}
-	\partDer{f_i}{\eta_j}{} = \partDer{\tilde{h}}{\eta_j}{} = \partDer{\internal{h}}{\eta_j}{} + \partDer{\external{h}}{\eta_j}{},\ i = 1 \hdots s,\ j = 1 \hdots m.
+	\partDer{f_i}{\eta_j}{} = \partDer{\tilde{h}}{\eta_j}{} = \partDer{\Delta \internal{h}}{\eta_j}{} + \partDer{\Delta \external{h}}{\eta_j}{},\ i = 1 \hdots s,\ j = 1 \hdots m.
 \end{equation}
 
 Будем решать задачу минимизации целевой функции методом сопряженных градиентов. Получим аналитические выражения для компонент вектора-градиента:
@@ -474,14 +474,14 @@
 \end{equation}
 где
 \begin{equation*}
-	\partDer{F}{\eta_j}{} = 2 \sum \limits_{i\,=\,1} ^ s \rbrackets{w_i f_i \partDer{f_i}{\eta_j}{}} + 2 w_c \eta_j, \ j = 1 \hdots m.
+	\partDer{F}{\eta_p}{} = 2 \sum \limits_{i\,=\,1} ^ s \rbrackets{w_i f_i \partDer{f_i}{\eta_p}{}} + 2 w_c \eta_j, \ p = 1 \hdots m.
 \end{equation*}
 
-Аналитические выражения для частных производных по каждому из коэффициентов демпфирования, необходимые для решения задачи минимизации \eqref{eq:objFinalDampFunUpdating}, имеют вид: 
+Аналитические выражения для частных производных по каждому из коэффициентов демпфирования, необходимые для решения задачи минимизации~\eqref{eq:objFinalDampFunUpdating}, имеют вид: 
 \begin{equation}
 	\begin{gathered}
-		\partDer{\internal{h}}{\eta_j}{} = \sum\limits_{k\,=\,1} ^ {L(p)} \beta_k y_i \rbrackets{v_{i, j} y_i + 2 \tilde{v}_{i, j} y_j}, \\
-		\partDer{\external{h}}{\eta_j}{} = \sum\limits_{p\,=\,e + 1} ^ m y_p ^ 2.
+		\partDer{\Delta \internal{h}}{\eta_p}{} = \sum\limits_{k\,=\,1} ^ {L(p)} \beta_k y_i \rbrackets{v_{i, j} y_i + 2 \tilde{v}_{i, j} y_j}, \\
+		\partDer{\Delta \external{h}}{\eta_p}{} = y_p ^ 2.
 	\end{gathered}
 \end{equation}
 
