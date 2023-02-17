@@ -6,27 +6,9 @@
 
 С целью обеспечения возможности эффективного расчета обобщенных характеристик по результатам модальных испытаний, на языке программирования \name{C\#} была разработана программная реализация \name{GenCalc}, позволяющая посредством графического интерфейса \figref{fig:gencalc-interface} гибко менять параметры расчета и исследовать зависимости получаемых характеристик по каждому из способов одновременно. Более того, для оценки качества выделения тона колебаний в программе заложена возможность построения частотного годографа \figref{fig:gencalc-godograph} и параметра монофазности \figref{fig:gencalc-monophase-parameter} колебательной системы.
 
-\begin{figure}[!htb]
-	\centerfloat
-	\includegraphics[width = 0.85\linewidth]{gencalc-interface}
-	\caption{Графический интерфейс программы} \label{fig:gencalc-interface}
-\end{figure}
-
 Необходимо отметить, что составленная программная реализация обеспечивает прямое взаимодействие с результатами модальных испытаний, которые были получены с использованием комплекса \name{Simcenter Testlab}. Это достигается за счет использования программного интерфейса приложения \name{Simcenter Testlab Automation} (\name{API}).
 
 В рамках предлагаемого подхода, для расчетного диапазона необходимо задать минимальный и максимальный уровень амплитуды, число уровней, а также число точек для интерполяции сигнала отклика на каждом уровне. Кроме того, необходимо выбрать частоту амплитудного и фазового резонанса.
-
-\begin{figure}[!htb]
-	\centerfloat
-	\includegraphics[width = 0.6\linewidth]{gencalc-monophase-parameter}
-	\caption{Параметр монофазности по двум каналам возбуждения при колебаниях изделия по тону АГИКр2} \label{fig:gencalc-monophase-parameter}
-\end{figure}
-
-\begin{figure}[!htb]
-	\centerfloat
-	\includegraphics[width = 0.6\linewidth]{gencalc-godograph}
-	\caption{Частотный годограф в точке отклика изделия при колебаниях по тону АГИКр2} \label{fig:gencalc-godograph}
-\end{figure}
 
 Программный функционал позволяет определять логарифмической декремент колебаний системы по каждому тону, используя четыре подхода:
 \begin{enumerate}[topsep = 0pt, noitemsep]
@@ -35,6 +17,18 @@
 	\item По наклону реальной составляющей сигнала отклика.
 	\item Посредством точного решения \eqref{eq:generalModalSolution} системы нелинейных уравнений третьего порядка \eqref{eq:generalModalSystem} относительно обобщенных характеристик:
 \end{enumerate}
+
+\begin{figure}[!htb]
+	\centerfloat
+	\includegraphics[width = 0.85\linewidth]{gencalc-interface}
+	\caption{Графический интерфейс программы} \label{fig:gencalc-interface}
+\end{figure}
+
+\begin{figure}[!htb]
+	\centerfloat
+	\includegraphics[width = 0.6\linewidth]{gencalc-monophase-parameter}
+	\caption{Параметр монофазности по двум каналам возбуждения при колебаниях изделия по антисимметричному тону} \label{fig:gencalc-monophase-parameter}
+\end{figure}
 
 \begin{equation}
 	\begin{aligned}
@@ -60,6 +54,12 @@
 	\end{gathered}
 	\label{eq:generalModalSolution}
 \end{equation}
+
+\begin{figure}[!htb]
+	\centerfloat
+	\includegraphics[width = 0.6\linewidth]{gencalc-godograph}
+	\caption{Частотный годограф в точке отклика изделия при колебаниях по антисимметричному тону} \label{fig:gencalc-godograph}
+\end{figure}
 
 В случае последнего подхода будем дополнительно определять обобщенное демпфирование, обобщенные жесткость и массу, и представлять их в виде графической зависимости от уровня амплитуд.
 
@@ -88,35 +88,17 @@
 
 Для определения обобщенных характеристик конструкции из решения системы нелинейных уравнений \eqref{eq:generalModalSystem} необходимо произвести расчет обобщенной силы $ Q $. Для этого воспользуемся выражением:
 \begin{equation}
-	Q_i = \frac{\sum\limits_{k\,=\,1} ^ p \vline F_i ^ {(k)} \vline \cdot \imag a_i ^ {(k)}}{\imag a_i ^ {ref}}, \ i = 1 \hdots n,
+	Q_i = \frac{\sum\limits_{k\,=\,1} ^ p \vline F_i ^ {(k)} \vline \cdot \imag a_i ^ {(k)}}{\imag a_i ^ {\text{ref}}}, \ i = 1 \hdots n,
 \end{equation}
-где $ n $~---~число отсчетов сигнала, $ \vline F_i ^ {(k)} \vline $~---~амплитуда воздействия в $ k $-ой точке, $ \imag a_i ^ {(k)} $~---~мнимая составляющая отклика сигнала $ k $-ой точке, $ \imag a_i ^ {ref} $~---~мнимая составляющая отклика сигнала в опорной точке.
+где $ n $~---~число отсчетов сигнала, $ \vline F_i ^ {(k)} \vline $~---~амплитуда воздействия в $ k $-ой точке, $ \imag a_i ^ {(k)} $~---~мнимая составляющая отклика сигнала $ k $-ой точке, $ \imag a_i ^ {\text{ref}} $~---~мнимая составляющая отклика сигнала в опорной точке.
 
 Отметим, что расчеты по каждому из способов \eqref{eq:generalModalSolution}, \eqref{eq:decrementWidthImaginaryPeak}~--~\eqref{eq:decrementAngleReal} являются независимыми, поэтому осуществляются параллельно. Такой подход позволяет существенно ускорить производительность вычислений при высокой дискретизации сигнала отклика по уровню амплитуды.
 
 По результатам вычислений было замечено, что изменение длины интерполяции на каждом расчетном уровне вне зависимости от расчетного подхода слабо влияет на результирующие значения обобщенных характеристик.
 
-Также отметим, что собственная частота колебаний, определенная по обобщенным характеристикам в рамках четвертого способа, претерпевает малые изменения по мере роста относительного значения расчетного уровня \figref{fig:gencalc-natural-frequency}. Зависимости обобщенной массы, жесткости и демпфирования для этого расчетного случая приведены на рисунке~\ref{fig:gencalc-general-params}.
+Также отметим, что собственная частота колебаний, определенная по обобщенным характеристикам в рамках четвертого способа, претерпевает малые изменения по мере роста относительного значения расчетного уровня \figref{fig:gencalc-natural-frequency}.
 
-\begin{figure}[H]
-	\centering
-	\begin{subfigure}{0.49\textwidth}
-		\includegraphics[width = 1\textwidth]{gencalc-general-stiffness} 
-		\caption{Обобщенная жесткость}
-	\end{subfigure}
-	\hfill
-	\begin{subfigure}{0.49\textwidth}
-		\includegraphics[width = 1\textwidth]{gencalc-general-mass} 
-		\caption{Обобщенная масса}
-	\end{subfigure}
-	\begin{subfigure}{0.49\textwidth}
-		\includegraphics[width = 1\textwidth]{gencalc-general-damping} 
-		\caption{Обобщенное демпфирование}
-	\end{subfigure}
-     \caption{Пример определения обобщенных характеристик конструкции} \label{fig:gencalc-general-params}
-\end{figure}
-
-\begin{figure}[H]
+\begin{figure}[!htb]
 	\centering
 	\includegraphics[width = 0.6\linewidth]{gencalc-natural-frequency}
 	\caption{Пример определения частоты собственных колебаний конструкции по обобщенным характеристикам} \label{fig:gencalc-natural-frequency}
@@ -152,50 +134,46 @@
 
 Локальное нормирование искажений портретов колебаний используется для определения местоположений дефектов в отдельных агрегатах и узлах сопряжения конструкции. Такое нормирование позволяет сопоставить между собой проявления разных дефектов и отследить динамику изменения каждого из них в процессе испытаний или эксплуатации.
 
-\subsection{Программная реализация}
-
-Программа предназначена для контроля дефектов в процессе вибрационных испытаний, которые проводятся с использованием программного комплекса \name{Simcenter Testlab}. Для оценки состояния поврежденности конструкции проводится расчет и построение параметров искажений портретов колебаний, которые позволяют выявлять такие конструкционные дефекты, как зазоры (люфты), трещины и повышенное трение в подвижных соединениях. Исходными данными для расчета являются временные сигналы по выбранным каналам измерения. 
+В рамках описанной методики была создана программа для контроля дефектов в процессе вибрационных испытаний, которые проводятся с использованием программного комплекса \name{Simcenter Testlab}. Для оценки состояния поврежденности конструкции проводится расчет и построение параметров искажений портретов колебаний, которые позволяют выявлять такие конструкционные дефекты, как зазоры (люфты), трещины и повышенное трение в подвижных соединениях. Исходными данными для расчета являются временные сигналы по выбранным каналам измерения. 
 
 По команде экспериментатора~\figref{subfig:finder-interface-single} она осуществляет расчет параметров искажений портретов колебаний $ \xi $ параллельно по всем каналам измерений, строит распределения искажений по конструкции и запоминает такие распределения. Это позволяет контролировать проявление дефектов в течение вибропрочностных испытаний, а также эксплуатации конструкции путем сравнения полей параметра искажений~\figref{subfig:finder-interface-compare}, записанных для разных состояний изделий. Кроме того, в программе заложена возможность построения искажений портретов колебаний для отдельных агрегатов и узлов сопряжения конструкции, что необходимо, например, для поэтапного контроля дефектов.
 
+\def\sfDefects{0.49\textwidth}
+
 \begin{figure}[!htb]
 	\centering
-	\begin{subfigure}{0.49\textwidth}
+	\begin{subfigure}[t]{\sfDefects}
 		\includegraphics[width = 1\textwidth]{finder-interface-single}
 		\caption{Режим одиночного расчета} \label{subfig:finder-interface-single}
 	\end{subfigure}
 	\hfill
-	\begin{subfigure}{0.49\textwidth}
+	\begin{subfigure}[t]{\sfDefects}
 		\includegraphics[width = 1\textwidth]{finder-interface-compare} 
 		\caption{Режим сравнения} \label{subfig:finder-interface-compare}
 	\end{subfigure}
     \caption{Графический интерфейс программы} 
 \end{figure}
 
-Для сохранения результирующих форм и портретов колебаний в навигаторе рабочего проекта~\figref{fig:finder-results-structure}, программа использует интерфейс \name{Testlab Automation}.
-
-\begin{figure}[H]
-	\centerfloat
-	\includegraphics[width = 0.8\linewidth]{finder-results-structure}
-	\caption{Расположение результатов работы программы в дереве навигатора проекта \name{Simcenter Testlab}} \label{fig:finder-results-structure}
-\end{figure}
+Для сохранения результирующих форм и портретов колебаний в навигаторе рабочего проекта, программа использует интерфейс \name{Testlab Automation}.
 
 \subsection{Применение методики для диагностирования зазоров и люфтов}
 
 Методика обнаружения зазоров по искажениям портретов колебаний была использована для диагностирования самолетов в процессе модальных испытаний, а также космических аппаратов открытого исполнения в технологических вибрационных испытаниях. 
 
-На рисунках~\ref{fig:distortion-airplane-forewing}~--~\ref{fig:distortion-vertical-stabilizer} приведены примеры распределений искажений портретов колебаний, полученные в модальных испытаниях нескольких самолётов. Здесь и далее на рисунках красной цветовой гамме соответствуют области изделий с наибольшими искажениями, а синей~---~с наименьшими. 
+На рисунках~\ref{fig:distortion-airplane}~--~\ref{fig:distortion-conjunction-excluded} приведены примеры распределений искажений портретов колебаний, полученные в модальных испытаниях нескольких самолётов. Здесь и далее на рисунках красной цветовой гамме соответствуют области изделий с наибольшими искажениями, а синей~---~с наименьшими. 
 
 \begin{figure}[!htb]
 	\centerfloat
-	\includegraphics[width = 0.5\linewidth]{distortion-airplane-forewing}
-	\caption{Зазоры в узлах крепления переднего горизонтального оперения (ПГО). Глобальная нормировка искажений на частоте вращения ПГО} \label{fig:distortion-airplane-forewing}
-\end{figure}
-
-\begin{figure}[!htb]
-	\centerfloat
-	\includegraphics[width = 0.5\linewidth]{distortion-airplane-stabilizer}
-	\caption{Зазоры в узлах крепления цельноповоротного стабилизатора. Глобальная нормировка искажений на частоте вращения стабилизатора} \label{fig:distortion-airplane-stabilizer}
+	\begin{subfigure}[t]{\sfDefects}
+		\includegraphics[width = 0.75\textwidth]{distortion-airplane-forewing}
+		\caption{Переднего горизонтального оперения}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[t]{\sfDefects}
+		\includegraphics[width = 1\textwidth]{distortion-airplane-stabilizer} 
+		\caption{Цельноповоротного стабилизатора}
+	\end{subfigure}
+    \caption{Зазоры в узлах крепления оперения. Глобальная нормировка искажений} \label{fig:distortion-airplane}
 \end{figure}
 
 \begin{figure}[!htb]
@@ -212,18 +190,52 @@
 	\caption{Зазоры в проводке управления рулем высоты и триммером. Глобальная нормировка искажений портретов колебаний \\ a) датчики на ручке управления, b) искажения на руле высоты и триммере} \label{fig:distortion-wiring-gap}
 \end{figure}
 
-На рисунке~\ref{fig:distortion-vertical-stabilizer} показаны распределения искажений портретов колебаний вертикального оперения самолёта. В передних болтовых соединениях киля с фюзеляжем обнаружены повышенные зазоры в поперечном направлении. 
-
 \begin{figure}[!htb]
 	\centerfloat
 	\includegraphics[width = 0.6\linewidth]{distortion-wiring-backlash}
 	\caption{Люфт в соединении ручки управления с проводкой. Глобальная нормировка искажений портретов колебаний} \label{fig:distortion-wiring-backlash}
 \end{figure}
 
+Из представленных результатов следует, что планеры самолетов являются линейно деформируемыми конструкциями. Нелинейные искажения портретов соответствуют колебаниям отклоняемых поверхностей. Необходимо отметить, что представленные результаты не являются частным случаем. На рисунке~\ref{fig:distortion-compare-mitten} приведены распределения искажений портретов колебаний самолетов на разных резонансных частотах нескольких собственных форм колебаний планера. Видно, что качественно результаты практически не отличаются~---~максимальные искажения портретов колебаний соответствуют отклоняемым поверхностям.
+
 \begin{figure}[!htb]
 	\centerfloat
-	\includegraphics[width = 0.3\linewidth]{distortion-vertical-stabilizer}
-	\caption{Зазоры в передних узлах крепления киля. Локальная нормировка искажений} \label{fig:distortion-vertical-stabilizer}
+	\begin{subfigure}[t]{\sfDefects}
+		\includegraphics[width = 1\textwidth]{distortion-compare-mitten-1}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[t]{\sfDefects}
+		\includegraphics[width = 1\textwidth]{distortion-compare-mitten-2} 
+	\end{subfigure} \\ 
+	\begin{subfigure}[t]{\sfDefects}
+		\vspace{-0.2cm}
+		\includegraphics[width = 1\textwidth]{distortion-compare-mitten-3} 
+	\end{subfigure}
+    \caption{Распределения искажений портретов колебаний для различных резонансных частот планера} \label{fig:distortion-compare-mitten}
+\end{figure}
+
+Зазоры, в том числе предусмотренные конструкторской документацией, имеют место и в узлах соединения агрегатов планера. В приведённом примере~\figref{subfig:distortion-compare-conjunction-1} видно, что максимумы искажений приходятся не только на отклоняемые поверхности, но и на концевые части крыла. Если нормировать величины искажений к амплитуде первой гармоники в каждой точке измерения, получится следующее: максимумы искажений соответствуют отклоняемым поверхностям и корневым частям крыла~\figref{subfig:distortion-compare-conjunction-2}.
+
+\begin{figure}[!htb]
+	\centerfloat
+	\begin{subfigure}[t]{\sfDefects}
+		\includegraphics[width = 1\textwidth]{distortion-compare-conjunction-1} 
+		\caption{Глобальная нормировка} \label{subfig:distortion-compare-conjunction-1}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[t]{\sfDefects}
+		\includegraphics[width = 1\textwidth]{distortion-compare-conjunction-2} 
+		\caption{Локальная нормировка} \label{subfig:distortion-compare-conjunction-2}
+	\end{subfigure}
+    \caption{Распределения искажений портретов колебаний для многоцелевого самолета} \label{fig:distortion-compare-conjunction}
+\end{figure}
+
+Поскольку в проводках управления и узлах установки флаперонов и стабилизаторов могут быть зазоры, исключим их из рассмотрения. Полученное распределение искажений портретов колебаний~\figref{fig:distortion-conjunction-excluded} указывает на наличие зазоров в узлах стыковки отъемной части крыла с фюзеляжем. По конструкторской документации самолета было установлено, что нижние узлы навески крыла действительно выполняются с гарантированным зазором, допускающим перемещения в вертикальном направлении.
+
+\begin{figure}[!htb]
+	\centerfloat
+	\includegraphics[width = 0.5\linewidth]{distortion-conjuction-excluded}
+	\caption{Исключение показаний датчиков из распределения искажений портретов колебаний для многоцелевого самолета} \label{fig:distortion-conjunction-excluded}
 \end{figure}
 
 Космические аппараты (КА) в ходе создания подвергаются технологическим вибрационным испытаниям. Результаты используются для подтверждения качества спроектированной конструкции КА и обеспечения ее вибрационной прочности, в том числе для обнаружения производственно-технологических дефектов. Поскольку наибольшие вибрационные нагрузки воздействуют на КА во время его выведения на орбиту, то испытаниям подвергаются КА в стартовой конфигурации. На рисунке~\ref{fig:spacecraft-scheme} показана конструктивно-компоновочная схема КА открытого исполнения. Силовым каркасом является углепластиковой цилиндр с закрепленными на нем сотовыми плоскими панелями. Оборудование КА (антенны, солнечные батареи и т.д), а также астроплата с датчиками системы ориентации и стабилизации расположены на панелях. Для проведения испытаний КА устанавливается на адаптер, предназначенный для стыковки КА с ракетой-носителем.
@@ -232,7 +244,7 @@
 
 \begin{figure}[!htb]
 	\centerfloat
-	\includegraphics[width = 0.4\linewidth]{spacecraft-scheme}
+	\includegraphics[width = 0.35\linewidth]{spacecraft-scheme}
 	\caption{Конструктивно-компоновочная схема космического аппарата \\ 1~---~адаптер, 2~---~панель, 3~---~астроплата, 4~---~рефлекторы антенн, 5~---~панели солнечной батареи, 6~---~узел крепления солнечной батареи} \label{fig:spacecraft-scheme}
 \end{figure}
 
@@ -252,13 +264,13 @@
 
 \begin{figure}[H]
 	\centerfloat
-	\includegraphics[width = 0.5\linewidth]{antenna-scheme}
+	\includegraphics[width = 0.6\linewidth]{antenna-scheme}
 	\caption{Установка для испытаний антенны \\ 1~---~каркас, 2~---~рефлектор, 3~---~вибростенд} \label{fig:antenna-scheme}
 \end{figure}
 
 \begin{figure}[!htb]
 	\centerfloat
-	\includegraphics[width = 0.5\linewidth]{distortion-antenna}
+	\includegraphics[width = 0.45\linewidth]{distortion-antenna}
 	\caption{Искажения портретов колебаний рефлектора антенны} \label{fig:distortion-antenna}
 \end{figure}
 
@@ -268,68 +280,28 @@
 
 Для решения этой задачи авторами на языке программирования \name{C\#} была разработана программа \name{ResponseAnalyzer} для представления результатов модальных испытаний, проведенных с использованием программного комплекса \name{Simcenter Testlab}. Программная реализация использует интерфейс \name{Testlab Automation} для получения и обработки сигналов с датчиков акселерометров, геометрии и информации о ходе проведения эксперимента.
 
-Посредством графического интерфейса \figref{fig:analyzer-interface} возможен выбор как отдельных геометрических точек конструкции, так и их комбинаций, для построения амплитудно-частотных характеристик при одном~\figref{fig:analyzer-response} и разных уровней нагружения ~\figref{fig:analyzer-multi-response}, форм колебаний~\figref{fig:analyzer-modeshape}, зависимостей резонансных частот собственных колебаний от амплитуд возбуждения \figref{fig:analyzer-frequency-dependency}. Данные пользовательского выбора сохраняются в виде бинарных шаблонов, которые могут использоваться для обработки результатов повторных испытаний рассматриваемой конструкции. Формой представления результатов работы программы являются электронные таблицы \name{Excel}. В соответствии с пользовательским форматированием этих таблиц происходит размещение результатов. Так, пользователь может поставить в соответствие графическим объектам типа <<Диаграмма>> различные экспериментальные данные, определив стиль и очередность их отображения: толщину и тип линий, параметры маркеров. С целью обеспечения пользовательского контроля результатов обработки, данные, использованные для построения этих графических объектов, наряду со служебной информацией о работе программы, приводятся в одном из разделов результирующих таблиц.
+Посредством графического интерфейса~\figref{fig:analyzer-interface} возможен выбор как отдельных геометрических точек конструкции, так и их комбинаций, для построения амплитудно-частотных характеристик на одном и разных уровнях нагружения, форм колебаний, зависимостей резонансных частот собственных колебаний от амплитуд возбуждения. Данные пользовательского выбора сохраняются в виде бинарных шаблонов, которые могут использоваться для обработки результатов повторных испытаний рассматриваемой конструкции. Формой представления результатов работы программы являются электронные таблицы \name{Excel}. В соответствии с пользовательским форматированием этих таблиц происходит размещение результатов. Так, пользователь может поставить в соответствие графическим объектам типа <<Диаграмма>> различные экспериментальные данные, определив стиль и очередность их отображения: толщину и тип линий, параметры маркеров. С целью обеспечения пользовательского контроля результатов обработки, данные, использованные для построения этих графических объектов, наряду со служебной информацией о работе программы, приводятся в одном из разделов результирующих таблиц.
+
+\begin{figure}[!htb]
+	\centerfloat
+	\includegraphics[width = 0.8\linewidth]{analyzer-interface}
+	\caption{Графический интерфейс программы} \label{fig:analyzer-interface}
+\end{figure}
 
 Для осуществления выбора сигналов используется раздел навигации \name{Simcenter Testlab} \figref{fig:analyzer-lms-structure}. При этом пользователю доступна загрузка результатов, соответствующих как одному, так и нескольким экспериментам. Кроме того, в случае, когда необходимо исключить выбросы в экспериментальных данных и/или испытания проведены в широком частотном диапазоне, пользователю доступен выбор значений частот для формирования результирующих таблиц.
 
 Взаимодействие с геометрией исследуемого объекта осуществляется с помощью пользовательского ввода и контекстного меню \figref{fig:analyzer-geometry-selection}, в котором доступно для выбора: модель отображения конструкции (полигональная и сетчатая), модель отображения узлов (маркеры и имена), отображение отдельных конструкционных элементов, модель освещения, а также стандартные виды (изометрические и проективные).
 
-\begin{figure}[H]
+\begin{figure}[!htb]
 	\centerfloat
-	\includegraphics[width = 0.9\linewidth]{analyzer-interface}
-	\caption{Графический интерфейс программы} \label{fig:analyzer-interface}
-\end{figure}
-
-\begin{figure}[H]
-	\centerfloat
-	\includegraphics[width = 0.9\linewidth]{analyzer-geometry-selection}
+	\includegraphics[width = 0.8\linewidth]{analyzer-geometry-selection}
 	\caption{Выбор точек конструкции с помощью графического меню} \label{fig:analyzer-geometry-selection}
 \end{figure}
 
 \begin{figure}[H]
 	\centerfloat
-	\includegraphics[width = 0.9\linewidth]{analyzer-lms-structure}
+	\includegraphics[width = 0.7\linewidth]{analyzer-lms-structure}
 	\caption{Выбор сигналов для построения графических объектов посредством дерева навигации \name{Simcenter Testlab}} \label{fig:analyzer-lms-structure}
-\end{figure}
-
-\begin{figure}[H]
-	\centerfloat
-	\includegraphics[width = 0.9\linewidth]{analyzer-modeshape}
-	\caption{Построение формы колебаний изделия по тону СИК1} \label{fig:analyzer-modeshape}
-\end{figure}
-
-\begin{figure}[H]
-	\centering
-	\begin{subfigure}{0.49\textwidth}
-		\includegraphics[width = 1\textwidth]{analyzer-response-imaginary}
-		\caption{Мнимая составляющая}
-	\end{subfigure}
-	\hfill
-	\begin{subfigure}{0.49\textwidth}
-		\includegraphics[width = 1\textwidth]{analyzer-response-real}
-		\caption{Действительная составляющая}
-	\end{subfigure}
-     \caption{Отклик в крыльевых точках при изгибе изделия по тону СИК1} \label{fig:analyzer-response}
-\end{figure}
-
-\begin{figure}[H]
-	\centering
-	\begin{subfigure}{0.49\textwidth}
-		\includegraphics[width = 1\textwidth]{analyzer-multi-response-imaginary}
-		\caption{Мнимая составляющая}
-	\end{subfigure}
-	\hfill
-	\begin{subfigure}{0.49\textwidth}
-		\includegraphics[width = 1\textwidth]{analyzer-multi-response-real}
-		\caption{Действительная составляющая}
-	\end{subfigure}
-     \caption{Отклик изделия по тону вращения правого руля направления (ВрПрРН) при разных уровнях нагружения} \label{fig:analyzer-multi-response}
-\end{figure}
-
-\begin{figure}[H]
-	\centerfloat
-	\includegraphics[width = 0.6\linewidth]{analyzer-frequency-dependency}
-	\caption{Зависимость частоты от амплитуды колебаний для тона ВрПрРН} \label{fig:analyzer-frequency-dependency}
 \end{figure}
 
 \section{Операционный модальный анализ}
