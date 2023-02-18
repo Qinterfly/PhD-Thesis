@@ -73,6 +73,11 @@
     labelsep = figsep,          % Разделитель
 }
 
+% Предкомпиляция рисунков
+\ifnumequal{\value{imgprecompile}}{1}{
+	\tikzexternalize
+}{}
+
 % --- Форматирование подрисунков --- %
 
 % Нумерация
