@@ -12,7 +12,11 @@
 
 % --- Отключение микротипографики --- %
 
-\ifdefmacro{\microtypesetup}{\microtypesetup{protrusion=false}}{} 
+\ifdefmacro{\microtypesetup}{\microtypesetup{protrusion = false}}{} 
+
+% --- Выделение составных частей библиографической записи --- %
+
+\providecommand*{\BibEmph}[1]{\emph{#1}} % Авторы --- курсивом
 
 % --- Подключаем Bib-базы --- %
 
@@ -23,7 +27,7 @@
 
 % --- Включение микротипографики --- %
 
-\ifdefmacro{\microtypesetup}{\microtypesetup{protrusion=true}}{}
+\ifdefmacro{\microtypesetup}{\microtypesetup{protrusion = true}}{}
 
 % --- Возвращаем установки шрифта ссылок URL --- %
 
