@@ -259,7 +259,53 @@
 
 \begin{figure}[!htb]
 	\centerfloat
-	\includegraphics[width = 0.7\linewidth]{simsat-estimation-scheme}
+	\begin{tikzpicture}[scale = 1, > = stealth]
+		% Задание переменных
+		\pgfmathsetmacro{\L}{12} 
+		\pgfmathsetmacro{\angle}{20}
+		\pgfmathsetmacro{\RPoint}{0.1}
+		% Стили
+		\tikzstyle{lineStart} = [fill = blue!15]
+		\tikzstyle{point} = [draw = black!50, fill = black!20, thick, inner sep = 0pt, minimum size = 2mm]
+		\tikzstyle{basedim} = [<->, very thick]
+		\tikzstyle{curlydim} = [decorate, very thick]
+		\tikzstyle{beamdim} = [curlydim, decoration = {calligraphic brace, mirror, raise = 5pt, amplitude = 6pt}]
+		% Недеформированная балка
+		\begin{scope}[dashed, thin, color = black, scale = 2]
+			\point{s}{0}{0}; \support{3}{s}[-90];
+		\end{scope}
+		\draw[very thick, black] (0, 0) coordinate (orig) -- (\L, 0) coordinate (endInit);
+		% Деформированная балка
+		\begin{scope}[scale = 2, blue]
+			\point{sr}{0}{0}; \support{3}{sr}[-90-\angle];
+		\end{scope}
+		\draw[ultra thick, blue] (0, 0) .. controls (3, -0.35) and (6, -1) .. (11.3, -2.5);
+		% Повернутая балка
+		\draw[thick, black] (0, 0) -- (11.75, -1.3) coordinate (endRot);
+		% Точки
+		\draw[point] (9, 0) circle (\RPoint) node (B) [above right = 2mm] {$ B $};
+		\draw[point] (11, 0) circle (\RPoint) node (A) [above right = 2mm] {$ A $};
+		% Размеры
+			% A
+		\draw[basedim] (10.5, -2.2) -- (10.7, -1.25) node [midway, left = 0.5mm] {$ y_A $};
+		\draw[beamdim] (10.5, -2.2) -- (11, 0) node [midway, above right, xshift = 3.5mm, yshift = -2mm] {$ Y_A $};
+			% B
+		\draw[basedim] (8.6, -1.75) -- (8.8, -1) node [midway, left = 0.5mm, yshift = 0.1mm] {$ y_B $};
+		\draw[beamdim] (8.6, -1.75) -- (9, 0) node [midway, above right, xshift = 3.5mm, yshift = -2mm] {$ Y_B $};
+			% До точек
+		\draw[curlydim, decoration = {calligraphic brace, raise = 3pt, amplitude = 15pt}] (0, 0) -- (9, 0) node [midway, above = 3mm, xshift = 5mm] {$ l_B $};
+		\draw[curlydim, decoration = {calligraphic brace, raise = 3pt, amplitude = 45pt}] (0, 0) -- (11, 0) node [midway, above = 12mm, xshift = 6mm, yshift = 0mm] {$ l_A $};
+		% Нагрузка
+		\draw[line width = 3pt, ->] (\L, 2.5) -- (\L, 0) node [midway, right] { $ P $ };
+		\draw[basedim] (0, 2.25) --++ (\L, 0) node [midway, above = 0.5mm] {$ l_P $};
+		\draw (0, 0) -- (0, 2.5);
+		% Угол
+		\draw pic [draw, <-, very thick, angle radius = 6cm] {angle = endRot--orig--endInit};
+		\draw (6.3, -0.35) node {$ \alpha $};
+		\draw (0, 1) coordinate (startSup) -- (orig) -- (0.75, 2) coordinate (endSup)
+        	pic [draw, <-, very thick, angle radius = 1.5cm] {angle = endSup--orig--startSup};
+        \draw (0.3, 1.75) node {$ \alpha $};
+	\end{tikzpicture}
 	\caption{Расчетная схема <<жесткости заделки>>} \label{fig:simsat-estimation-scheme}
 \end{figure}
 
@@ -275,32 +321,63 @@
 
 Для такой модели можно получить выражения для размера пластины  и жесткости пружин:
 \begin{equation}
-	a = b \sqrt{\frac{P_1}{P_2} \frac{\ell_1}{\ell_2} \frac{\sin \alpha_2}{\sin \alpha_1}}, \ c = \frac{P_1 \ell_1}{a ^ 2 \sin \alpha_1}.
+	a = b \sqrt{\frac{P_1}{P_2} \frac{\ell_1}{\ell_2} \frac{\sin \alpha_2}{\sin \alpha_1}}, \ c = \frac{P_1 \ell_1}{a ^ 2 \sin \alpha_1}. \label{eq:simsat-estimation-final}
 \end{equation}
 
-\begin{figure}[!htb]
-	\centering
-	\includegraphics[width = 0.5\linewidth]{simsat-fixture-scheme}
-	\caption{Модель <<упругой заделки>> для штанги} \label{fig:simsat-fixture-scheme}
-\end{figure}
-
-На рисунке~\ref{fig:simsat-static-experiment} приведена схема проведенного статического эксперимента для определения параметров жесткости крепления штанги к стене.
-
-\begin{figure}[!htb]
-	\centering
-	\begin{subfigure}[b]{0.49\textwidth}
-		\centering
-		\includegraphics[width = \textwidth]{simsat-static-experiment-1}
-	\end{subfigure}
-	\hfill
-	\begin{subfigure}[b]{0.5\textwidth}
-		\centering
-		\includegraphics[width = \textwidth]{simsat-static-experiment-2}
-	\end{subfigure}	
-	\caption{Схема статического эксперимента для определения жесткости закрепления штанги} \label{fig:simsat-static-experiment}
-\end{figure}
+Для определения параметров жесткости крепления штанги к стене была проведена пара статических экспериментов. Нагрузка прикладывалась в концевом сечении штанги вдоль осей $ \mathrm{Y} $ и $ \mathrm{Z} $ соответственно. Регистрация перемещений велась в двух сечениях по длине штанги в соответствии со схемой~\ref{fig:simsat-fixture-scheme}. Экспериментальные данные использованы для определения параметров упругого основания по формулам~\eqref{eq:simsat-estimation-final}.
 
 По рассчитанным данным была создана конечно-элементная модель в \name{Ansys}, геометрия которой представлена на рисунке~\ref{fig:simsat-handle-result}. В таблице~\ref{tab:simsat-handle-experiment} сведены первые семь частот собственных колебаний, рассчитанных по модели с <<нормальной (идеальной) заделкой>>, с <<упругой заделкой>> и определенные экспериментально. Из таблицы видно, что учет упругости закрепления позволил снизить частоты, но они всё равно остались выше определенных экспериментально, что не противоречит теории.
+
+\begin{figure}[!htb]
+	\centerfloat
+	\begin{tikzpicture}[scale = 1, isometric]
+		% Задание переменных
+		\pgfmathsetmacro{\width}{8}
+		\pgfmathsetmacro{\height}{5}
+		\pgfmathsetmacro{\length}{3}
+		\pgfmathsetmacro{\hWall}{2}
+		\pgfmathsetmacro{\dWall}{0.5}
+		\pgfmathsetmacro{\hFixS}{2}
+		\pgfmathsetmacro{\hFixE}{1}
+		\pgfmathsetmacro{\wFix}{2.5}
+		\pgfmathsetmacro{\sD}{2}
+		\pgfmathsetmacro{\eD}{0.4}
+		\pgfmathsetmacro{\op}{0.95}
+		% Стили
+		\tikzstyle{plate} = [ultra thick, fill = blue!30, draw = black, opacity = \op]
+		\tikzstyle{fixture} = [ultra thick, fill = green!10, draw = black, opacity = \op]
+		\tikzstyle{spring} = [thick, color = black, decoration = {aspect = 0.3, segment length = 3mm, amplitude = 3mm, coil}, decorate]
+		\tikzstyle{wall} = [pattern = north west lines, pattern color = black]
+		% Координаты пластины
+		\coordinate (lb) at (-\width/2, 0, 0);
+		\coordinate (lt) at (-\width/2, \height, 0);
+		\coordinate (rb) at (\width/2, 0, 0);
+		\coordinate (rt) at (\width/2, \height, 0);
+		% Пружины
+		\draw[spring] (rt) --++ (0, 0, -\length) coordinate (rtw) node [midway, above left = 2mm] { $ c $ };
+		\draw[wall] (rtw) ++ (0, \hWall/2, 0) --++ (0, -\hWall, 0) --++ (0, 0, -\dWall) --++ (0, \hWall, 0) -- cycle;
+		\draw[spring] (rb) --++ (0, 0, -\length) coordinate (rbw) node [midway, above left = 2mm] { $ c $ };
+		\draw[wall] (rbw) ++ (0, \hWall/2, 0) --++ (0, -\hWall, 0) --++ (0, 0, -\dWall) --++ (0, \hWall, 0) -- cycle;
+		\draw[spring] (lt) --++ (0, 0, -\length) coordinate (ltw) node [midway, above left = 2mm] { $ c $ };
+		\draw[wall] (ltw) ++ (0, \hWall/2, 0) --++ (0, -\hWall, 0) --++ (0, 0, -\dWall) --++ (0, \hWall, 0) -- cycle;
+		\draw[spring] (lb) --++ (0, 0, -\length) coordinate (lbw) node [midway, above left = 2mm] { $ c $ };
+		\draw[wall] (lbw) ++ (0, \hWall/2, 0) --++ (0, -\hWall, 0) --++ (0, 0, -\dWall) --++ (0, \hWall, 0) -- cycle;
+		% Пластина
+		\draw[plate] (lb) -- (lt) -- (rt) -- (rb) -- cycle;
+		% Крепление
+		\draw[fixture] (-\width/15, \height/4, 0) --++ (0, 0, \wFix) --++ (0, \hFixE, 0) --++ (0, -\hFixE+\hFixS, -\wFix) -- cycle;
+		\draw[fixture] (\width/15, \height/4, 0) --++ (0, 0, \wFix) --++ (0, \hFixE, 0) --++ (0, -\hFixE+\hFixS, -\wFix) -- cycle;
+		% Вспомогательные линии для размеров
+		\draw (lb) --++ (0, -\sD-\eD, 0);
+		\draw (rb) --++ (0, -\sD-\eD, 0);
+		\draw (lb) --++ (-\sD-\eD, 0, 0);
+		\draw (lt) --++ (-\sD-\eD, 0, 0);
+		% Размеры
+		\draw[dim<->] (-\width/2, -\sD, 0) --++ (\width, 0, 0) node[midway, below] {$ b $};
+		\draw[dim<->] (-\width/2-\sD, 0, 0) --++ (0, \height, 0) node[midway, left] {$ a $};
+	\end{tikzpicture}
+	\caption{Модель <<упругой заделки>> для штанги} \label{fig:simsat-fixture-scheme}
+\end{figure}
 
 \begin{longtblr}[
 	caption = {Частоты собственных колебаний колебаний штанги}, 
