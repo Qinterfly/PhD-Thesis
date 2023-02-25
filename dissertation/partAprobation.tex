@@ -237,7 +237,7 @@
 
 \begin{figure}[!htb]
 	\centerfloat
-	\includegraphics[width = 1\linewidth]{simsat-assembly-mesh}
+	\includegraphics[width = 0.8\linewidth]{simsat-assembly-mesh}
 	\caption{КЭ-модель имитационной модели в Ansys} \label{fig:simsat-assembly-mesh}
 \end{figure}
 
@@ -403,13 +403,13 @@
 
 \begin{figure}[!htb]
 	\centering
-	\begin{subfigure}[t]{0.44\textwidth}
+	\begin{subfigure}[t]{0.46\textwidth}
 		\centering
 		\includegraphics[width = \textwidth]{simsat-handle-model}
 		\caption{Конечно-элементная сетка}
 	\end{subfigure}
 	\hfill
-	\begin{subfigure}[t]{0.55\textwidth}
+	\begin{subfigure}[t]{0.49\textwidth}
 		\centering
 		\includegraphics[width = \textwidth]{simsat-handle-coeffs}
 		\caption{Распределение корректирующих жесткостей по узлам}
@@ -455,7 +455,7 @@
 		\caption{Изменение MAC-критерия по абсолютному значению} \label{subfig:simsat-MAC-absolute}
 	\end{subfigure}
 	\hfill
-	\begin{subfigure}[t]{0.49\textwidth}
+	\begin{subfigure}[t]{0.47\textwidth}
 		\centering
 		\includegraphics[width = \textwidth]{simsat-MAC-relative}
 		\caption{Значения MAC-критерия между исходной и скорректированной моделью} \label{subfig:simsat-MAC-relative}
@@ -469,21 +469,20 @@
 	caption = {Результаты полноразмерной коррекции, освобождения и ассемблирования при различном числе корректируемых тонов колебаний}, 
 	label = {tab:simsat-full-results}
 ]{
-	colspec = {|X[c, 2.25]|X[c]|X[c]|X[c]|X[c]|X[c]|X[c]|X[c]|X[c]|X[c]|}, 
-	width = \textwidth, 
-	rows = {font = \footnotesize},
+	colspec = {|X[c, 1.4]|X[c]|X[c]|X[c]|X[c]|X[c]|X[c]|X[c]|X[c]|X[c]|}, 
+	width = \textwidth,
 	hlines
 }
-	{Номера \\ корректируемых \\ частот} & \SetCell[c = 9]{c} {Погрешности частот скорректированной ассемблированной \\ модели по сравнению с частотами из эксперимента, \%} \\
-	Штанги & 1 & 1,2 & 1-3 & 1-4 & 1-3 & 1-3 & 1-3 & 1-3 & 1-4 \\
-	Антенны & \SetCell[c = 4]{c} --- &&& & 1 & 1, 2 & 1, 15 & 1, 2, 15 & 1, 15 \\ \hline
-	1 & -0.898 & -0.898 & 0.699 & 0.702 & 0.699 & 0.699 & 0.699 & 0.699 & 0.702 \\
-	2 & 1.158 & 1.472 & 1.47 & -0.325 & 1.41 & 1.434 & 1.39 & 1.395 & -0.403 \\
-	3 & 1.5 & 1.5 & 1.235 & 1.237 & 1.233 & 1.214 & 1.233 & 1.213 & 1.235 \\
-	4 & 1.403 & 1.403 & 1.181 & 1.183 & 1.18 & 1.169 & 1.181 & 1.168 & 1.182 \\
-	5 & 1.436 & 1.487 & 1.489 & 2.733 & 0.91 & 1.156 & 0.714 & 0.778 & 1.947 \\ 
-	6 & 3.286 & 3.287 & 3.287 & 3.476 & 3.22 & 3.215 & 3.213 & 3.206 & 3.411 \\ 
-	7 & 3.639 & 3.639 & 3.639 & 3.639 & 3.639 & 3.639 & 3.639 & 3.639 & 3.639 \\ 
+	{Номера \\ тонов} & \SetCell[c = 9]{c} {Погрешности частот скорректированной ассемблированной \\ модели по сравнению с частотами из эксперимента, \%} \\
+	Штанги & 1 & 1,\,2 & 1\,--\,3 & 1\,--\,4 & 1\,--\,3 & 1\,--\,3 & 1\,--\,3 & 1\,--\,3 & 1\,--\,4 \\
+	Антенны & \SetCell[c = 4]{c} --- &&& & 1 & 1,\,2 & 1,\,15 & 1,\,2,\,15 & 1,\,15 \\ \hline
+	1 & -0.90 & -0.90 & 0.70 & 0.70 & 0.70 & 0.70 & 0.70 & 0.70 & 0.70 \\
+	2 & 1.16 & 1.47 & 1.47 & -0.33 & 1.41 & 1.43 & 1.39 & 1.40 & -0.40 \\
+	3 & 1.50 & 1.50 & 1.24 & 1.24 & 1.23 & 1.21 & 1.23 & 1.21 & 1.24 \\
+	4 & 1.40 & 1.40 & 1.18 & 1.18 & 1.18 & 1.17 & 1.18 & 1.17 & 1.18 \\
+	5 & 1.44 & 1.49 & 1.49 & 2.73 & 0.91 & 1.16 & 0.71 & 0.78 & 1.95 \\ 
+	6 & 3.29 & 3.29 & 3.29 & 3.48 & 3.22 & 3.22 & 3.21 & 3.21 & 3.41 \\ 
+	7 & 3.64 & 3.64 & 3.64 & 3.64 & 3.64 & 3.64 & 3.64 & 3.64 & 3.64 \\ 
 \end{longtblr}
 
 Можно видеть, что наибольшее влияние на частоты ассемблированной модели оказывает коррекция штанги, в то время как коррекция зонтичного каркаса приводит лишь к небольшому снижению результирующих погрешностей.
@@ -498,7 +497,7 @@
 
 \begin{figure}[H]
 	\centerfloat
-	\includegraphics[width = 0.8\linewidth]{wing-experiment}
+	\includegraphics[width = 0.6\linewidth]{wing-experiment}
 	\caption{Общий вид ОЧК изделия \mbox{С-70} на упругой подвеске} \label{fig:wing-experiment}
 \end{figure}
 
@@ -520,19 +519,19 @@
 
 \begin{figure}[!htb]
 	\centerfloat
-	\includegraphics[width = 1\linewidth]{wing-geometry-beams}
+	\includegraphics[width = 0.85\linewidth]{wing-geometry-beams}
 	\caption{Геометрическая модель балочного каркаса}\label{fig:wing-geometry-beams}
 \end{figure}
 
 \begin{figure}[!htb]
 	\centerfloat
-	\includegraphics[width = 1\linewidth]{wing-geometry-panels}
+	\includegraphics[width = 0.85\linewidth]{wing-geometry-panels}
 	\caption{Геометрическая модель обшивки}\label{fig:wing-geometry-panels}
 \end{figure}
 
-\begin{figure}[!htb]
+\begin{figure}[H]
 	\centerfloat
-	\includegraphics[width = 1\linewidth]{wing-mesh}
+	\includegraphics[width = 0.85\linewidth]{wing-mesh}
 	\caption{Конечно-элементная модель ОЧК} \label{fig:wing-mesh}
 \end{figure}
 
@@ -569,13 +568,12 @@
 	caption = {Результаты коррекции ОЧК}, 
 	label = {tab:wing-results}
 ]{
-	colspec = {|X[c, -1]|X[c, 1.4]|X[c]|X[c]|X[c]|X[c]|X[c]|X[c]|X[c]|}, 
+	colspec = {|c|c|c|X[c]|X[c]|X[c]|X[c]|X[c]|X[c]|}, 
 	width = \textwidth, 
-	rows = {font = \footnotesize},
 	hlines
 }
 	\SetCell[r = 3]{c} Тон & \SetCell[c = 2]{c} Приведенная частота && \SetCell[c = 6]{c} Погрешность до и после коррекции, \% \\
-	& \SetCell[r = 2]{c} Эксперимент & \SetCell[r = 2]{c} Исходная модель & \SetCell[r = 2]{c} До & \SetCell[c = 5]{c}После \\
+	& \SetCell[r = 2]{c} Эксперимент & \SetCell[r = 2]{c} {Исходная \\ модель} & \SetCell[r = 2]{c} До & \SetCell[c = 5]{c}После \\
 	& & & & 1 & 2 & 3 & 4 & 5 \\ \hline
 	1 & 1.00 & 1.51 & 50.7 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 \\ 
 	2 & 2.28 & 3.18 & 39.5 & -7.4 & 0.0 & 0.0 & 0.0 & 0.0 \\ 
@@ -640,7 +638,7 @@
 
 \begin{figure}[H]
 	\centerfloat
-	\includegraphics[width = 0.7\linewidth]{wing-MAC}
+	\includegraphics[width = 0.6\linewidth]{wing-MAC}
 	\caption{Таблица соответствия форм колебаний до и после коррекции} \label{fig:wing-MAC}
 \end{figure}
 
@@ -742,9 +740,9 @@
 	11 & 242.24 & 253.51 & 4.65 & \\
 \end{longtblr}
 
-Наибольшие изменения узловых жесткостей~\figref{fig:girder-coeffs} достигаются в местах сопряжения конструктивных элементов гирдера. Минимальный критерий модального соответствия, связывающий формы колебания до и после коррекции, составил $ 0.9411 $. 
+Наибольшие изменения узловых жесткостей~\figref{fig:girder-coeffs} достигаются в местах сопряжения конструктивных элементов гирдера. Минимальный критерий модального соответствия, связывающий формы колебания до и после коррекции, составил $ 0.9411 $~\figref{fig:girder-MAC}. 
 
-\begin{figure}[H]
+\begin{figure}[!htb]
 	\centering
 	\begin{subfigure}[t]{\sfGirder}
 		\centering
@@ -758,6 +756,12 @@
 		\caption{Относительно коррекции по одной частоте} 
 	\end{subfigure}	
 	\caption{Распределения изменений узловых жестокостей по всем линейным степеням свободы КЭ-модели до и после коррекции по шести упругим тонам собственных колебаний} \label{fig:girder-coeffs}
+\end{figure}
+
+\begin{figure}[!htb]
+	\centering
+	\includegraphics[width = 0.6\linewidth]{girder-MAC}
+	\caption{Таблица соответствия форм колебаний до и после коррекции} \label{fig:girder-MAC}
 \end{figure}
 
 \section{Выводы по главе \thechapter}

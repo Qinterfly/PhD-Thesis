@@ -1324,12 +1324,12 @@ m_{n,1} & \hdots & m_{n,n}
 Воспользуемся изложенным алгоритмом для анализа чувствительности метода коррекции на примере свободной прямоугольной пластины. Ограничим предельный уровень вносимых ошибок пятью процентами. На рисунке~\ref{fig:perturbation-plate} показаны зависимости, полученные при разном числе корректируемых тонов собственных колебаний. При этом точки, составляющие эти зависимости, определены путем многократного проведения независимых испытаний на одном уровне шума. Число этих испытаний, которое потребовалось для стабилизации центрального момента критерия модального соответствия, приведено на рисунке~\ref{fig:perturbation-plate-samplesize}. Получаемые погрешности в формах колебаний отображены на рисунке~\ref{fig:perturbation-plate-convergence}. Можем видеть, что метод устойчив во всем диапазоне вносимых отклонений. Более того, при увеличении числа тонов кривые стремятся к предельной образующей. Аналогичный результат был получен и для другой модельной конструкции~---~балочной.
 
 \begin{figure}[!htb]
-	\begin{subfigure}[b]{0.46\textwidth}
+	\begin{subfigure}[b]{0.48\textwidth}
 		\includegraphics[width = \textwidth]{perturbation-plate-convergence}
 		\caption{Погрешность определения форм колебаний в зависимости от погрешности целевых частот} \label{fig:perturbation-plate-convergence}
 	\end{subfigure}
 	\hfill
-	\begin{subfigure}[b]{0.48\textwidth}
+	\begin{subfigure}[b]{0.49\textwidth}
 		\includegraphics[width = \textwidth]{perturbation-plate-samplesize}
 		\caption{Число независимых испытаний в зависимости от погрешности целевых частот} \label{fig:perturbation-plate-samplesize}
 	\end{subfigure}
@@ -1340,7 +1340,7 @@ m_{n,1} & \hdots & m_{n,n}
 
 \begin{figure}[!htb]
 	\centering
-	\includegraphics[width = 0.65\textwidth]{perturbation-plate-distribution}
+	\includegraphics[width = 0.6\textwidth]{perturbation-plate-distribution}
 	\caption{Распределение изменений узловых жесткостей по всем линейным степеням свободы при одновременной коррекции пластины по девяти тонам собственных колебаний} \label{fig:perturbation-plate-distribution}
 \end{figure}
 
@@ -1348,12 +1348,12 @@ m_{n,1} & \hdots & m_{n,n}
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width = 0.9\textwidth]{spacecraft-full-mesh}
+	\includegraphics[width = 0.85\textwidth]{spacecraft-full-mesh}
 	\caption{Конечно-элементная модель тестового космического аппарата} \label{fig:spacecraft-full-mesh}
 \end{figure}
 
 \begin{figure}[!htb]
-	\begin{subfigure}[b]{0.46\textwidth}
+	\begin{subfigure}[b]{0.49\textwidth}
 		\includegraphics[width = \textwidth]{perturbation-spacecraft-convergence}
 		\caption{Погрешность определения форм колебаний в зависимости от погрешности целевых частот} \label{fig:perturbation-spacecraft-convergence}
 	\end{subfigure}
@@ -1377,7 +1377,7 @@ m_{n,1} & \hdots & m_{n,n}
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width = 0.8\textwidth]{perturbation-spacecraft-mac}
+	\includegraphics[width = 0.7\textwidth]{perturbation-spacecraft-mac}
 	\caption{Значения MAC-критерия между исходной и скорректированной моделью космического аппарата} \label{fig:perturbation-spacecraft-mac}
 \end{figure}
 
@@ -1541,9 +1541,11 @@ m_{n,1} & \hdots & m_{n,n}
 
 \begin{figure}[!htb]
 	\centering
-	\includegraphics[width = 0.5\linewidth]{test-spacecraft-convergence}
+	\includegraphics[width = 0.55\linewidth]{test-spacecraft-convergence}
 	\caption{Сходимость частотного критерия при коррекции орбитального модуля и панелей солнечных батарей}  \label{fig:test-spacecraft-convergence}
 \end{figure}
+
+Время одновременной коррекции орбитального модуля по двум экспериментам составило $ 27 $ минут, а время коррекции панелей солнечных батарей~---~$ 2 $ минуты.
 
 \section{Программная реализация методик коррекции, освобождения и синтеза}
 
