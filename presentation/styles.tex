@@ -64,6 +64,7 @@
 \fboxsep=0.5mm                        % Величина смещения рамки
 \fboxrule=1pt                         % Толщина линии рамки
 \setbeamertemplate{caption}[numbered] % Включение нумерации
+\setlength\abovecaptionskip{0pt}	  % Отступ до подписки рисунка
 
 % --- Настройки библиографии --- % 
 
@@ -82,6 +83,10 @@
 \makeatother
 
 \newcommand{\itemi}{\item[\checkmark]}
+
+% --- Настройка сносок --- %
+
+\renewcommand{\thefootnote}{[\arabic{footnote}]}
 
 % --- Разметка нижнего колонтитула --- %
 
