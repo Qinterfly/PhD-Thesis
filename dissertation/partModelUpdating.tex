@@ -1394,7 +1394,7 @@ m_{n,1} & \hdots & m_{n,n}
 	\hfill
 	\begin{subfigure}[b]{0.45\textwidth}
 	     % Определение стиля
-        \tikzstyle{blockWide} = [rectangle, draw = black, fill = blue!15, rounded corners, text width = 22em, text centered, minimum height = 1.5em, drop shadow] 
+        \tikzstyle{blockWide} = [rectangle, draw = black, fill = blue!15, rounded corners, text width = 20em, text centered, minimum height = 1.5em, drop shadow] 
         \tikzstyle{blockWideC} = [blockWide, fill = red!20]
         \tikzstyle{arrow} = [draw, thick, color = black!90, -latex'] 
         \scriptsize 
@@ -1404,10 +1404,10 @@ m_{n,1} & \hdots & m_{n,n}
         \begin{tikzpicture}[scale = 1, transform shape]
             % Задание узлов		
             \node (modalTests) [blockWide] {Модальные испытания \\ составных частей конструкции};
-            \node (modelUpdating) [blockWide, below = \nodeDist of modalTests] {Коррекция математических моделей составных частей \\ конструкции по результатам испытаний};
-            \node (checkInfluence) [blockWide, below = \nodeDist of modelUpdating] {Освобождение математических моделей \\ составных частей конструкции};
-            \node (buildRealModel) [blockWide, below = \nodeDist of checkInfluence] {Синтез математической модели полной \\ конструкции из её составных частей};
-            \node (buildMathModel) [blockWide, below = \nodeDist of buildRealModel] {Определение динамических характеристик полной математической модели};
+            \node (modelUpdating) [blockWide, below = \nodeDist of modalTests] {Коррекция расчетных моделей \\ составных частей  конструкции \\ по результатам испытаний};
+            \node (checkInfluence) [blockWide, below = \nodeDist of modelUpdating] {Освобождение расчетных моделей \\ составных частей конструкции};
+            \node (buildRealModel) [blockWide, below = \nodeDist of checkInfluence] {Синтез расчетной модели полной \\ конструкции из её составных частей};
+            \node (buildMathModel) [blockWide, below = \nodeDist of buildRealModel] {Определение динамических \\ характеристик полной расчетной модели};
             % Соединение узлов
             \draw [arrow] (modalTests.south) -- (modelUpdating.north);
             \draw [arrow] (modelUpdating.south) -- (checkInfluence.north);

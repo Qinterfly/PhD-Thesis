@@ -15,13 +15,23 @@
 	\usebeamerfont{author}\insertauthor\par
 	% Название работы
 	\vfill
-	\usebeamerfont{title}\inserttitle\par
+	\begin{beamercolorbox}[sep=8pt, center]{title}
+		\usebeamerfont{title}\inserttitle\par%
+    \end{beamercolorbox}%
 	% Данные о специальности
-	\bigskip
+	\vfill
 	\usebeamerfont{subtitle}\insertsubtitle\par
+	% Данные о научном руководителе
+	\vfill
+	\begin{flushright}
+		Научный руководитель: \\
+		\supervisorRegalia \\
+		\supervisorFio
+	\end{flushright}
 	% Дата
     \vfill
     \usebeamerfont{date}\insertdate\par
+    {\usebeamercolor[fg]{titlegraphic}\inserttitlegraphic\par}
 }
 
 % Данные полей шаблона

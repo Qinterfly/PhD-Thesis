@@ -8,12 +8,11 @@
 
 % --- Путь к изображениям --- %
 
-\graphicspath{{images/partReview/}{images/partModalAnalysis/}{images/partModelUpdating/}{images/partAprobation/}{images/appendix/}}
+\graphicspath{{images/presentation}{images/partReview/}{images/partModalAnalysis/}{images/partModelUpdating/}{images/partAprobation/}{images/appendix/}}
 
 % --- Тема оформления --- %
 
-\usetheme{Pittsburgh}
-\usecolortheme{whale}
+\usetheme{Warsaw}
 
 % --- Макет страниц --- %
 
@@ -22,6 +21,18 @@
 % --- Настройки навигации --- %
 
 \beamertemplatenavigationsymbolsempty % Отключение стрелок
+
+% --- Форматирование текста --- %
+
+% Выравнивание по ширине
+\apptocmd{\frame}{}{\justifying}{} 
+\apptocmd{\itemize}{\justifying}{}{}
+\apptocmd{\enumerate}{\justifying}{}{}
+
+% Настройка переносов
+\hyphenpenalty=10000 % Запрет переносов
+\righthyphenmin=2    % Перенос двух последний букв
+\sloppy              % Выравнивание текста по ширине
 
 % --- Параметры шрифтов --- %
 
@@ -42,7 +53,6 @@
 
 % --- Цвета структурных элементов --- %
 
-\setbeamercolor{footline}{fg = blue}
 \setbeamercolor{bibliography item}{fg = black}
 \setbeamercolor{bibliography entry author}{fg = black}
 \setbeamercolor{bibliography entry title}{fg = black}
@@ -72,17 +82,21 @@
 \setbeamertemplate{footline}{
     \leavevmode%
     \hbox{%
-    	% Автор 
-        \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{}%
-            \thesisAuthorShort, \thesisFirstOrganizationShort
+    	% Автор
+        \begin{beamercolorbox}[wd=0.28\paperwidth, ht=2.25ex, dp=1ex, center]{author in head/foot}%
+            \usebeamerfont{author in head/foot}\thesisAuthor
         \end{beamercolorbox}%
-        % Город
-        \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{}%
-            \thesisCity, \thesisYear
-        \end{beamercolorbox}%
-        % Страницы
-        \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,right]{}%
-            Стр. \insertframenumber{} из \inserttotalframenumber \hspace*{2ex}
+        % Тема и страницы
+        \begin{beamercolorbox}[wd=0.72\paperwidth, ht=2.25ex, dp=1ex, right]{title in head/foot}%
+            \thesisTitleShort\hfill\insertframenumber{}\,/\,\inserttotalframenumber\hspace*{2ex}
         \end{beamercolorbox}}%
     \vskip0pt%
 }
+
+% --- Разметка верхнего колонтитула --- %
+
+\setbeamertemplate{headline}{
+    \begin{beamercolorbox}[wd=\paperwidth, colsep=1.5pt]{lower separation line head}
+    \end{beamercolorbox}
+} 
+
