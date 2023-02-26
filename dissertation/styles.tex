@@ -19,8 +19,6 @@
 \setlength{\footskip}{12.3pt} % Снимет warning, согласно https://tex.stackexchange.com/a/334346
 
 % --- Выравнивание и переносы --- %
-%% http://tex.stackexchange.com/questions/241343/what-is-the-meaning-of-fussy-sloppy-emergencystretch-tolerance-hbadness
-%% http://www.latex-community.org/forum/viewtopic.php?p=70342#p70342
 
 \tolerance 1414
 \hbadness 1414
@@ -195,88 +193,8 @@
 
 \AfterEndPreamble{
     \regtotcounter{totalcount@figure}
-    \regtotcounter{totalcount@table}       % Если иным способом поставить в преамбуле то ошибка в числе таблиц
-    \regtotcounter{TotPages}               % Если иным способом поставить в преамбуле то ошибка в числе страниц
+    \regtotcounter{totalcount@table}  % Если иным способом поставить в преамбуле то ошибка в числе таблиц
+    \regtotcounter{TotPages}          % Если иным способом поставить в преамбуле то ошибка в числе страниц
     \newtotcounter{totalappendix}
     \newtotcounter{totalchapter}
 }
-
-% --- Определение новых сокращений --- %
-
-% Формулы
-\newcommand{\rarr}{$\rightarrow$}             % Стрелка вправо
-\newcommand{\mat}[1]{\mathbf{#1}}             % Жирные матричные символы
-\newcommand{\set}[1]{\mathbb{#1}}             % Множество
-\newcommand{\trans}[1]{#1 ^ \mathsf{T}}       % Транспонирование
-\newcommand{\rbrackets}[1]{\left( #1 \right)} % Круглые скобки
-\newcommand{\sbrackets}[1]{\left[ #1 \right]} % Квадратные скобки
-\newcommand{\cbrackets}[1]{\{ #1 \}}		  % Фигурные скобки
-\newcommand{\abs}[1]{\left| #1 \right|}       % Модуль числа
-\newcommand{\imag}{\operatorname{Im}}         % Мнимая часть числа
-\newcommand{\real}{\operatorname{Re}}         % Действительная часть числа
-\newcommand{\internal}[1]{#1 ^ {\text{int}}}  % Обозначение внутреннего элемента
-\newcommand{\external}[1]{#1 ^ {\text{ext}}}  % Обозначение внешнего элемента
-% Частная производная n-го порядка по одному аргументу
-\newcommand{\partDer}[3]{ 
-\ifthenelse{ \equal{#3}{1} \OR \equal{#3}{} }
-	{ \frac{\partial #1}{\partial #2} }
-	{ \frac{\partial^{#3} #1}{\partial #2^{#3}} }
-}
-
-% Названия
-\newcommand{\name}[1]{\texttt{#1}} 
-
-% Рисунки
-\newcommand{\figref}[1]{(рисунок~\ref{#1})} 
-
-% Таблицы
-\newcommand{\tabref}[1]{(таблица~\ref{#1})}
-
-% Приложение
-\newcommand{\appref}[1]{(приложение~\ref{#1})}
-
-% --- Начертание математических выражений --- %
-
-% Русская традиция начертания математических знаков
-\renewcommand{\le}{\ensuremath{\leqslant}}
-\renewcommand{\leq}{\ensuremath{\leqslant}}
-\renewcommand{\ge}{\ensuremath{\geqslant}}
-\renewcommand{\geq}{\ensuremath{\geqslant}}
-\renewcommand{\emptyset}{\varnothing}
-
-% Русская традиция начертания математических функций
-\renewcommand{\tan}{\operatorname{tg}}
-\renewcommand{\cot}{\operatorname{ctg}}
-\renewcommand{\csc}{\operatorname{cosec}}
-
-% Русская традиция начертания греческих букв (греческие буквы вертикальные, через пакет upgreek)
-\renewcommand{\epsilon}{\ensuremath{\upvarepsilon}}
-\renewcommand{\phi}{\ensuremath{\upvarphi}}
-%\renewcommand{\kappa}{\ensuremath{\varkappa}}
-\renewcommand{\alpha}{\upalpha}
-\renewcommand{\beta}{\upbeta}
-\renewcommand{\gamma}{\upgamma}
-\renewcommand{\delta}{\updelta}
-\renewcommand{\varepsilon}{\upvarepsilon}
-\renewcommand{\zeta}{\upzeta}
-\renewcommand{\eta}{\upeta}
-\renewcommand{\theta}{\uptheta}
-\renewcommand{\vartheta}{\upvartheta}
-\renewcommand{\iota}{\upiota}
-\renewcommand{\kappa}{\upkappa}
-\renewcommand{\lambda}{\uplambda}
-\renewcommand{\mu}{\upmu}
-\renewcommand{\nu}{\upnu}
-\renewcommand{\xi}{\upxi}
-\renewcommand{\pi}{\uppi}
-\renewcommand{\varpi}{\upvarpi}
-\renewcommand{\rho}{\uprho}
-%\renewcommand{\varrho}{\upvarrho}
-\renewcommand{\sigma}{\upsigma}
-%\renewcommand{\varsigma}{\upvarsigma}
-\renewcommand{\tau}{\uptau}
-\renewcommand{\upsilon}{\upupsilon}
-\renewcommand{\varphi}{\upvarphi}
-\renewcommand{\chi}{\upchi}
-\renewcommand{\psi}{\uppsi}
-\renewcommand{\omega}{\upomega}

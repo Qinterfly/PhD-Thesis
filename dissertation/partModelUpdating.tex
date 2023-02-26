@@ -83,7 +83,7 @@
 \begin{equation}
 	\Delta \external{\mat{K}} = \operatorname{diag} \cbrackets{\external{c}_1, \external{c}_2, \hdots, \external{c}_N},
 \end{equation}
-где $ N $~---~размерность КЭ-модели, $ \external{c} $~---~неизвестные внешние корректирующие жесткости. 
+где $ N $~---~размерность КЭ-модели, $ \external{\mat{c}} $~---~неизвестные внешние корректирующие жесткости. 
 
 Заметим, что жесткости корректирующих элементов могут быть отрицательными для изменения упругости конструкции в сторону уменьшения. При этом жесткости каждого вводимого элемента являются параметрами коррекции, которые подлежат определению из решения задачи безусловной минимизации целевой функции. Полный вектор разыскиваемых параметров записывается по всем жесткостям внутренних и внешних корректирующих элементов: $ \mat{c} = \rbrackets{\internal{\mat{c}}, \external{\mat{c}}} $.
 
@@ -1332,7 +1332,7 @@ m_{n,1} & \hdots & m_{n,n}
 		\includegraphics[width = \textwidth]{perturbation-plate-samplesize}
 		\caption{Число независимых испытаний в зависимости от погрешности целевых частот} \label{fig:perturbation-plate-samplesize}
 	\end{subfigure}
-	\caption{Результаты анализа чувствительности метода коррекции на примере свободной прямоугольной пластины} \label{fig:perturbation-plate}
+	\caption{Результаты анализа чувствительности методики коррекции на примере свободной прямоугольной пластины} \label{fig:perturbation-plate}
 \end{figure}
 
 Также было построено распределение изменений узловых жесткостей по всем линейным степеням свободы при одновременной коррекции по девяти тонам собственных колебаний~\figref{fig:perturbation-plate-distribution}. Это распределение соответствует уровню шумового воздействия в один процент. Красный цвет на рисунке соответствует областям повышения исходной жесткости, а синий~---~понижения. Черная цветовая гамма определяет области, жесткость которых осталась неизменной в ходе коррекции.
@@ -1527,7 +1527,7 @@ m_{n,1} & \hdots & m_{n,n}
 	\begin{subfigure}[t]{\sfSpacecraft}
 		\centering
 		\includegraphics[width = \textwidth]{test-spacecraft-orbital-distribution}
-		\caption{Орбитальный модуль} \label{subfig:test-orbital-distribution} 
+		\caption{Орбитальный модуль} \label{subfig:test-orbital-distribution}
 	\end{subfigure}
 	\hfill
 	\begin{subfigure}[t]{\sfSpacecraft}
