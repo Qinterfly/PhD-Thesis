@@ -1,0 +1,32 @@
+% ---------------------- %
+% --- Титульный лист --- %
+% ---------------------- %
+
+% Шаблон оформления титульной страницы
+\setbeamertemplate{title page}
+{
+	% Названия организаций
+	\centering
+	\usebeamerfont{institute}\insertinstitute\par
+	\rule{\linewidth}{0.5pt}
+	% Данные автора
+	\centering
+	\vfill
+	\usebeamerfont{author}\insertauthor\par
+	% Название работы
+	\vfill
+	\usebeamerfont{title}\inserttitle\par
+	% Данные о специальности
+	\bigskip
+	\usebeamerfont{subtitle}\insertsubtitle\par
+	% Дата
+    \vfill
+    \usebeamerfont{date}\insertdate\par
+}
+
+% Данные полей шаблона
+\institute{\thesisFirstOrganization\newline\thesisSecondOrganization}
+\author{\thesisAuthor}
+\title{\thesisTitle}
+\subtitle{Специальность \thesisSpecialtyNumber~---~\thesisSpecialtyTitle}
+\date{\thesisCity, \thesisYear}

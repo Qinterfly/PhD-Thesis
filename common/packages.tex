@@ -6,6 +6,7 @@
 
 \newif\ifsynopsis     % Условие, проверяющее, что документ является авторефератом
 \usepackage{etoolbox}
+\providebool{presentation}
 
 % --- Комментирование текста --- %
 
@@ -66,17 +67,27 @@
 \ifnumequal{\value{usealtfont}}{2}{
 	\usepackage[scaled = 0.914]{XCharter} 
 	%\usepackage[charter, vvarbb, scaled = 1.048]{newtxmath}
-	\setDisplayskipStretch{-0.078}
+	\ifpresentation
+	\else
+		\setDisplayskipStretch{-0.078}
+	\fi
 }{}
 
 % --- Оформление абзацев --- %
 
-\indentafterchapter % Красная строка после заголовков типа chapter
-\usepackage{indentfirst}
+% Красная строка после заголовков типа chapter
+\ifpresentation
+\else
+    \indentafterchapter
+    \usepackage{indentfirst}
+\fi
 
 % --- Цвета --- %
 
-\usepackage[dvipsnames, table, hyperref]{xcolor}
+\ifpresentation
+\else
+    \usepackage[dvipsnames, table, hyperref]{xcolor}
+\fi
 
 % --- Таблицы --- %
 
@@ -93,12 +104,15 @@
 
 % --- Работа со списками --- %
 
-\usepackage{enumitem}
+\ifpresentation
+\else
+	\usepackage{enumitem}
+\fi
 
 % --- Векторная графика --- %
 
-\usepackage{stanli}   % Отрисовка конструкций
-\usepackage{tikz}     % Пакет векторной изображений 
+\usepackage{stanli} % Отрисовка конструкций
+\usepackage{tikz}   % Пакет векторной изображений 
 
 % Пакеты Tikz
 \usetikzlibrary{shadows}     				% Тени
@@ -127,18 +141,21 @@
 
 % --- Счётчики --- %
 
-\usepackage{aliascnt}                 % Псевдонимы счетчиков
-\usepackage[figure,table]{totalcount} % Счётчик рисунков и таблиц
-\usepackage{totcount}                 % Пакет создания счётчиков на основе последнего номера
-                                      %  подсчитываемого элемента (может требовать дважды
-                                      %  компилировать документ)
-\usepackage{totpages}                 % Счётчик страниц, совместимый с hyperref (ссылается
-                                      %  на номер последней страницы). Желательно ставить
-                                      %  последним пакетом в преамбуле
+\usepackage{aliascnt}                  % Псевдонимы счетчиков
+\usepackage[figure, table]{totalcount} % Счётчик рисунков и таблиц
+\usepackage{totcount}                  % Пакет создания счётчиков на основе последнего номера
+                                       %  подсчитываемого элемента (может требовать дважды
+                                       %  компилировать документ)
+\usepackage{totpages}                  % Счётчик страниц, совместимый с hyperref (ссылается
+                                       %  на номер последней страницы). Желательно ставить
+                                       %  последним пакетом в преамбуле
 
 % --- Управление групповыми ссылками --- %
 
-\usepackage[russian]{cleveref}
+\ifpresentation
+\else
+	\usepackage[russian]{cleveref}
+\fi
 
 % --- При работе с черновиком --- %
 

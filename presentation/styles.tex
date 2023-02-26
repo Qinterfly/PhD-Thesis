@@ -1,0 +1,88 @@
+% ----------------------------- %
+% --- Стили для презентации --- %
+% ----------------------------- %
+
+% --- Шаблон --- %
+
+\DeclareRobustCommand{\fixme}{\textcolor{red}}
+
+% --- Путь к изображениям --- %
+
+\graphicspath{{images/partReview/}{images/partModalAnalysis/}{images/partModelUpdating/}{images/partAprobation/}{images/appendix/}}
+
+% --- Тема оформления --- %
+
+\usetheme{Pittsburgh}
+\usecolortheme{whale}
+
+% --- Макет страниц --- %
+
+\setbeamersize{text margin left = 1cm, text margin right = 1cm} % Размер полей слайдов
+
+% --- Настройки навигации --- %
+
+\beamertemplatenavigationsymbolsempty % Отключение стрелок
+
+% --- Параметры шрифтов --- %
+
+% Размеры шрифтов
+\setbeamerfont{institute}{size = \small}
+\setbeamerfont{author}{size = \large}
+\setbeamerfont{title}{size = \large}
+\setbeamerfont{subtitle}{size = \normalsize}
+\setbeamerfont{date}{size = \normalsize}
+\setbeamerfont{bibliography item}{size = \small}
+\setbeamerfont{bibliography entry author}{size = \small}
+\setbeamerfont{bibliography entry title}{size = \small}
+\setbeamerfont{bibliography entry location}{size = \small}
+\setbeamerfont{bibliography entry note}{size = \small}
+
+% Шрифты с засечками для формул
+\usefonttheme[onlymath]{serif} 
+
+% --- Цвета структурных элементов --- %
+
+\setbeamercolor{footline}{fg = blue}
+\setbeamercolor{bibliography item}{fg = black}
+\setbeamercolor{bibliography entry author}{fg = black}
+\setbeamercolor{bibliography entry title}{fg = black}
+\setbeamercolor{bibliography entry location}{fg = black}
+\setbeamercolor{bibliography entry note}{fg = black}
+
+% --- Настройки библиографии --- % 
+
+\setbeamertemplate{bibliography item}{\insertbiblabel} % Нумерация списка статей
+
+% --- Настройки гиперссылок --- %
+
+\hypersetup{
+    unicode = true, % Не латинские символы в закладках
+}
+
+% --- Настройка списков --- %
+
+\makeatletter
+\newcommand*{\rom}[1]{\expandafter\@slowromancap\romannumeral#1@}
+\makeatother
+
+\newcommand{\itemi}{\item[\checkmark]}
+
+% --- Разметка нижнего колонтитула --- %
+
+\setbeamertemplate{footline}{
+    \leavevmode%
+    \hbox{%
+    	% Автор 
+        \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{}%
+            \thesisAuthorShort, \thesisFirstOrganizationShort
+        \end{beamercolorbox}%
+        % Город
+        \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{}%
+            \thesisCity, \thesisYear
+        \end{beamercolorbox}%
+        % Страницы
+        \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,right]{}%
+            Стр. \insertframenumber{} из \inserttotalframenumber \hspace*{2ex}
+        \end{beamercolorbox}}%
+    \vskip0pt%
+}

@@ -1,0 +1,48 @@
+%&presentation-preformat
+
+% --- Определение класса документа --- %
+
+\newif\ifpresentation % Условие, проверяющее, что документ --- презентация
+\presentationtrue
+\documentclass[10pt, xcolor={dvipsnames, table, hyperref}]{beamer}
+
+% --- Подключение общих новых переменных, данных и стилей --- %
+
+\input{common/setup}    % Общие настройки шаблона
+\input{common/packages} % Пакеты общие для диссертации и автореферата
+\input{common/data}     % Основные сведения
+
+% --- Подключение специальных настроек шаблона и пакетов --- %
+
+\input{presentation/packages} % Пакеты для презентации
+\input{presentation/styles}	  % Стили презентации
+\input{presentation/title}	  % Настройки заглавной страницы
+
+% --- Подключение библиографии --- %
+
+\input{biblio/settings}
+
+% --- Метка окончания предкомпиляции --- %
+
+\csname endofdump\endcsname
+
+% --- Вывод отладочной информации --- %
+
+\listfiles
+
+% --- Формирование документа --- %
+
+\begin{document}
+	% Преамбула презентации
+	\input{presentation/preamble}   
+	
+	% Основное содержание
+	\input{presentation/content}
+	
+	% Заключение	
+	\input{presentation/conclusion} 
+	
+	% Приложение
+	%\appendix
+	%\input{presentation/appendix}
+\end{document}
