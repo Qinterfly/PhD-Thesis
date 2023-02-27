@@ -10,41 +10,8 @@
 \begin{frame}{Постановка задачи}
 	\textbf{\underline{Цель диссертационной работы}}: разработка методики коррекции расчетных моделей летательных аппаратов по результатам модальных испытаний.
 	\begin{center}
-		\includegraphics[width = 0.6\textwidth]{large-reflector}
+		\includegraphics[width = 0.8\textwidth]{example-airplane}
 	\end{center}
-\end{frame}
-
-\begin{frame}{Алгоритм решения проблемы}
-	\begin{columns}
-		\begin{column}{0.5\textwidth}
-			\centering
-			\includegraphics[width=1\textwidth]{decomposition}
-		\end{column}
-		\begin{column}{0.5\textwidth}
-			\centering
-			% Определение стиля
-			\tikzstyle{blockWide}=[rectangle, draw = black, fill = blue!20, rounded corners, text width = 20em, text centered, minimum height = 1.5em, drop shadow] % Блок
-			\tikzstyle{blockWideC}=[blockWide, fill = red!20]
-			\tikzstyle{arrow} = [draw, thick, color=black!90, -latex'] % Стрелка
-			\scriptsize % Размер шрифта
-			% Задание перменных
-			\def\nodeDist{0.3cm} % Дистанция между узлами
-			% Отрисовка блок-схемы
-			\begin{tikzpicture}[scale = 1, transform shape]
-				% Задание узлов		
-				\node (modalTests) [blockWide] {Модальные испытания составных частей конструкции};
-				\node (modelUpdating) [blockWide, below = \nodeDist of modalTests] {Коррекция расчетных моделей составных частей конструкции по результатам испытаний};
-				\node (checkInfluence) [blockWide, below = \nodeDist of modelUpdating] {Освобождение закрепленных расчетных моделей составных частей конструкции};
-				\node (buildRealModel) [blockWide, below = \nodeDist of checkInfluence] {Синтез расчетной модели полной конструкции из её составных частей};
-				\node (buildMathModel) [blockWide, below = \nodeDist of buildRealModel] {Определение динамических характеристик полной расчетной модели};
-				% Соединение узлов
-				\draw [arrow] (modalTests.south) -- (modelUpdating.north);
-				\draw [arrow] (modelUpdating.south) -- (checkInfluence.north);
-				\draw [arrow] (checkInfluence.south) -- (buildRealModel.north);
-				\draw [arrow] (buildRealModel.south) -- (buildMathModel.north);
-			\end{tikzpicture}
-		\end{column}
-	\end{columns}
 \end{frame}
 
 \begin{frame}{Задачи исследования}

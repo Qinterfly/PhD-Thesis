@@ -100,9 +100,9 @@
 		\vspace{-1em}
 		\begin{gather}
 			f_j(c) = \mat{Y}_j^{(0)\mathsf{T}} \Delta \mat{K}^{(i+1)} \mat{Y}_j^{(i)} + \mat{Y}_j^{(0)\mathsf{T}} \mat{K} \Delta \mat{Y}_j^{(i)} - \Delta \lambda^*_j, \\
-			F(c) = \sum \limits_{j\,=\,1}^s w_i f_j^2(c) + w_c \sum \limits_{k\,=\,1}^m c_k^2 \rightarrow \min_{c},
+			F(c) = \sum \limits_{j\,=\,1}^s w_j f_j^2(c) + w_c \sum \limits_{k\,=\,1}^m c_k^2 \rightarrow \min_{c},
 		\end{gather}
-		где $ i $~---~номер текущей итерации, $ \Delta \lambda^*_j = \lambda_j^* - \lambda_{j0} $ ($\lambda_j^*$~---~целевые собственные значения), $ w_i $~---~весовые коэффициенты, $ s $~---~число целевых частот, $ w_c $~---~параметр регуляризации.
+		где $ i $~---~номер текущей итерации, $ \Delta \lambda^*_j = \lambda_j^* - \lambda_{j0} $ ($\lambda_j^*$~---~целевые собственные значения), $ w_j $~---~весовые коэффициенты, $ s $~---~число целевых частот, $ w_c $~---~параметр регуляризации.
 	\end{block}	
 	\begin{block}{Нормировка собственных векторов}
 		\vspace{-1em}
@@ -305,7 +305,40 @@
 	\end{center}
 \end{frame}
 
-\section{Тестирование методики синтеза расчетных моделей}
+\section{Методика синтеза глобальных расчетных моделей конструкций}
+
+\begin{frame}{Методика синтеза глобальных расчетных моделей конструкций}
+	\begin{columns}
+		\begin{column}{0.5\textwidth}
+			\centering
+			\includegraphics[width = 1\textwidth]{decomposition}
+		\end{column}
+		\begin{column}{0.5\textwidth}
+			\centering
+			% Определение стиля
+			\tikzstyle{blockWide}=[rectangle, draw = black, fill = blue!20, rounded corners, text width = 20em, text centered, minimum height = 1.5em, drop shadow] % Блок
+			\tikzstyle{blockWideC}=[blockWide, fill = red!20]
+			\tikzstyle{arrow} = [draw, thick, color=black!90, -latex'] % Стрелка
+			\scriptsize % Размер шрифта
+			% Задание перменных
+			\def\nodeDist{0.3cm} % Дистанция между узлами
+			% Отрисовка блок-схемы
+			\begin{tikzpicture}[scale = 1, transform shape]
+				% Задание узлов		
+				\node (modalTests) [blockWide] {Модальные испытания составных частей конструкции};
+				\node (modelUpdating) [blockWide, below = \nodeDist of modalTests] {Коррекция расчетных моделей составных частей конструкции по результатам испытаний};
+				\node (checkInfluence) [blockWide, below = \nodeDist of modelUpdating] {Освобождение закрепленных расчетных моделей составных частей конструкции};
+				\node (buildRealModel) [blockWide, below = \nodeDist of checkInfluence] {Синтез расчетной модели полной конструкции из её составных частей};
+				\node (buildMathModel) [blockWide, below = \nodeDist of buildRealModel] {Определение динамических характеристик полной расчетной модели};
+				% Соединение узлов
+				\draw [arrow] (modalTests.south) -- (modelUpdating.north);
+				\draw [arrow] (modelUpdating.south) -- (checkInfluence.north);
+				\draw [arrow] (checkInfluence.south) -- (buildRealModel.north);
+				\draw [arrow] (buildRealModel.south) -- (buildMathModel.north);
+			\end{tikzpicture}
+		\end{column}
+	\end{columns}
+\end{frame}
 
 \begin{frame}{Тестирование методики синтеза на расчетной модели космического аппарата (КА)}
 	\begin{figure}
@@ -388,53 +421,6 @@
 	\end{figure}
 \end{frame}
 
-\section{Декомпозиция сигналов виброускорений}
-
-\begin{frame}{Декомпозиция сигналов виброускорений}
-	Представим ускорения в каждый момент времени как:
-	\begin{equation}
-		\alpha_i(\mat{p}) = \sum\limits_{k\,=\,1} ^ m A_k e ^ {-\eta_k (t_i - t_0)} \sbrackets{\rho_{1,i}(\mat{p}) + \rho_{2, i}(\mat{p})}, \ i = 1 \hdots n.
-	\end{equation}
-	Гармонические слагаемые, входящие в это разложение, запишутся:
-	\begin{equation}
-		\begin{gathered}
-			\rho_{1, i}(\mat{p}) = \cos \sbrackets{\varphi_k + \omega_k (t_i - t_0)} \rbrackets{\eta_k ^ 2 - \omega_k ^ 2}, \\
-			\rho_{2, i}(\mat{p}) = 2 \eta_k \omega_k \sin \sbrackets{\varphi_k + \omega_k (t_i - t_0)},
-		\end{gathered}
-	\end{equation}
-	где $ m $~---~число гармоник в разложении; $ n $~---~число временных отсчетов; $ \eta_k $~---~относительный коэффициент демпфирования; $ \varphi_k $ и $ \omega_k $~---~фаза и частота колебаний. 
-\end{frame}
-
-\begin{frame}{Вычисление параметров разложения}
-	Сведем варьируемые параметры разложения в вектор неизвестных:
-	\begin{equation}
-		\mat{p} = 
-		\begin{Bmatrix}
-			\varphi_k & A_k & \omega_k & \eta_k
-		\end{Bmatrix}, \ k = 1 \hdots m.
-	\end{equation}
-	Выразим ошибку представления $ \alpha_i(\mat{p}) $ экспериментальных ускорений $ a_i $:
-	\begin{equation}
-		\mat{f(\mat{p})} = 
-		\begin{Bmatrix}
-			\alpha_0(\mat{p}) - a_0 & \hdots & \alpha_i(\mat{p}) - a_i & \hdots & \alpha_n(\mat{p}) - a_n
-		\end{Bmatrix}.
-	\end{equation}
-	Таким образом, получаем задачу условной оптимизации ($ k = 1 \hdots m $):
-	\begin{equation}
-		\begin{aligned}
-			\min_{\mat{p}} \quad & \mat{F}(\mat{p}) = \vert \vert \mat{f} \vert \vert ^ 2, \\
-			\textrm{s.t.} \quad & 0 \leq \phi_k \leq \pi, \\
-		 				    & \omega_k > 0. \\
-		\end{aligned} 
-	\end{equation}
-	Градиент целевой функции имеет вид:
-	\begin{equation}
-		\nabla \mat{F(\mat{p})} = 2 \trans{\mat{J}(\mat{p})} \mat{f(\mat{p})},
-	\end{equation}
-	где $ \mat{J}(p) $~---~матрица Якоби по неизвестным параметрам.
-\end{frame}
-
 \section{Определение модальных характеристик по результатам акустических испытаний}
 
 \begin{frame}{Определение модальных характеристик рефлектора по результатам акустических испытаний}
@@ -459,6 +445,7 @@
 \end{frame}
 
 \begin{frame}{Результаты определения динамических характеристик рефлектора методами операционного модального анализа}
+	\centering
 	\begin{tblr}{
 		colspec = {|c|c|c|c||c|c|c|},
 		hlines
@@ -484,7 +471,7 @@
 
 \section{Определение модальных характеристик по результатам летных испытаний}
 
-\begin{frame}{Определение модальных характеристик рефлектора по результатам летных испытаний}
+\begin{frame}{Определение модальных характеристик по результатам летных испытаний}
 	\begin{block}{Методика определения критической скорости флаттера}
 		\begin{itemize}
 			\item выход летательного аппарата на исследуемый скоростной режим;
@@ -508,17 +495,112 @@
 		\begin{subfigure}[b]{0.49\textwidth}
 			\centering
 	     	\includegraphics[width = 1\textwidth]{flight-decrements-2} 
+	     	\caption{Полет № 1}
 	    \end{subfigure}
     	\hfill
 	    \begin{subfigure}[b]{0.49\textwidth}
 			\centering
 			\includegraphics[width = 1\textwidth]{flight-decrements-1}
+			\caption{Полет № 2}
 	    \end{subfigure}
     	\caption{Кривые зависимости логарифмических декрементов от скорости полета}
 	\end{figure}
 \end{frame}
 
 \section{Решение практических задач коррекции расчетных моделей}
+
+\section{Коррекция расчетной модели динамически-подобной модели самолета Ту-204}
+
+\begin{frame}{Коррекция расчетной модели динамически-подобной модели самолета Ту-204}
+	\begin{figure}
+		\begin{subfigure}[t]{0.49\textwidth}
+			\centering
+	     	\includegraphics[width = 1\textwidth]{tu-204-experiment} 
+	     	\caption{Упругое вывешивание модели}
+	    \end{subfigure}
+    	\hfill
+	    \begin{subfigure}[t]{0.49\textwidth}
+			\centering
+			\includegraphics[width = 1\textwidth]{tu-204-coeffs-6}
+			\caption{Изменения узловых жесткостей}
+	    \end{subfigure}
+	    \caption{Динамически-подобная модель самолета Ту-204}
+	\end{figure}
+\end{frame}
+
+\begin{frame}{Результаты применения метода коррекции} 
+	\resizebox{\textwidth}{!}{%
+	\begin{tblr}
+	{
+		colspec = {|c|c|c|c|c|c|c|c|c|c|}, 
+		hlines
+	}
+   		\SetCell[r = 3]{c} Тон & \SetCell[c = 2]{c} Частоты, Гц && \SetCell[c = 7]{c} Погрешность до и после коррекции, \%  \\
+	   	& \SetCell[r = 2]{c} Эксперимент & \SetCell[r = 2]{c} {Исходная \\ модель} & \SetCell[r = 2]{c} До & \SetCell[c = 6]{c} После \\ 
+   		& & & & 1 & 2 & 3 & 4 & 5 & 6 \\ \hline
+		СИКр1 & 3.44 & 3.49 & 1.5 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 \\
+		АСИКр1 & 4.87 & 4.96 & 1.7 & -0.6 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 \\
+		ГИФ1 & 5.44 & 5.73 & 5.3 & 4.7 & 4.7 & 0.0 & 0.0 & 0.0 & 0.0 \\ 
+		ВИФ1 & 5.73 & 5.97 & 4.2 & 3.5 & 3.3 & 2.6 & 0.0 & 0.0 & 0.0 \\
+		СИКр2 & 9.30 & 9.13 & -1.8 & -4.4 & -3.2 & -3.9 & -4.4 & 0.0 & 0.0 \\
+		ВИФ2 & 14.18 & 14.77 & 4.2 & 3.7 & 3.8 & 3.4 & 2.0 & 3.3 & 0.0 \\
+	\end{tblr} }
+	\footnotetext[1]{Cимметричный изгиб крыла I тона}
+	\footnotetext[2]{Антисимметричный изгиб крыла I тона}
+	\footnotetext[3]{Горизонтальный изгиб фюзеляжа I тона}
+	\footnotetext[4]{Вертикальный изгиб фюзеляжа I тона}
+	\footnotetext[5]{Симметричный изгиб крыла II тона}
+	\footnotetext[6]{Вертикальный изгиб фюзеляжа II тона}
+\end{frame}
+
+\section{Синтез имитационной модели каркаса зонтичной антенны космического аппарата}
+
+\begin{frame}{Синтез имитационной модели каркаса зонтичной антенны космического аппарата}
+	\begin{figure}
+		\centering
+		\includegraphics[width = 0.9\linewidth]{simsat-assembly}
+		\caption{Общий вид имитационной модели каркаса зонтичной антенны в сборе} 
+	\end{figure}
+\end{frame}
+
+\begin{frame}{Составные части имитационной модели}
+	\begin{figure}
+		\centering
+		\begin{subfigure}[t]{0.48\textwidth}
+			\centering
+			\includegraphics[width = \textwidth]{simsat-antenna}
+			\caption{Зонтичный каркас}
+		\end{subfigure}
+		\hfill
+		\begin{subfigure}[t]{0.48\textwidth}
+			\centering
+			\includegraphics[width = \textwidth]{simsat-handle}
+			\caption{Штанга}
+		\end{subfigure}	
+		\caption{Составные части модели каркаса зонтичной антенны}
+	\end{figure}
+\end{frame}
+
+\begin{frame}{Результаты применения методики синтеза} 
+	\centering
+	\begin{tblr}
+	{
+		colspec = {|c|c|c|c|}, 
+		width = \textwidth, 
+		hlines
+	}
+		\SetCell[r = 3]{c} Тон & \SetCell[c = 3]{c} {Погрешность относительно эксперимента \\ до и после коррекции  моделей составных частей, \%} \\ \cline{2-4} 
+		& \SetCell[r = 2]{c} До коррекции & \SetCell[c = 2]{c} После коррекции & \\ \cline{3-4} 
+		& & Коррекция штанги & {Коррекция штанги и \\ антенны} \\ \hline
+		1 & 1.84 & 0.70 & 0.70 \\ 
+	    2 & 3.88 & 0.33 & 0.40 \\ 
+	    3 & 3.19 & 1.24 & 1.24 \\ 
+    	4 & 2.13 & 1.18 & 1.18 \\ 
+	    5 & 2.25 & 2.73 & 1.95 \\ 
+	    6 & 3.55 & 3.48 & 3.41 \\ 
+    	7 & 3.78 & 3.64 & 3.64 
+	\end{tblr}
+\end{frame}
 
 \subsection{Коррекция расчетной модели отъемной части крыла изделия С-70}
 
@@ -540,6 +622,7 @@
 \end{frame}
 
 \begin{frame}{Результаты коррекции композитной консоли крыла} 
+	\centering
 	\begin{tblr}{
 		colspec = {|c|c|c|c|c|c|c|c|c|}, 
 		width = \textwidth, 
@@ -611,6 +694,7 @@
 		\item Коррекция всех шести упругих тонов ($ 4 $ минуты).
 	\end{enumerate}
 	\vfill
+	\centering
 	\begin{tblr}{
 		colspec = {|X[c, -1]|X[c]|X[c]|X[c]|X[c]|}, 
 		width = \textwidth, 
