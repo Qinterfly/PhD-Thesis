@@ -6,6 +6,7 @@ test
 images
 documents
 TODO.txt
+presentation-notes.tex
 *.aux
 *.log
 *.synctex.gz
