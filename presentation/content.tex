@@ -305,7 +305,7 @@
 	\end{center}
 \end{frame}
 
-\section{Методика синтеза глобальных расчетных моделей конструкций}
+\section{Методика синтеза расчетной модели конструкции из ее составных частей}
 
 \begin{frame}{Методика синтеза глобальных расчетных моделей конструкций}
 	\begin{columns}
@@ -418,6 +418,19 @@
 			\caption{Цельноповоротного стабилизатора}
 		\end{subfigure}
     	\caption{Зазоры в узлах крепления оперения} 
+	\end{figure}
+\end{frame}
+
+\begin{frame}{Программа для диагностирования дефектов конструкций по результатам испытаний}
+	\begin{figure}
+		\begin{subfigure}[t]{0.49\textwidth}
+			\includegraphics[width = 0.7\textwidth]{spacecraft-scheme}
+		\end{subfigure}
+		\hfill
+		\begin{subfigure}[t]{0.49\textwidth}
+			\includegraphics[width = 1\textwidth]{distortion-spacecraft}
+		\end{subfigure}
+		\caption{Зазоры в узлах установки солнечных батарей}
 	\end{figure}
 \end{frame}
 
@@ -615,6 +628,7 @@
 
 \begin{frame}{Результаты коррекции композитной консоли крыла} 
 	\centering
+	\resizebox{\textwidth}{!}{%
 	\begin{tblr}{
 		colspec = {|c|c|c|c|c|c|c|c|c|}, 
 		width = \textwidth, 
@@ -628,7 +642,7 @@
 		3 & 3.37 & 4.13 & 22.6 & -18.6 & -13.8 & 0.0 & 0.0 & 0.0 \\ 
 		4 & 3.95 & 4.82 & 21.8 & -19.1 & -17.8 & -8.2 & 0.0 & 0.0 \\ 
 		5 & 4.87 & 6.15 & 26.2 & -16.2 & -21.8 & -2.6 & -4.4 & 0.0 \\ 
-	\end{tblr}
+	\end{tblr} }
 \end{frame}
 
 \begin{frame}{Сопоставление форм колебаний до и после коррекции}
