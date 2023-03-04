@@ -52,10 +52,9 @@
 
 % Настройки перенесенного заголовка
 \DefTblrTemplate{contfoot-text}{default}{}
-\DefTblrTemplate{conthead-text}{default}{(продолжение)}
+\DefTblrTemplate{conthead-text}{default}{\textit{Продолжение таблицы\hspace{0.25em}\thetable}}
 \DefTblrTemplate{capcont}{default}{
-	\UseTblrTemplate{caption}{default}
-    \UseTblrTemplate{conthead-text}{default}
+	\UseTblrTemplate{conthead-text}{default}
 }
 
 % --- Форматирование рисунков --- %
@@ -223,6 +222,10 @@
         draft,
     }
 }{}
+
+% --- Параметры графиков --- %
+
+\pgfplotsset{compat = 1.18}
 
 % --- Списки --- %
 
