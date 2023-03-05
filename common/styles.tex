@@ -60,6 +60,7 @@
 % --- Форматирование рисунков --- %
 
 \DeclareCaptionLabelSeparator{figsep}{\figlabelsep}
+\DeclareCaptionJustification{figjust}{\hyphenpenalty=10000\centering}
 
 \captionsetup[figure]{
     format = plain,             % Формат подписи (plain|hang)
@@ -68,7 +69,7 @@
     parskip = .0pt,             % Отбивка между параграфами подписи
     position = below,           % Положение подписи
     singlelinecheck = true,     % Выравнивание по центру, если умещается в одну строку
-    justification = centerlast, % Центровка
+    justification = figjust,    % Центровка
     labelsep = figsep,          % Разделитель
 }
 
