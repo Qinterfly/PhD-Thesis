@@ -445,7 +445,7 @@
 	11 & 52.6507 & & 52.5310 & 0.0626 & -0.2274 & -0.4486 \\ 
 \end{longtblr}
 
-Необходимо заметить, что определенные формы колебаний \name{SSI-COV} совпадают с расчетными из~\name{Ansys}. Сравнение форм колебаний на примере пятого тона собственных колебаний приведено на рисунке~\ref{fig:x58-mode-compare}. Остальные формы колебаний, определенные методом \name{SSI-COV}, приведены на рисунках~\ref{subfig:x58-ssi-cov-mode-1}~--~\ref{subfig:x58-ssi-cov-mode-4}.
+Необходимо заметить, что определенные формы колебаний \name{SSI-COV} совпадают с расчетными из~\name{Ansys}. Сравнение форм колебаний на примере пятого тона собственных колебаний приведено на рисунке~\ref{fig:x58-mode-compare}. Остальные формы колебаний, определенные методом \name{SSI-COV}, показаны на рисунке~\ref{fig:x58-ssi-cov-modes}.
 
 \begin{figure}[H]
 	\centering
@@ -466,7 +466,7 @@
 	\centering
 	\begin{subfigure}[b]{\sfX58}
 		\includegraphics[width = \textwidth]{x58-ssi-cov-mode-1}
-		\caption{1.83 Гц (траекторный)} \label{subfig:x58-ssi-cov-mode-1}
+		\caption{1.83 Гц (траекторный)}
 	\end{subfigure}
 	\hfill
 	\begin{subfigure}[b]{\sfX58}
@@ -480,9 +480,9 @@
 	\hfill
 	\begin{subfigure}[b]{\sfX58}
 		\includegraphics[width = \textwidth]{x58-ssi-cov-mode-4}
-		\caption{21.71 Гц} \label{subfig:x58-ssi-cov-mode-4}
+		\caption{21.71 Гц}
 	\end{subfigure}	
-	\caption{Формы колебаний имитационной модели по методу \name{SSI-COV}}
+	\caption{Формы колебаний имитационной модели по методу \name{SSI-COV}} \label{fig:x58-ssi-cov-modes}
 \end{figure}
 
 Устойчивость получаемых параметров оценивалась путем варьирования порядка стохастической модели. При это решение считалось стабильным, если ему предшествовали близкие по значению собственные частоты, декременты и формы колебаний. Значения этих параметров накапливались и усреднялись по кластерам. Полученные данные отображены в виде стабилизационной диаграммы по методу \name{SSI-COV}~\figref{fig:x58-ssi-cov}.
@@ -550,7 +550,7 @@
 	6 & 127.850 & --- & --- & 0.049 & --- & --- \\
 \end{longtblr}
 
-Примеры форм колебаний, определенных методам \name{SSI-COV}, приведены на рисунках~\ref{subfig:reflector-ssi-cov-mode-1} и \ref{subfig:reflector-ssi-cov-mode-2}. Эти формы колебаний сопоставлялись с расчетными~---~получено удовлетворительное согласование.
+Примеры форм колебаний, определенных методам \name{SSI-COV}, отображены на рисунке~\ref{fig:reflector-ssi-cov-modes}. Полученные формы колебаний сопоставлялись с расчетными~---~достигнуто удовлетворительное согласование.
 
 \def\sfReflector{0.46\textwidth}
 
@@ -558,14 +558,14 @@
 	\centerfloat
 	\begin{subfigure}[b]{\sfReflector}
 		\includegraphics[width = 1\textwidth]{reflector-ssi-cov-mode-1} 
-		\caption{$ f = 91.29 $ Гц, $ \delta = 0.03 $} \label{subfig:reflector-ssi-cov-mode-1}
+		\caption{$ f = 91.29 $ Гц, $ \delta = 0.03 $} 
 	\end{subfigure}
 	\hfill
 	\begin{subfigure}[b]{\sfReflector}
 		\includegraphics[width = \textwidth]{reflector-ssi-cov-mode-2} 
-		\caption{$ f = 127.85 $ Гц, $ \delta = 0.05 $} \label{subfig:reflector-ssi-cov-mode-2}
+		\caption{$ f = 127.85 $ Гц, $ \delta = 0.05 $} 
 	\end{subfigure}
-	\caption{Пример определенных форм колебаний рефлектора} 
+	\caption{Пример определенных форм колебаний рефлектора} \label{fig:reflector-ssi-cov-modes} 
 \end{figure}
 
 На основе таблицы~\ref{tab:reflector-results} можем заключить, что метод \name{SSI-COV} позволяет выделить наибольшее число тонов колебаний. Оценим сходимость модальных характеристик, определяемых этим методом: частот~\tabref{tab:reflector-conv-time-frequency} и логарифмических декрементов колебаний~\tabref{tab:reflector-conv-time-decrement}, варьируя длительность временных сигналов от $ 5 $ до $ 50 $ секунд. 
