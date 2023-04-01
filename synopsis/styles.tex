@@ -1,0 +1,60 @@
+% ---------------------------------- %
+% --- Задание стиля автореферата --- %
+% ---------------------------------- %
+
+% --- Путь к изображениям --- %
+
+\graphicspath{{images/general/}{images/partModelUpdating/}{images/partModalAnalysis/}{images/partAprobation/}}
+
+% --- Макет страницы --- %
+
+\geometry{a5paper, top = 14mm, bottom = 14mm, inner = 18mm, outer = 10mm, footskip = 5mm, nomarginpar}
+\setlength{\topskip}{0pt}
+
+% --- Интервалы --- %
+
+% Для исправления интервала в таблицах ставится *
+\SingleSpacing % Одинарный интервал
+
+% --- Выравнивание и переносы --- %
+
+\tolerance 1414
+\hbadness 1414
+\emergencystretch 1.5em % В случае проблем регулировать в первую очередь
+\hfuzz 0.3pt
+\vfuzz \hfuzz
+%\raggedbottom
+%\sloppy                % Избавляемся от переполнений
+\clubpenalty=10000      % Запрещаем разрыв страницы после первой строки абзаца
+\widowpenalty=10000     % Запрещаем разрыв страницы после последней строки абзаца
+
+% --- Колонтитулы --- %
+
+\makeevenhead{plain}{}{}{}
+\makeoddhead{plain}{}{}{}
+\makeevenfoot{plain}{}{--~\rmfamily\thepage~--}{}
+\makeoddfoot{plain}{}{--~\rmfamily\thepage~--}{}
+\pagestyle{plain}
+
+% --- Заголовки --- %
+
+\setsecheadstyle{\centering\normalfont\large\bfseries\MakeUppercase}
+\renewcommand*{\chaptitlefont}{\normalfont\ul}
+\setlength{\beforesecskip}{3pt}
+\setlength{\aftersecskip}{3pt}
+
+% --- Подписи --- %
+
+\setfloatadjustment{table}{%
+    \setlength{\abovecaptionskip}{0pt} % Отбивка перед подписи
+    \setlength{\belowcaptionskip}{0pt} % Отбивка после подписи
+}
+
+% --- Отступы --- %
+
+\setlength\textfloatsep{1ex}
+\newcommand\blank[1][\textwidth]{\noindent\rule[-.2ex]{#1}{.4pt}}
+
+% --- Списки --- %
+
+\setenumerate{wide}

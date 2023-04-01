@@ -1,0 +1,72 @@
+%%&synposis-preformat
+% ---------------------------------- %
+% --- Сборка текста автореферата --- %
+% ---------------------------------- %
+
+% --- Служебные пакеты --- %
+
+\RequirePackage[l2tabu, orthodox]{nag} % Вывод информации об используемых пакетах
+
+% --- Определение класса документа --- %
+
+\documentclass[a5paper, 10pt, oneside, openany, article]{memoir}
+
+% --- Подключение общих настроек шаблона, пакетов и команд --- %
+
+\input{common/setup}    % Общие настройки шаблона
+\input{common/packages} % Пакеты общие для диссертации и автореферата
+
+% --- Подключение специальных настроек шаблона и пакетов --- %
+
+\newif\ifsynopsis
+\synopsistrue             % Этот документ --- автореферат
+\input{synopsis/packages} % Пакеты для диссертации
+\input{synopsis/setup}    % Упрощённые настройки шаблона
+
+% --- Подключение общих новых переменных, данных и стилей --- %
+
+\input{common/newnames} % Новые переменные
+\input{common/data}     % Основные сведения
+\input{common/styles}   % Стили общие для диссертации и автореферата
+
+% --- Подключение специальные стилей для диссертации --- %
+
+\input{synopsis/styles}
+
+% --- Метка окончания предкомпиляции --- %
+
+\csname endofdump\endcsname
+
+% --- Вывод отладочной информации --- %
+
+\typeout{Selected options:}
+\typeout{Draft mode: \arabic{draft}}
+\typeout{AltFont: \arabic{usealtfont}}
+\typeout{Precompile images: \arabic{imgprecompile}}
+\listfiles
+
+% --- Формирование документа --- %
+
+\begin{document}
+	% Титульный лист
+	\input{synopsis/title}
+	
+	% Нумерация страниц
+	%\mainmatter	% В том числе начинает нумерацию страниц арабскими цифрами с единицы
+	\mainmatter*	% Нумерация страниц не изменится, но начнётся с новой страницы
+	
+	% Введение
+	\input{synopsis/introduction}	
+	
+	% Основное содержание
+	\input{synopsis/content}
+	
+	% Заключение
+	\input{synopsis/conclusion}
+
+	% Публикации
+	\input{synopsis/publications}
+	
+	% Публикации
+	\input{synopsis/typography}
+\end{document}

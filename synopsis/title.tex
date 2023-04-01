@@ -1,0 +1,116 @@
+% ------------------------------- %
+% --- Лицевая сторона обложки --- %
+% --------------------------------%
+
+\thispagestyle{empty}
+
+% --- Подпись --- %
+
+\noindent%
+\begin{flushright}
+	\begin{tabular}{@{}c@{}}
+		\large
+		На правах рукописи \\
+		\includegraphics[height = 2cm]{personal-signature}
+	\end{tabular}
+\end{flushright}
+
+% --- Данные автора --- %
+
+\vspace{0pt plus2fill}
+\begin{center}
+	\Large \thesisAuthor
+\end{center}
+
+% --- Данные диссертации --- %
+
+\vspace{0pt plus1fill}
+\begin{center}
+	\textbf {\Large \MakeUppercase \thesisTitle}
+	
+	\vspace{0pt plus1fill} 
+	{\large Специальность \thesisSpecialtyNumber\ "---\par <<\thesisSpecialtyTitle>>}
+	
+	\vspace{0pt plus1fill} %число перед fill = кратность относительно некоторого расстояния fill, кусками которого заполнены пустые места
+	\large{Автореферат диссертации на соискание учёной степени\par \thesisDegree}
+\end{center}
+
+% --- Данные о защите --- %
+
+\vspace{0pt plus4fill} 
+{\large \centering\thesisCity~---~\thesisYear\par}
+
+% --------------------------------- %
+% --- Оборотная сторона обложки --- %
+% ----------------------------------%
+
+\newpage
+\thispagestyle{empty}
+
+% --- Данные об организации --- %
+
+\noindent%
+Работа выполнена в {\thesisInFirstOrganization} и {\thesisInSecondOrganization}.
+
+% --- Данные об оппонентах и ведущей организации --- %
+
+\vspace{0.008\paperheight plus1fill}
+
+\noindent%
+\begin{tabularx}{\textwidth}{@{}lX@{}}
+    Научный руководитель:   & \supervisorRegalia\par
+    						  \textbf{\supervisorFio}
+                              \vspace{0.013\paperheight} \\
+    Официальные оппоненты:  &
+    \ifnumequal{\value{showopplead}}{0}{\vspace{13\onelineskip plus1fill}}{%
+        \textbf{\opponentOneFio,}\par
+        \opponentOneRegalia,\par
+        \opponentOneJobPlace,\par
+        \opponentOneJobPost\par
+        \vspace{0.01\paperheight}
+        \textbf{\opponentTwoFio,}\par
+        \opponentTwoRegalia,\par
+        \opponentTwoJobPlace,\par
+        \opponentTwoJobPost
+    }%
+    \vspace{0.013\paperheight} \\
+    Ведущая организация:    &
+    \ifnumequal{\value{showopplead}}{0}{\vspace{6\onelineskip plus1fill}}{%
+        \leadingOrganizationTitle
+    }%
+\end{tabularx}
+
+% --- Данные о защите --- %
+
+\vspace{0.008\paperheight plus1fill}
+\noindent Защита состоится \defenseDate~на~заседании диссертационного совета \defenseCouncilNumber, созданного на базе  \defenseCouncilTitle~по адресу: \defenseCouncilAddress.
+
+% --- Данные о размещении --- %
+
+\vspace{0.008\paperheight plus1fill}
+\noindent С диссертацией можно ознакомиться~\synopsisSource.
+
+% --- Дата рассылки --- %
+
+\vspace{0.008\paperheight plus1fill}
+\noindent{Автореферат разослан \synopsisDate.}
+
+% --- Данные ученого секретаря --- %
+
+\vspace{0.008\paperheight plus1fill}
+\noindent%
+\begin{tabularx}{\textwidth}{@{}%
+>{\raggedright\arraybackslash}b{14em}@{}
+>{\centering\arraybackslash}X
+r
+@{}}
+    Ученый секретарь\par
+    диссертационного совета\par
+    \defenseSecretaryRegalia
+    & 
+    \ifnumequal{\value{showsecrsign}}{0}{}{%
+        \includegraphics[width = 2cm]{secretary-signature}%
+    }%
+    &
+    \defenseSecretaryFio
+\end{tabularx}
