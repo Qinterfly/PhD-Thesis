@@ -40,14 +40,21 @@
 
 \setsecheadstyle{\centering\normalfont\large\bfseries\MakeUppercase}
 \renewcommand*{\chaptitlefont}{\normalfont\ul}
-\setlength{\beforesecskip}{3pt}
-\setlength{\aftersecskip}{3pt}
 
-% --- Подписи --- %
+% --- Интервалы до и после структурных элементов --- %
 
+% Заголовков
+\setbeforesecskip{\the\secskip}
+\setaftersecskip{\the\secskip}
+
+% Taблиц
 \setfloatadjustment{table}{%
-    \setlength{\abovecaptionskip}{0pt} % Отбивка перед подписи
-    \setlength{\belowcaptionskip}{0pt} % Отбивка после подписи
+    \setlength{\belowcaptionskip}{\the\belowcaptskip} 
+}
+
+% Рисунков
+\setfloatadjustment{figure}{%
+    \setlength{\belowcaptionskip}{\the\belowcaptskip} 
 }
 
 % --- Отступы --- %

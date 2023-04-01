@@ -48,6 +48,11 @@
 % --- Формирование документа --- %
 
 \begin{document}
+
+	% Переопределение именований типовых разделов --- %
+	\gappto\captionsrussian{\input{common/renames}\unskip}
+	\input{common/renames}
+
 	% Титульный лист
 	\input{synopsis/title}
 	

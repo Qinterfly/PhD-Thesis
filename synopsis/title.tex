@@ -11,7 +11,7 @@
 	\begin{tabular}{@{}c@{}}
 		\large
 		На правах рукописи \\
-		\includegraphics[height = 2cm]{personal-signature}
+		\includegraphics[height = 1.75cm]{personal-signature}
 	\end{tabular}
 \end{flushright}
 
@@ -65,7 +65,7 @@
     \ifnumequal{\value{showopplead}}{0}{\vspace{13\onelineskip plus1fill}}{%
         \textbf{\opponentOneFio,}\par
         \opponentOneRegalia,\par
-        \opponentOneJobPlace,\par
+        \opponentOneJobPlace, \par
         \opponentOneJobPost\par
         \vspace{0.01\paperheight}
         \textbf{\opponentTwoFio,}\par
@@ -98,19 +98,19 @@
 % --- Данные ученого секретаря --- %
 
 \vspace{0.008\paperheight plus1fill}
-\noindent%
-\begin{tabularx}{\textwidth}{@{}%
->{\raggedright\arraybackslash}b{14em}@{}
->{\centering\arraybackslash}X
-r
-@{}}
-    Ученый секретарь\par
-    диссертационного совета\par
-    \defenseSecretaryRegalia
+\SetTblrInner{colsep = 0pt}
+\noindent
+\begin{tblr}{
+	colspec = {Q[l, h]X[c, -1]Q[h]},
+	width   = \textwidth
+}
+	{Ученый секретарь \\ диссертационного совета \\ \defenseSecretaryRegalia}
     & 
     \ifnumequal{\value{showsecrsign}}{0}{}{%
         \includegraphics[width = 2cm]{secretary-signature}%
     }%
     &
-    \defenseSecretaryFio
-\end{tabularx}
+    {\\ \defenseSecretaryFio}
+\end{tblr}
+
+
