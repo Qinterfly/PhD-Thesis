@@ -41,19 +41,24 @@
 \setsecheadstyle{\centering\normalfont\large\bfseries\MakeUppercase}
 \renewcommand*{\chaptitlefont}{\normalfont\ul}
 
-% --- Интервалы до и после структурных элементов --- %
+% --- Интервалы до и после заголовков --- %
 
-% Заголовков
 \setbeforesecskip{\the\secskip}
 \setaftersecskip{\the\secskip}
 
-% Taблиц
+% --- Настройки плавающего окружения --- %
+
+%\captionsetup[figure]{font = small}
+
+% Taблицы
 \setfloatadjustment{table}{%
+%	\small
     \setlength{\belowcaptionskip}{\the\belowcaptskip} 
 }
 
-% Рисунков
+% Рисунки
 \setfloatadjustment{figure}{%
+%	\small
     \setlength{\belowcaptionskip}{\the\belowcaptskip} 
 }
 
