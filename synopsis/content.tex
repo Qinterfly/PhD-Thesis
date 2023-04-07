@@ -76,7 +76,7 @@
 На рисунке~\ref{fig:principalSchemeUpdating} приведена принципиальная схема, иллюстрирующая физическую сторону предлагаемой методики на примере простой модели летательного аппарата. В данном случае модель составлена из объемных и оболочечных элементов, поэтому для изменения её динамических свойств вводятся как ферменные, так и балочные корректирующие элементы. Кроме того, для описания модели упругого основания, вводятся пружинные элементы. Таким образом, корректирующая модель является <<каркасной структурой>> исходной модели.
 
 \begin{figure}[H]
-	\centerfloat
+	\hfill
 	\begin{tikzpicture}[scale = 1]
 		\pgfmathsetmacro{\nodeDist}{0.1}
 		\pgfmathsetmacro{\shiftText}{0.0}
@@ -89,8 +89,8 @@
 		\node[inner sep = 0pt, below = -\nodeDist of sumSign.south] (elements) {\includegraphics[width = 0.32\textwidth]{simple-model-elements}};
 		\node[inner sep = 0pt, below = \shiftText of elements.south] (textElements) {Корректирующие элементы};
 		% Скорректированная модель
-		\draw (sumSign.east) ++ (3.5, 0) node [right] (updated) {\includegraphics[width = 0.44\textwidth]{simple-model-updated}};
-		\draw [line width = 1.5mm, -{Latex[length = 8mm]}, color = red](sumSign.east) ++ (2, 0) --++ (2.5, 0);
+		\draw (sumSign.east) ++ (3.5, 0) node [right] (updated) {\includegraphics[width = 0.5\textwidth]{simple-model-updated}};
+		\draw [line width = 1.5mm, -{Latex[length = 8mm]}, color = red](sumSign.east) ++ (2.5, 0) --++ (2, 0);
 		\node[inner sep = 0pt, below = \shiftText of updated.south] (textUpdated) {Скорректированная модель};
 	\end{tikzpicture}
 	\caption{Принципиальная схема коррекции} \label{fig:principalSchemeUpdating}
@@ -466,7 +466,7 @@
 		]{
 			colspec = {|c|c|c|c|c|c|c|c|},
 			hlines,
-			colsep = 4pt,
+			colsep = 3.7pt,
 			rows = {font = \small}
 		}
 			\SetCell[r = 3]{c} Тон & \SetCell[c = 7]{c} {Погрешность до и после \\ коррекции, \%}  \\
