@@ -16,7 +16,7 @@
 
 Рассматривается конечно-элементная (КЭ) модель исследуемого объекта в виде матриц жесткости $ \mat{K} $ и масс $ \mat{M} $. Собственные числа $ \lambda $ и формы колебаний $ \mat{Y} $ определяются из решения обобщённой проблемы собственных значений.
 
-Обладая конструкторской документацией и результатами контроля весов и моментов инерции деталей и агрегатов конструкции, инерционные характеристики модели могут быть определены достаточно точно. Но уточнение упругих характеристик модели не столь однозначно в силу совокупного объема факторов, обуславливающих погрешности моделирования: дискретизация модели, неточность задания упругих свойств материалов и граничных условий. Поэтому изменения вносятся только в матрицу жесткости путем добавления к исходной матрице $ \mat{K} $ матрицы жесткости корректирующей КЭ-модели $ \Delta \mat{K} $. Последняя записывается в виде суперпозиции матриц жесткости внутренних $ \Delta \internal{\mat{K}} $ и внешних $ \Delta \external{\mat{K}} $ корректирующих элементов.
+Обладая конструкторской документацией и результатами контроля весов и моментов инерции деталей и агрегатов конструкции, инерционные характеристики модели могут быть определены достаточно точно. Но уточнение упругих характеристик модели не столь однозначно в силу совокупного объема факторов, обуславливающих погрешности моделирования: дискретизация модели, неточность задания упругих свойств материалов и граничных условий. Поэтому изменения вносятся только в матрицу жесткости путем добавления к исходной матрице $ \mat{K} $ матрицы жесткости корректирующей КЭ-модели $ \Delta \mat{K} $. Последняя записывается в виде суммы матриц жесткости внутренних $ \Delta \internal{\mat{K}} $ и внешних $ \Delta \external{\mat{K}} $ корректирующих элементов. Заметим, что жесткости корректирующих элементов могут быть отрицательными для изменения упругости конструкции в сторону уменьшения.
 
 Матрица жесткости внутреннего корректирующего элемента в общем случае имеет вид:
 \begin{equation}
@@ -24,7 +24,40 @@
 \end{equation}
 где $ \internal{c}_{j+p-1} $~---~неизвестная внутренняя корректирующая жесткость; $ q $~---~число внутренних корректирующих жесткостей, описывающих элемент; $ \mat{G}_j^{(p)} $~---~матрица внутреннего корректирующего элемента, составленная из длин и направляющих косинусов; $ e $~---~число внутренних корректирующих элементов. 
 
-Число корректирующих жесткостей $ q $ зависит от числа физических параметров, которыми описывается добавляемый элемент. Для коррекции модели, составленной из объемных элементов, в качестве корректирующей КЭ-модели используется ферменная конструкция ($ q = 1 $). В случае, если динамические свойства модели существенно зависят от изгибных и крутильных жесткостей её балочных или оболочечных элементов, предлагается использовать корректирующую КЭ-модель из балочных элементов ($ q = 4 $). 
+Число корректирующих жесткостей $ q $ зависит от числа физических параметров, которыми описывается добавляемый элемент. Для коррекции модели, составленной из объемных элементов, в качестве корректирующей КЭ-модели используется ферменная конструкция ($ q = 1 $). В случае, если динамические свойства модели существенно зависят от изгибных и крутильных жесткостей её балочных или оболочечных элементов, предлагается использовать корректирующую КЭ-модель из балочных элементов ($ q = 4 $). Матрицы корректирующего элемента имеют вид:
+\begin{equation*}
+	\begin{gathered}
+	\mat{G}_j^{(1)} =
+	\begin{pmatrix}
+		\mat{D}_1 & \mat{0} & -\mat{D}_1 & \mat{0} \\
+		\mat{0} & \mat{0} & \mat{0} & \mat{0} \\
+		-\mat{D}_1 & \mat{0} & \mat{D}_1 & \mat{0} \\
+		\mat{0} & \mat{0} & \mat{0} & \mat{0} \\
+	\end{pmatrix},
+	\mat{G}_j^{(2)} =
+	\begin{pmatrix}
+		6 \mat{D}_2 & 3 \ell \mat{D}_4 & -6 \mat{D}_2 & 3 \ell \mat{D}_4 \\
+		3 \ell \trans{\mat{D}}_4 & 2 \ell ^ 2 \mat{D}_3 & -3 \ell \trans{\mat{D}}_4 & \ell ^ 2 \mat{D}_3 \\
+		-6 \trans{\mat{D}}_2 & -3 \ell \mat{D}_4 & 6 \mat{D}_2 & -3 \ell \mat{D}_4 \\
+		3 \ell \trans{\mat{D}}_4 & \ell ^ 2 \trans{\mat{D}}_3 & -3 \ell \trans{\mat{D}}_4 & 2 \ell ^ 2 \mat{D}_3
+	\end{pmatrix}, \\
+	\mat{G}_j^{(3)} =
+	\begin{pmatrix}
+		6 \mat{D}_3 & -3 \ell \trans{\mat{D}}_4 & -6 \mat{D}_3 & -3 \ell \trans{\mat{D}}_4 \\
+		-3 \ell \mat{D}_4 & 2 \ell ^ 2 \mat{D}_2 & 3 \ell \mat{D}_4 & \ell ^ 2 \mat{D}_2 \\
+		-6 \trans{\mat{D}}_3 & 3 \ell \trans{\mat{D}}_4 & 6 \mat{D}_3 & 3 \ell \trans{\mat{D}}_4 \\
+		-3 \ell \mat{D}_4 & \ell ^ 2 \trans{\mat{D}}_2 & 3 \ell \mat{D}_4 & 2 \ell ^ 2 \mat{D}_2
+	\end{pmatrix},
+	\mat{G}_j^{(4)} =
+	\begin{pmatrix}
+		\mat{0} & \mat{0} & \mat{0} & \mat{0} \\
+		\mat{0} & \mat{D}_1 & \mat{0} & -\mat{D}_1 \\
+		\mat{0} & \mat{0} & \mat{0} & \mat{0} \\
+		\mat{0} & -\mat{D}_1 & \mat{0} & \mat{D}_1 \\
+	\end{pmatrix},
+	\end{gathered}
+\end{equation*}
+где $ \ell $~---~длина корректирующего балочного элемента; $ \mat{D}_1, \mat{D}_2, \mat{D}_3, \mat{D}_4 $~---~матрицы, состоящие из направляющих косинусов.
 
 В качестве внешних корректирующих элементов используются пружинные опоры, прикрепленные к неподвижному основанию. Матрица $ \Delta \external{\mat{K}} $ имеет следующий вид:
 \begin{equation}
@@ -44,19 +77,20 @@
 
 \begin{figure}[H]
 	\centerfloat
-	\begin{tikzpicture}[scale = 0.7]
+	\begin{tikzpicture}[scale = 1]
 		\pgfmathsetmacro{\nodeDist}{0.1}
 		\pgfmathsetmacro{\shiftText}{0.0}
 		% Исходная модель
-		\node[inner sep = 0pt] (initial) at (0, 0) {\includegraphics[width = 0.3\textwidth]{simple-model-initial}};
+		\node[inner sep = 0pt] (initial) at (0, 0) {\includegraphics[width = 0.32\textwidth]{simple-model-initial}};
 		\node[inner sep = 0pt, below = \shiftText of initial.south] (textInitial) {Исходная модель};
 		% Знак
-		\node [below = \nodeDist of textInitial.south, color = blue] (sumSign) {\Huge \bfseries +};
+		\node [font = \fontsize{42}{44}, below = \nodeDist of textInitial.south, color = blue] (sumSign) {\bfseries +};
 		% Коррректирующие элементы
-		\node[inner sep = 0pt, below = -\nodeDist of sumSign.south] (elements) {\includegraphics[width = 0.3\textwidth]{simple-model-elements}};
+		\node[inner sep = 0pt, below = -\nodeDist of sumSign.south] (elements) {\includegraphics[width = 0.32\textwidth]{simple-model-elements}};
 		\node[inner sep = 0pt, below = \shiftText of elements.south] (textElements) {Корректирующие элементы};
 		% Скорректированная модель
-		\draw [-{Latex[length = 4mm]}, color = red, ultra thick](sumSign.east) ++ (3, 0) --++ (1.25, 0) node [right] (updated) {\includegraphics[width = 0.4\textwidth]{simple-model-updated}};
+		\draw (sumSign.east) ++ (3.5, 0) node [right] (updated) {\includegraphics[width = 0.44\textwidth]{simple-model-updated}};
+		\draw [line width = 1.5mm, -{Latex[length = 8mm]}, color = red](sumSign.east) ++ (2, 0) --++ (2.5, 0);
 		\node[inner sep = 0pt, below = \shiftText of updated.south] (textUpdated) {Скорректированная модель};
 	\end{tikzpicture}
 	\caption{Принципиальная схема коррекции} \label{fig:principalSchemeUpdating}
@@ -70,7 +104,7 @@
 \begin{equation}
 	\mat{H} = \alpha \mat{K} ^ \ast + \beta \mat{M},
 \end{equation}
-где $ \mat{K} ^ \ast $~---~скорректированная матрица жесткости, $ \alpha, \beta $~---~постоянные коэффициенты.
+где $ \mat{K} ^ \ast $~---~матрица жесткости после коррекции, $ \alpha, \beta $~---~постоянные коэффициенты.
 
 Частоты и формы собственных колебаний, вычисленные в результате решения обобщенной проблемы, остаются неизменными в процессе восстановления матрицы демпфирования. Обобщенные жесткости $ \kappa_i $ и массы $ \mu_i $ корректируемых тонов колебаний используются для определения коэффициентов $ \alpha $ и $ \beta $ в результате решения задачи минимизации целевой функции:
 \begin{equation}
@@ -125,96 +159,95 @@
 На примере свободной прямоугольной пластины показаны зависимости искажений форм колебаний относительно ошибок в целевых частотах, полученные при разном числе корректируемых тонов собственных колебаний~\figref{fig:perturbation-plate-errors}. При этом точки, составляющие эти зависимости, определены путем многократного проведения независимых испытаний на одном уровне шума. Число этих испытаний $ N_\Sigma $, которое потребовалось для стабилизации величины центрального момента критерия модального соответствия, приведено на рисунке~\ref{fig:perturbation-plate-samplesize}. Установлено, что методика устойчива во всем диапазоне вносимых отклонений. Более того, при увеличении числа тонов кривые стремятся к предельной огибающей. Аналогичный результат получен для более сложной конструкции~---~модели космического аппарата (КА).
 
 \begin{figure}[!htb]
-\centering
-\vspace{-1em}
-\begin{minipage}[b]{0.49\textwidth}
 	\centering
-	\begin{tikzpicture}[scale = 1]
-		\begin{semilogyaxis}[
-			xlabel           = {$\Delta \mat{f} $, \% },
-			ylabel           = {$ \varepsilon_{\mathrm{MAC}} $, \%},
-			ylabel shift     = -2 pt,
-			grid             = major,
-			legend columns   = 2,
-			legend style     = {
-				at           = {(0.76, 0.03)},
-				anchor       = south,
-				fill         = white,
-				fill opacity = 0.6,
-				draw opacity = 1,
-				text opacity = 1,
-			},
-			ylabel near ticks,  
-			xtick            = {0, 1, 2, 3, 4, 5},
-			ytick            = {1e-6, 1e-4, 1e-2, 1e0},
-			mark size        = 1pt,
-			width            = 6.4cm
-		]
-			\pgfplotstableread{images/partModelUpdating/perturbation-plate-errors.txt}\contentFile
-			\addplot[color = blue, mark = *] table [x index = 0, y index = 1] {\contentFile};
-			\addplot[color = red, mark = triangle*] table [x index = 0, y index = 2] {\contentFile};
-			\addplot[color = olive, mark = diamond*] table [x index = 0, y index = 3] {\contentFile};
-			\addplot[color = purple, mark = halfcircle*] table [x index = 0, y index = 4] {\contentFile};
-			\addplot[color = teal, mark = x] table [x index = 0, y index = 5] {\contentFile};
-			\legend{$ 1 $, $ 3 $, $ 5 $, $ 7 $, $ 9 $}
-		\end{semilogyaxis}
-	\end{tikzpicture}
-	\caption{Погрешность определения форм колебаний пластины} \label{fig:perturbation-plate-errors}
-\end{minipage}
-\hfill
-\begin{minipage}[b]{0.49\textwidth}
-	\centering
-	\begin{tikzpicture}[scale = 1]
-		\begin{axis}[
-			xlabel           = {$\Delta \mat{f} $, \% },
-			ylabel           = {$ N_\Sigma $},
-			ylabel shift     = -5 pt,
-			legend columns   = 1,
-			legend style     = {
-				at           = {(0.04, 0.69)},
-				anchor       = west,
-				fill         = white,
-				fill opacity = 0.6,
-				draw opacity = 1,
-				text opacity = 1,
-			},
-			ylabel near ticks,
-			try min ticks = 6,
-			bar width  = 2pt,
-			width      = 6.4cm,
-			ybar stacked,
-			scaled y ticks = base 10:-3,
-          	xmin = 0.15, xmax = 5.05, ymin = 0
-		]
-			\pgfplotstableread{images/partModelUpdating/perturbation-plate-samplesize.txt}\contentFile
-			\addplot table [x index = 0, y index = 1] {\contentFile};
-			\addplot table [x index = 0, y index = 2] {\contentFile};
-			\addplot table [x index = 0, y index = 3] {\contentFile};
-			\addplot table [x index = 0, y index = 4] {\contentFile};
-			\addplot table [x index = 0, y index = 5] {\contentFile};
-			\legend{$ 1 $, $ 3 $, $ 5 $, $ 7 $, $ 9 $}
-		\end{axis}
-	\end{tikzpicture}
-	\caption{Число независимых испытаний пластины} \label{fig:perturbation-plate-samplesize}
-\end{minipage}
+	\begin{minipage}[b]{0.49\textwidth}
+		\centering
+		\begin{tikzpicture}[scale = 1]
+			\begin{semilogyaxis}[
+				xlabel           = {$\Delta \mat{f} $, \% },
+				ylabel           = {$ \varepsilon_{\mathrm{MAC}} $, \%},
+				ylabel shift     = -5 pt,
+				grid             = major,
+				legend columns   = 2,
+				legend style     = {
+					at           = {(0.81, 0.03)},
+					anchor       = south,
+					fill         = white,
+					fill opacity = 0.6,
+					draw opacity = 1,
+					text opacity = 1,
+				},
+				ylabel near ticks,  
+				xtick            = {0, 1, 2, 3, 4, 5},
+				ytick            = {1e-6, 1e-4, 1e-2, 1e0},
+				mark size        = 1.5pt,
+				width            = 8.75cm
+			]
+				\pgfplotstableread{images/partModelUpdating/perturbation-plate-errors.txt}\contentFile
+				\addplot[color = blue, mark = *] table [x index = 0, y index = 1] {\contentFile};
+				\addplot[color = red, mark = triangle*] table [x index = 0, y index = 2] {\contentFile};
+				\addplot[color = olive, mark = diamond*] table [x index = 0, y index = 3] {\contentFile};
+				\addplot[color = purple, mark = halfcircle*] table [x index = 0, y index = 4] {\contentFile};
+				\addplot[color = teal, mark = x] table [x index = 0, y index = 5] {\contentFile};
+				\legend{$ 1 $, $ 3 $, $ 5 $, $ 7 $, $ 9 $}
+			\end{semilogyaxis}
+		\end{tikzpicture}
+		\caption{Погрешность определения форм колебаний} \label{fig:perturbation-plate-errors}
+	\end{minipage}
+	\hfill
+	\begin{minipage}[b]{0.49\textwidth}
+		\centering
+		\begin{tikzpicture}[scale = 1]
+			\begin{axis}[
+				xlabel           = {$\Delta \mat{f} $, \% },
+				ylabel           = {$ N_\Sigma $},
+				ylabel shift     = -10 pt,
+				legend columns   = 1,
+				legend style     = {
+					at           = {(0.03, 0.72)},
+					anchor       = west,
+					fill         = white,
+					fill opacity = 0.6,
+					draw opacity = 1,
+					text opacity = 1,
+				},
+				ylabel near ticks,
+				try min ticks = 6,
+				bar width  = 3pt,
+				width      = 8.75cm,
+				ybar stacked,
+				scaled y ticks = base 10:-3,
+	          	xmin = 0.15, xmax = 5.05, ymin = 0
+			]
+				\pgfplotstableread{images/partModelUpdating/perturbation-plate-samplesize.txt}\contentFile
+				\addplot table [x index = 0, y index = 1] {\contentFile};
+				\addplot table [x index = 0, y index = 2] {\contentFile};
+				\addplot table [x index = 0, y index = 3] {\contentFile};
+				\addplot table [x index = 0, y index = 4] {\contentFile};
+				\addplot table [x index = 0, y index = 5] {\contentFile};
+				\legend{$ 1 $, $ 3 $, $ 5 $, $ 7 $, $ 9 $}
+			\end{axis}
+		\end{tikzpicture}
+		\caption{Число независимых испытаний} \label{fig:perturbation-plate-samplesize}
+	\end{minipage}
 \end{figure}
 
 Развита методика, состоящая в декомпозиции крупногабаритных трансформируемых конструкций (КТК) на составные части, которые подвергаются модальным испытаниям независимо друг от друга. Результаты испытаний используются для коррекции, освобождения и синтеза расчетных моделей составных частей~\figref{fig:schemeDecomposition}. Обоснован выбор граничных условий в испытаниях составных частей. Кроме того, имея в виду достижение физической согласованности расчетных моделей, предложено использовать для коррекции результаты нескольких экспериментов при различных условиях закрепления одной составной части.
 
 \begin{figure}[!htb]
 	\centering
-	\begin{subfigure}[b]{0.45\textwidth}
-		\includegraphics[width = \textwidth]{decomposition}
+	\begin{subfigure}[b]{0.54\textwidth}
+		\includegraphics[width = \textwidth]{images/synopsis/decomposition}
 	\end{subfigure}
 	\hfill
 	\begin{subfigure}[b]{0.45\textwidth}
 	     % Определение стиля
         \tikzstyle{blockWide} = [rectangle, draw = black, fill = blue!15, rounded corners, text width = 20em, text centered, minimum height = 1.5em, drop shadow] 
         \tikzstyle{blockWideC} = [blockWide, fill = red!20]
-        \tikzstyle{arrow} = [draw, thick, color = black!90, -latex'] 
-        \scriptsize 
+        \tikzstyle{arrow} = [draw, very thick, color = black!90, line width = 0.7mm, -latex'] 
+        \small
         % Задание перменных
-        \def\nodeDist{0.3cm}
+        \def\nodeDist{0.45cm}
         % Отрисовка блок-схемы
         \begin{tikzpicture}[scale = 1, transform shape]
             % Задание узлов		
@@ -231,24 +264,66 @@
         \end{tikzpicture}
 	\end{subfigure}
     \caption{Схема методики синтеза расчетных моделей КТК} \label{fig:schemeDecomposition}
-    \vspace{1em}
 \end{figure}  
 
-\begin{wrapfigure}[29]{r}{0.5\textwidth}
-	\begin{center}
-		\vspace{-1em}
-		\begin{subfigure}[t]{0.49\linewidth}
-			\centering
-			\includegraphics[height = \textwidth]{test-spacecraft-panel-distribution}
-		\end{subfigure}
-		\begin{subfigure}[t]{0.49\linewidth}
-			\centering
-			\includegraphics[width = \textwidth]{test-spacecraft-orbital-distribution}
-		\end{subfigure}
-		\caption{Изменения узловых жесткостей} \label{fig:test-spacecraft-distribution}
-		\vspace{-0.5em}
+Методика синтеза протестирована на примере модели космического аппарата, состоящего из орбитального модуля и панелей солнечных батарей. Модели каждой составной части корректировались по девяти частотам собственных колебаний, используя данных двух виртуальных экспериментов. Распределение изменений узловых жесткостей по всем линейным степеням свободы для моделей составных частей после коррекции показано на рисунке~\ref{fig:test-spacecraft-distribution}. Максимальная погрешность в определении первых шестнадцати частот синтезированной (глобальной) модели до коррекции равнялась $ 5.1 $ \%, а после коррекции составила $ 0.1 $ \%~\tabref{tab:resultUpdatingTestSpacecraft}. 
+
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}[t]{0.44\textwidth}
+		\centering
+		\includegraphics[width = \textwidth]{test-spacecraft-orbital-distribution}
+		\caption{Орбитальный модуль} \label{subfig:test-orbital-distribution}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[t]{0.42\textwidth}
+		\centering
+		\includegraphics[height = \textwidth]{test-spacecraft-panel-distribution}
+		\caption{Панели солнечных батарей} \label{subfig:test-panel-distribution}
+	\end{subfigure}
+	\vspace{1em}
+	\caption{Изменения жесткостей при коррекции моделей составных частей} \label{fig:test-spacecraft-distribution} 
+\end{figure}
+
+\begin{figure}[!htb]
+	\centering
+	\begin{minipage}{0.52\textwidth}
+		\hspace{2em} Сходимость алгоритма коррекции оценивалась по частотному критерию $ \lVert \mat{\alpha} \rVert_{\max} $, равному наибольшему относительному отклонению расчетных частот от целевых значений~\figref{fig:test-spacecraft-convergence}.
+		\vspace{-1.5em}
+		\begin{center}
+			\begin{tikzpicture}[scale = 1]
+				\begin{semilogyaxis}[
+					xlabel            = {Номер итерации коррекции},
+					ylabel            = {$ \lVert \mat{\alpha} \rVert_{\max} $}, 
+					ylabel shift      = -5 pt,
+					width             = 9cm,
+					grid              = both,
+					legend cell align = left,
+					legend style      = {
+						at            = {(0.02, 0.12)},
+						anchor        = west,
+						fill          = white,
+						fill opacity  = 0.6,
+						draw opacity  = 1,
+						text opacity  = 1,
+					},
+					ylabel near ticks,
+					xmin = 0, xmax = 8
+				]
+					\addplot table {images/partModelUpdating/test-spacecraft-panels-convergence.txt};
+					\addplot table {images/partModelUpdating/test-spacecraft-orbital-convergence.txt};
+					\legend{Панели солнечных батарей, Орбитальный модуль}
+				\end{semilogyaxis}
+			\end{tikzpicture}
+			\caption{Оценка сходимости} \label{fig:test-spacecraft-convergence}
+		\end{center}
+	\end{minipage}
+	\hfill
+	\begin{minipage}{0.45\textwidth}
+		\centering
+		\vspace{0.1em}
 		\begin{talltblr}[
-			caption = {Cинтез расчетной модели КА},
+			caption = {Cинтез модели КА},
 			label = {tab:resultUpdatingTestSpacecraft}
 		]{
 			colspec = {|X[c, -1]|X[c]|X[c]|X[c]|X[c]|},
@@ -270,33 +345,27 @@
 			15 & -3.303 & -0.234 & -3.066 & -0.006 \\
 			16 & -3.303 & -0.234 & -3.066 & -0.005 \\
 		\end{talltblr}
-	\end{center}
-\end{wrapfigure}
+	\end{minipage}
+	\vspace{0.3em}
+\end{figure}
 
-Методика синтеза протестирована на примере модели космического аппарата, состоящего из орбитального модуля и панелей солнечных батарей. Модели каждой составной части корректировались по девяти частотам собственных колебаний, используя данных двух виртуальных экспериментов. Максимальная погрешность в определении первых шестнадцати частот синтезированной (глобальной) модели до коррекции равнялась $ 5.1 $ \%, а после коррекции составила $ 0.1 $ \%~\tabref{tab:resultUpdatingTestSpacecraft}. Распределение изменений узловых жесткостей по всем линейным степеням свободы для моделей составных частей после коррекции показано на рисунке~\ref{fig:test-spacecraft-distribution}. 
+\begin{wrapfigure}[17]{r}{0.6\textwidth}
+	\centering
+	\includegraphics[width = 1\linewidth]{gencalc-interface}
+	\caption{Определение модальных параметров} \label{fig:gencalc-interface}
+\end{wrapfigure}
 
 \pdfbookmark[1]{Глава 3. Результаты модальных испытаний как исходные данные для коррекции расчетных моделей конструкций}{partModalAnalysis}
 
-\highlight{В третьей главе} развиваются методы классического и операционного модального анализа, позволяющие получать достоверные оценки динамических параметров для коррекции. С целью обеспечения возможности оперативного расчета обобщенных характеристик по результатам модальных испытаний, составлена программная реализация, позволяющая посредством графического интерфейса~\figref{subfig:gencalc-interface} варьировать параметры расчета и исследовать зависимости получаемых характеристик несколькими способами одновременно. 
+\highlight{В третьей главе} развиты методы классического и операционного модального анализа, позволяющие получать достоверные оценки динамических параметров для коррекции. С целью обеспечения возможности оперативного расчета обобщенных характеристик по результатам модальных испытаний, составлена программная реализация, позволяющая посредством графического интерфейса~\figref{fig:gencalc-interface} варьировать параметры расчета и исследовать зависимости получаемых характеристик несколькими способами одновременно. 
 
-Одним из ключевых требований обеспечения непрерывности производственного процесса авиационной техники является сокращение времени между натурными испытаниями и первым вылетом. Этой цели служит разработанная программа~\figref{subfig:analyzer-interface}, использующая программный интерфейс \name{Testlab Automation} для обработки и представления результатов модального анализа непосредственно в процессе испытаний.
+Одним из ключевых требований обеспечения непрерывности производственного процесса авиационной техники является сокращение времени между натурными испытаниями и первым вылетом. Этой цели служит разработанная программа~\figref{fig:analyzer-interface}, использующая программный интерфейс \name{Testlab Automation} для обработки и представления результатов модального анализа непосредственно в процессе испытаний.
 
-\begin{figure}[!htb]
+\begin{wrapfigure}[15]{r}{0.6\textwidth}
 	\centering
-	\begin{subfigure}[t]{0.45\textwidth}
-		\centering
-		\includegraphics[width = \textwidth]{gencalc-interface}
-		\caption{\small Определение модальных параметров} \label{subfig:gencalc-interface}
-	\end{subfigure}
-	\hfill
-	\begin{subfigure}[t]{0.52\textwidth}
-		\centering
-		\includegraphics[width = \textwidth]{analyzer-interface}
-		\caption{\small Экспресс-представление результатов} \label{subfig:analyzer-interface}
-	\end{subfigure}
-	\vspace{1em}
-	\caption{Программы для обработки и представления результатов модальных испытаний} 
-\end{figure}
+	\includegraphics[width = \linewidth]{analyzer-interface}
+	\caption{Экспресс-представление результатов} \label{fig:analyzer-interface}
+\end{wrapfigure}
 
 Изложена методика контроля зазоров в технических изделиях по искажениям портретов вынужденных колебаний в процессе вибрационных испытаний. Представлен способ поэтапного выявления всех зазоров в объекте испытаний, которые приводят к искажениям портретов колебаний. В рамках описываемого подхода разработана и интегрирована в программное обеспечение управления испытаниями программа анализа портретов колебаний. Методика обнаружения дефектов по искажениям портретов колебаний использована для диагностирования самолётов в процессе модальных испытаний~\figref{fig:distortion-wiring-backlash}, а также космических аппаратов открытого исполнения в технологических вибрационных испытаниях~\figref{fig:distortion-spacecraft}. 
 
@@ -313,15 +382,23 @@
 		\includegraphics[width = 0.8\linewidth]{distortion-spacecraft}
 		\captionof{figure}{Зазоры в узлах установки солнечных батарей} \label{fig:distortion-spacecraft}
 	\end{minipage}
-	\vspace{1em}
+	\vspace{0.5em}
 \end{figure}
 
-\def\shiftPlot{-2em}
-
-\begin{wrapfigure}[14]{r}{0.48\textwidth}
+\begin{wrapfigure}[9]{r}{0.4\textwidth}
 	\begin{center}
 		\vspace{-1.5em}
-		\hspace{\shiftPlot}
+		\includegraphics[width = 1\linewidth]{reflector-experiment}
+		\caption{Рефлектор в акустической камере} \label{fig:reflector-experiment}
+	\end{center}
+\end{wrapfigure}
+
+Разработан подход определения модальных параметров, обладающий низкий чувствительностью к дрейфу показаний (тренду) акселерометров, регистрирующих отклики конструкции на импульсное воздействие (\name{ADA}). При этом разметка временных границ анализируемых участков осуществляется автоматически методом сегментации. Методы операционного модального анализа: \name{SSI}, \name{ERA}, \name{N4SID} и \name{ADA}, протестированы на примере имитационной модели беспилотного летательного аппарата и применены для определения модальных характеристик рефлектора КА по результатам испытаний в акустической камере~\figref{fig:reflector-experiment}.
+
+\begin{wrapfigure}[15]{r}{0.5\textwidth}
+	\begin{center}
+		\vspace{-1.5em}
+		\hspace{-1em}
 		\begin{tikzpicture}[scale = 1]
 			\small
 			\begin{axis}[
@@ -333,7 +410,7 @@
 				legend columns    = 1,
 				legend cell align = {left},
 				legend style      = {
-					at            = {(0.025, 0.7)},
+					at            = {(0.025, 0.76)},
 					anchor        = west,
 					fill          = white,
 					fill opacity  = 0.6,
@@ -354,10 +431,10 @@
 				ylabel near ticks,  
 				try min ticks    = 6,
 				mark size        = 1.25pt,
-				width            = 6.1cm,
-				height           = 6.1cm
+				width            = 9cm,
+				height           = 8.25cm,
 			]
-				\pgfplotstableread{images/partModalAnalysis/flight-decrements-2.txt}\contentFile
+				\pgfplotstableread{images/synopsis/flight-decrements-2.txt}\contentFile
 				\addplot[color = blue, thick, mark = *, smooth, tension = 0.2] table [x index = 0, y index = 1] {\contentFile};
 				\addplot[color = gray, thick, mark = triangle*, smooth, tension = 0.2] table [x index = 0, y index = 2] {\contentFile};
 				\addplot[color = teal, thick, mark = diamond*, smooth, tension = 0.2] table [x index = 0, y index = 3] {\contentFile};
@@ -367,7 +444,7 @@
 				\legend{\name{SSI-DD}, \name{ERA}, \name{ADA}, \name{N4SID}, {\name{ЛИИ}, оценка снизу}, {\name{ЛИИ}, оценка сверху}}
 			\end{axis}
 		\end{tikzpicture}
-	    \caption{Скоростные зависимости логарифмического декремента} \label{fig:flight-decrements}
+		\caption{Скоростные зависимости логарифмического декремента} \label{fig:flight-decrements}
 	\end{center}
 \end{wrapfigure}
 
@@ -377,19 +454,19 @@
 
 \highlight{Четвертая глава} посвящена применению разработанных методик для решения практических задач коррекции, освобождения и синтеза расчетных динамических моделей. Разработан способ моделирования податливости закреплений в условиях эксперимента. 
 
-\begin{wrapfigure}[25]{r}{0.4\textwidth}
+\begin{wrapfigure}[21]{r}{0.4\textwidth}
 	\begin{center}
 		\vspace{-3em}
 		\includegraphics[width = 1\linewidth]{tu-204-experiment}
-		\caption{Общий вид ДПМ \mbox{Ту-204} на упругой подвеске} \label{fig:tu-204-experiment}
-		\vspace{-0.2em}
+		\caption{Общий вид ДПМ} \label{fig:tu-204-experiment}
+		\vspace{1.3em}
 		\begin{talltblr}[
 			caption = {Коррекция ДПМ},
 			label   = {tab:updatingTu204}
 		]{
 			colspec = {|c|c|c|c|c|c|c|c|},
 			hlines,
-			colsep = 1.6pt,
+			colsep = 4pt,
 			rows = {font = \small}
 		}
 			\SetCell[r = 3]{c} Тон & \SetCell[c = 7]{c} {Погрешность до и после \\ коррекции, \%}  \\
@@ -409,30 +486,25 @@
 
 Осуществлен синтез глобальной модели каркаса зонтичной антенны по результатам испытания её составных частей. В результате проведенных исследований показано, что использование полноразмерных моделей составных частей является предпочтительным по отношению к редуцированным моделям в силу того, что первые более полно описывает связи между подконструкциями.
 
-\begin{wrapfigure}[11]{r}{0.4\textwidth}
+\begin{wrapfigure}[12]{r}{0.38\textwidth}
 	\begin{center}
-		\vspace{-5em}
+		\vspace{-1em}
 		\includegraphics[width = \linewidth]{wing-experiment} 
-		\captionof{figure}{Общий вид ОЧК изделия \mbox{С-70} на подвеске} \label{fig:wing-experiment}
+		\captionof{figure}{Общий вид ОЧК} \label{fig:wing-experiment}
 	\end{center}
 \end{wrapfigure}
 
 Выполнена коррекция расчетной модели отъемной части крыла (ОЧК) изделия \mbox{С-70}~\figref{fig:wing-experiment}. По результатам экспериментального модального анализа было выявлено, что полученные частоты собственных колебаний консоли крыла существенно отличаются от расчетных. Это во многом обусловлено тем, что масса конструкции, выполненной из композиционных материалов, в расчетной схеме представлялась дискретно, а жесткостное распределение моделировалось невесомыми панелями с изотропными характеристиками. Однако, даже в случае столь существенных различий в схематизации, целевые частоты по пяти тонам собственных колебаний были достигнуты с заданной точностью. 
 
-Уточнены упругие характеристики модели гирдера (подставки), который используется для размещения электрофизического оборудования в накопительной части кольца центра коллективного пользования <<Сибирский кольцевой источник фотонов>>~\figref{fig:girder-experiment}. Коррекция позволит улучшить эксплутационные характеристики совместной системы гирдера с оборудованием за счет избежания возникновения резонансов от сейсмических колебаний, приводящих к потере качества электронного пучка. Построена модель фундамента, идентифицированная по низшим частотам собственных колебаний. Модель гирдера на упругом основании скорректирована по шести частотам упругих тонов собственных колебаний. Минимальный критерий модального соответствия, связывающий формы колебания до и после коррекции, составил $ 0.9412 $~\figref{fig:girder-mac}. Суммарные модальные эффективные массы корректируемых тонов колебаний по направлениям глобальной системы координат составили: $ 79 $, $ 96 $ и $ 97 $ \%. 
-
-\begin{figure}[!htb]
-	\centering
-	\vspace{-0.5em}
-	\begin{minipage}{0.5\textwidth}
-		\centering
+\begin{wrapfigure}[27]{r}{0.52\textwidth}
+	\begin{center}
+		\vspace{-1.5em}
 		\includegraphics[width = \linewidth]{girder-full-system} 
-		\captionof{figure}{Совместная система гирдера с оборудованием} \label{fig:girder-experiment}
-	\end{minipage}
-	\hfill
-	\begin{minipage}{0.435\textwidth}
-		\centering
-		\includegraphics[width = \linewidth]{girder-mac}
-		\captionof{figure}{Сравнение форм колебаний до и после коррекции} \label{fig:girder-mac}
-	\end{minipage}
-\end{figure}
+		\captionof{figure}{Гирдер с оборудованием} \label{fig:girder-experiment}
+		\vspace{1.25em}
+		\includegraphics[width = \linewidth]{girder-mac-scaled}
+		\captionof{figure}{Сравнение форм колебаний} \label{fig:girder-mac}
+	\end{center}
+\end{wrapfigure}
+
+Уточнены упругие характеристики модели гирдера (подставки), который используется для размещения электрофизического оборудования в накопительной части кольца центра коллективного пользования <<Сибирский кольцевой источник фотонов>>~\figref{fig:girder-experiment}. Коррекция позволит улучшить эксплутационные характеристики совместной системы гирдера с оборудованием за счет избежания возникновения резонансов от сейсмических колебаний, приводящих к потере качества электронного пучка. Построена модель фундамента, идентифицированная по низшим частотам собственных колебаний. Модель гирдера на упругом основании скорректирована по шести частотам упругих тонов собственных колебаний. Минимальный критерий модального соответствия, связывающий формы колебания до и после коррекции, составил $ 0.941 $~\figref{fig:girder-mac}. Суммарные модальные эффективные массы корректируемых тонов колебаний по направлениям глобальной системы координат составили: $ 79 $, $ 96 $ и $ 97 $ \%. 

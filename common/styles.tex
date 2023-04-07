@@ -85,13 +85,8 @@
 \renewcommand\thesubfigure{\asbuk{subfigure}} 
 
 % Выбор размера шрифта в зависимости от типа документа
-\ifsynopsis
-	\DeclareCaptionFont{norm}{\fontsize{10pt}{11pt}\selectfont}
-	\newcommand{\subfigureskip}{2.pt}
-\else
-	\DeclareCaptionFont{norm}{\fontsize{14pt}{16pt}\selectfont}
-	\newcommand{\subfigureskip}{0.pt}
-\fi
+\DeclareCaptionFont{norm}{\fontsize{14pt}{16pt}\selectfont}
+\newcommand{\subfigureskip}{0.pt}
 
 % Стиль
 \captionsetup[subfloat]{
