@@ -1,0 +1,71 @@
+% --------------------------------------- %
+% --- Создание конвертов в формате С5 --- %
+% --------------------------------------- %
+
+\documentclass{letter}
+
+% Пакеты
+\usepackage[top=2cm, bottom=2cm, left=2cm, right=2cm, papersize={229mm, 162mm}, twoside=false]{geometry} % Геометрия
+\usepackage{tabularray} % Таблицы
+\usepackage{fontspec}   % Шрифты
+\usepackage{setspace}	% Интервал		
+
+% Интервалы и абзацные отступы
+\parindent=0pt
+\renewcommand{\baselinestretch}{1.75} 
+
+% Отсутствие переносов и номеров страниц
+\pagestyle{empty}
+\tolerance=9999
+
+% Шрифты
+\defaultfontfeatures{Ligatures=TeX}
+\setmainfont{Liberation Serif}
+\setsansfont{Liberation Serif Italic}
+\newfontfamily\baseFont[SizeFeatures={Size=14}]{Liberation Serif}
+\newfontfamily\indexFont[SizeFeatures={Size=16}]{Liberation Serif}
+\newfontfamily\sansFont[SizeFeatures={Size=14}]{Liberation Serif Italic}
+\newfontfamily\postFont[SizeFeatures={Size=50}]{PostIndex}
+\overfullrule=0pt
+
+% Данные об отправителе
+\def\fromwhom{Учёного секретаря \\ диссертационного совета~24.2.347.03}
+\def\frominstitution{ФГБОУ~ВО <<Новосибирский государственный технический университет>>}
+\def\fromcity{г.~Новосибирск, Россия}
+\def\fromaddress{пр-кт К.~Маркса, д.~20}
+\def\fromindex{630073}
+
+% Данные о получателе
+\ifx\toindex\undefined \def\toindex{119019} \fi
+\ifx\toinstitution\undefined \def\toinstitution{ИТАР-ТАСС} \fi
+\ifx\towhom\undefined \def\towhom{Учёному секретарю} \fi
+\ifx\tocity\undefined \def\tocity{г.~Москва} \fi
+\ifx\toaddress\undefined \def\toaddress{Кремлёвская~наб., д.~1/9, стр.~8} \fi
+
+\begin{document}
+	\baseFont
+	
+	\parbox{12cm}{
+		\raggedright
+		{\sansFont От кого:} \fromwhom\par\frominstitution\par
+		{\sansFont Откуда:} \fromaddress, \fromcity\par{\indexFont \fromindex}
+	}
+
+	\vfill
+	
+	\noindent
+	\begin{tblr}{
+		colspec = {Q[l, b]X[c]Q[l, b]},
+		column{3} = 10cm,
+		width = \textwidth
+	}
+		{\postFont \$\toindex}
+		&
+		&
+	 	{
+	 		{\sansFont Кому:}
+	 		\ifx\towhom\empty\else\towhom \\ \fi \toinstitution \\
+		 	{\sansFont Куда:} \toaddress, \tocity \\ {\indexFont \toindex}
+		}
+	\end{tblr}
+\end{document}
