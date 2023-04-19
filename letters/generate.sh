@@ -1,6 +1,20 @@
 #!/bin/bash
+# $1 -- формат (C5 или A4)
 
-fileName="source.csv"
+# Параметры файла с адресатами
+baseFileName="source"
+fileExtension=".csv"
+baseOutputFileName="letters"
+
+# Проверка корректности формата
+fileFormat=$1
+if [[ $fileFormat == "C5" || $fileFormat == "A4" ]]; then
+	inputFileName="$baseFileName-$fileFormat$fileExtension"
+	outputFileName="letters-$fileFormat.pdf"
+else
+	echo "File format is not supported. Try using 'C5' or 'A4'"
+	exit
+fi
 
 iRow=0
 
@@ -13,11 +27,11 @@ do
 						    \def\toaddress{$address} \
 						    \def\toinstitution{$institution} \
 						    \def\towhom{$whom} \
-						    \input{letters.tex}"
-done < $fileName
+						    \input{$baseOutputFileName-$fileFormat.tex}"
+done < $inputFileName
 
 # Объединение конвертов
-rm -f letters.pdf
-pdftk $(find -name "*.pdf" | sort -V) cat output letters.pdf.backup
-rm -f *.aux *.log *.pdf
-mv letters.pdf.backup letters.pdf
+rm -f $outputFileName
+pdftk $(find -name "$baseOutputFileName*.pdf" -prune -o -name '*.pdf' -print | sort -V) cat output $baseOutputFileName.pdf.backup
+rm -f *.aux *.log $(find -name "$baseOutputFileName*.pdf" -prune -o -name '*.pdf' -print)
+mv $baseOutputFileName.pdf.backup $outputFileName
