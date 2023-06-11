@@ -1,4 +1,4 @@
-\section{Методика коррекции динамических свойств КЭ-модели}
+\section{Методика коррекции конечно-элементных моделей ЛА}
 
 \begin{frame}{Методика коррекции конечно-элементной модели}
 	\begin{block}{Обобщенная проблема собственных значений}
@@ -15,12 +15,12 @@
 				\Delta \external{\mat{K}} = \operatorname{diag} \cbrackets{\external{c}_1, \external{c}_2, \hdots, \external{c}_N}.
 			\end{gathered}
 		\end{equation}
-		где $ \internal{\mat{c}} $ и $ \external{\mat{c}} $~---~внутренние и внешние корректирующие жесткости; $ q $~---~число внутренних парциальных корректирующих жесткостей, описывающих элемент; $ \mat{G}_j^{(p)} $~---~парциальная матрица жесткости внутреннего коррректирующего элемента; $ e $~---~число внутренних корректирующих элементов.
+		где $ \internal{\mat{c}} $ и $ \external{\mat{c}} $~---~неизвестные внутренние и внешние корректирующие жесткости; $ \mat{G}_j^{(p)} $~---~матрица внутреннего коррректирующего элемента, составленная из длин и направляющих косинусов; $ q $~---~число корректирующих жесткостей, описывающих элемент; $ e $~---~число внутренних корректирующих элементов.
 	\end{block}
 \end{frame}
 
 \begin{frame}{Внутренний корректирующий элемент в виде балки}
-	\begin{block}{Парциальные корректирующие матрицы жесткости}
+	\begin{block}{Матрицы корректирующего элемента}
 		\begin{equation*}
 		\begingroup
 		\setlength\arraycolsep{2pt}
@@ -77,22 +77,25 @@
 \end{frame}
 
 \begin{frame}{Принципиальная схема коррекции}
-	\centering
-	\begin{tikzpicture}[scale = 1]
-		\pgfmathsetmacro{\nodeDist}{0.1}
-		\pgfmathsetmacro{\shiftText}{0.0}
-		% Исходная модель
-		\node[inner sep = 0pt] (initial) at (0, 0) {\includegraphics[width = 0.4\textwidth]{simple-model-initial}};
-		\node[inner sep = 0pt, below = \shiftText of initial.south] (textInitial) {Исходная модель};
-		% Знак
-		\node [below = \nodeDist of textInitial.south, color = blue] (sumSign) {\huge \bfseries +};
-		% Коррректирующие элементы
-		\node[inner sep = 0pt, below = -\nodeDist of sumSign.south] (elements) {\includegraphics[width = 0.4\textwidth]{simple-model-elements}};
-		\node[inner sep = 0pt, below = \shiftText of elements.south] (textElements) {Корректирующие элементы};
-		% Скорректированная модель
-		\draw [-{Latex[length = 4mm]}, color = red, very thick](sumSign.east) ++ (2, 0) --++ (1, 0) node [right] (updated) {\includegraphics[width = 0.5\textwidth]{simple-model-updated}};
-		\node[inner sep = 0pt, below = \shiftText of updated.south] (textUpdated) {Скорректированная модель};
-	\end{tikzpicture}
+	При создании корректирующих элементов учитывается особенности конструкции: наличие плоскостей симметрии и конструктивно-идентичных элементов, а также неопределенность физико-механических характеристик.
+	\begin{center}
+		\begin{tikzpicture}[scale = 1]
+			\pgfmathsetmacro{\nodeDist}{0.1}
+			\pgfmathsetmacro{\shiftText}{0.0}
+			% Исходная модель
+			\node[inner sep = 0pt] (initial) at (0, 0) {\includegraphics[width = 0.3\textwidth]{simple-model-initial}};
+			\node[inner sep = 0pt, below = \shiftText of initial.south] (textInitial) {Исходная модель};
+			% Знак
+			\node [font = \fontsize{30}{32}, below = \nodeDist of textInitial.south, color = blue] (sumSign) {\bfseries +};
+			% Коррректирующие элементы
+			\node[inner sep = 0pt, below = -\nodeDist of sumSign.south] (elements) {\includegraphics[width = 0.3\textwidth]{simple-model-elements}};
+			\node[inner sep = 0pt, below = \shiftText of elements.south] (textElements) {Корректирующие элементы};
+			% Скорректированная модель
+			\draw (sumSign.east) ++ (2.25, 0) node [right] (updated) {\includegraphics[width = 0.5\textwidth]{simple-model-updated}};
+			\draw [line width = 0.75mm, -{Latex[length = 6mm]}, color = red](sumSign.east) ++ (1.25, 0) --++ (1.75, 0);
+			\node[inner sep = 0pt, below = \shiftText of updated.south] (textUpdated) {Скорректированная модель};
+		\end{tikzpicture}
+	\end{center}
 \end{frame}
 
 \begin{frame}{Расчет корректирующих жесткостей}
@@ -114,166 +117,11 @@
 	\end{block}	
 \end{frame}
 
-\begin{frame}{Формирование матрицы демпфирования в физической системе координат}
-	\begin{block}{Нулевое приближение (гипотеза Е.\,C.~Сорокина)}
-		\begin{gather}
-			\mat{H} = \alpha \tilde{\mat{K}} + \beta \mat{M}, \\
-			G(\alpha, \beta) = \sum\limits_{i\,=\,1}^p w_i \left( 1 - \frac{\alpha \tilde{\kappa}_i + \beta \mu_i}{h_i} \right)^2 \rightarrow \min_{\alpha, \beta},
-		\end{gather}
-		где $ \alpha $ и $ \beta $~---~коэффициенты конструкционного и инерционного демпфирования, $ h $~---~целевые обобщенные коэффициенты демпфирования, $ p $~---~число целевых коэффициентов.
-	\end{block}
-	\begin{block}{Преобразование матрицы демпфирования} 
- 		\begin{equation} 
-			\tilde{\mat{H}} = \mat{H} + \Delta \internal{\mat{H}} + \Delta \external{\mat{H}},
-		\end{equation}
-		где $ \Delta \internal{\mat{H}} $ и $ \Delta \external{\mat{H}} $~---~матрицы демпфирования внутренних и внешних корректирующих элементов. 
-	\end{block}
-\end{frame}
-
-\begin{frame}{Методика освобождения КЭ-модели от закреплений}
-	\begin{equation} 
-		\begin{pmatrix}
-			\mat{K} & -(\sum k)^\intercal \\
-			 -\sum k & \mat{0} 
-		\end{pmatrix} 
-		\begin{Bmatrix}
-			\tilde{X} \\ 
-			\xi
-		\end{Bmatrix}			
-		+ 
-		\begin{pmatrix}
-			\mat{M} & \mat{0} \\
-			\mat{0} & \mu - \sum \sum m
-		\end{pmatrix}
-			\begin{Bmatrix}
-			\ddot{\tilde{\mat{X}}} \\ 
-			\ddot{\mat{\xi}}
-		\end{Bmatrix}	
-		= 0,
-	\end{equation}
-	\begin{itemize}
-		\item $ \mat{K}, \mat{M} \in R ^ {n \times n} $~---~матрицы жесткости и масс закрепленной модели,
-		\item $ \mu \in R^{6 \times 6} $~---~матрица инерции,
-		\item $ \xi $~---~вектор перемещений как жесткого целого,
-		\item $ \tilde{\mat{X}} $~---~вектор перемещений свободной модели,
-		\item $ \sum k = F_s(\mat{K}) \in R ^ {6 \times n}$, $ \sum \sum m = F_m(F_s(\mat{M})) \in R ^ {6 \times 6} $~{\footnotemark}.
-	\end{itemize}
-	\vfill
-	\footnotetext[1]{Матричные функции $ F_s,\ F_m $ представлены на следующем слайде.}
-\end{frame}
-
-\begin{frame}{Матричные функции $ F_m $ и $ F_s $}
-	\begingroup
-	\setlength\arraycolsep{2pt}
-	\begin{gather*}
-		\small
-		F_m(\mat{A})
-		= \left(
-		\begin{matrix}
-			\sum \limits_{i=1}^N a_{1,G_{i,1}} 
-			& \hdots
-			& \sum \limits_{i=1}^N a_{1,G_{i,3}} 
-			&
-			\sum\limits_{i=1}^N
-			\left(
-			\begin{matrix}
-				a_{1,G_{i,4}} + \\
-				+ \Delta y_i^0 a_{1, G_{i,3}} - \\
-				- \Delta z_i^0 a_{1, G_{i,2}} \\
-			\end{matrix} \right)
-			& 
-			\hdots
-			&
-			\sum\limits_{i=1}^N
-			\left(
-			\begin{matrix}
-				a_{1,G_{i,6}} + \\
-				+ \Delta x_i^0 a_{1, G_{i,2}} - \\
-				- \Delta y_i^0 a_{1, G_{i,1}} \\
-			\end{matrix} \right) \\ 
-			\hdots & \hdots & \hdots & \hdots & \hdots & \hdots \\
-			\sum \limits_{i=1}^N a_{6,G_{i,1}} 
-			& \hdots 
-			& \sum \limits_{i=1}^N a_{6,G_{i,3}} 
-			&
-			\sum\limits_{i=1}^N
-			\left(
-			\begin{matrix}
-				a_{6,G_{i,4}} + \\
-				+ \Delta y_i^0 a_{6, G_{i,3}} - \\
-				- \Delta z_i^0 a_{6, G_{i,2}} \\
-			\end{matrix} \right)
-			& 
-			\hdots
-			&
-			\sum\limits_{i=1}^N
-			\left(
-			\begin{matrix}
-				a_{6,G_{i,6}} + \\
-				+ \Delta x_i^0 a_{6, G_{i,2}} - \\
-				- \Delta y_i^0 a_{6, G_{i,1}} \\
-			\end{matrix} \right) \\ 
-		\end{matrix}
-		\right), \\ 
-		\small
-		F_s(\mat{A}) ^ \intercal
-		= \left(
-		\begin{matrix}	
-			\sum \limits_{i=1}^N a_{G_{i,1}, 1} 
-			& \hdots 
-			& \sum \limits_{i=1}^N a_{G_{i,3}, 1} 
-			&
-			\sum\limits_{i=1}^N
-			\left(
-			\begin{matrix}
-				a_{G_{i,4}, 1} + \\
-				+ \Delta y_i^0 a_{G_{i,3}, 1} - \\
-				- \Delta z_i^0 a_{G_{i,2}, 1} \\
-			\end{matrix} \right)
-			& 
-			\hdots
-			&
-			\sum\limits_{i=1}^N
-			\left(
-			\begin{matrix}
-				a_{G_{i,6}, 1} + \\
-				+ \Delta x_i^0 a_{G_{i,2}, 1} - \\
-				- \Delta y_i^0 a_{G_{i,1}, 1} \\
-			\end{matrix} \right) \\ 
-			\hdots & \hdots & \hdots & \hdots & \hdots & \hdots \\
-			\sum \limits_{i=1}^N a_{G_{i,1},n} 
-			& \hdots
-			& \sum \limits_{i=1}^N a_{G_{i,3},n} 
-			&
-			\sum\limits_{i=1}^N
-			\left(
-			\begin{matrix}
-				a_{G_{i,4},n} + \\
-				+ \Delta y_i^0 a_{G_{i,3}, n} - \\
-				- \Delta z_i^0 a_{G_{i,2}, n} \\
-			\end{matrix} \right)	
-			& 
-			\hdots
-			&
-			\sum\limits_{i=1}^N
-			\left(
-			\begin{matrix}
-				a_{G_{i,6}, n} + \\
-				+ \Delta x_i^0 a_{G_{i,2}, n} - \\
-				- \Delta y_i^0 a_{G_{i,1}, n} \\
-			\end{matrix} \right) \\ 
-		\end{matrix}
-		\right),
-	\end{gather*}
-	\endgroup
-	где $ G_{i, j} $~---~номер уравнения $ i $-го узла $ j $-ой степени свободы; $ a_{i,j}$~---~элементы матрицы $ \mat{A} $; $ \Delta x^0_i, \Delta y^0_i, \Delta z^0_i $~---~компоненты радиус-вектора от центра тяжести до $ i $-го узла недеформированной конструкции.
-\end{frame}
-
 \section{Оценка чувствительности методики коррекции}
 
 \begin{frame}{Оценка чувствительности методики коррекции}
-	\textbf{\underline{Цель}}: оценка влияния погрешностей в экспериментальном определении частот на устойчивость результата коррекции. \\
-	\textbf{\underline{Алгоритм}}
+	\textbf{\underline{Задача}}: оценить влияние погрешностей в экспериментальном определении частот на устойчивость результата коррекции. \\ \vspace{0.5em}
+	\textbf{\underline{Алгоритм оценки:}}
 	\begin{enumerate}
 		\item Вычисление частот и форм собственных колебаний исходной модели.
 		\item Варьирование числа корректируемых тонов собственных колебаний и внесение случайных отклонений $ \Delta \mat{f} \sim \set{N} \rbrackets{\mu, \sigma ^ 2} $ в значения частот. 
@@ -283,155 +131,373 @@
 	\end{enumerate}
 \end{frame}
 
-\begin{frame}{Оценка чувствительности на примере свободной прямоугольной пластины}
-	\begin{center}	
+\begin{frame}{Оценка чувствительности методики коррекции}
+	На примере свободной прямоугольной пластины показано, что:
+	\begin{itemize}
+		\item Методика устойчива во всем диапазоне вносимых погрешностей. 
+		\item Результирующие кривые стремятся к огибающей, соответствующей предельному решению.
+	\end{itemize}	
+	\begin{center}
 		\begin{columns}
 			\begin{column}{0.5\textwidth}
 				\centering
 				\begin{figure}
-					\includegraphics[width = 1\textwidth]{perturbation-plate-convergence}
-					\caption{Погрешность определения форм колебаний в зависимости от погрешности целевых частот}
+					\begin{tikzpicture}[scale = 1]
+						\hspace{-0.5em}
+						\begin{semilogyaxis}[
+							xlabel           = {$\Delta \mat{f} $, \% },
+							ylabel           = {$ \varepsilon_{\mathrm{MAC}} $, \%},
+							ylabel shift     = -5 pt,
+							grid             = major,
+							legend columns   = 3,
+							legend style     = {
+								at           = {(0.65, 0.03)},
+								anchor       = south,
+								fill         = white,
+								fill opacity = 0.6,
+								draw opacity = 1,
+								text opacity = 1,
+							},
+							ylabel near ticks,  
+							xtick            = {0, 1, 2, 3, 4, 5},
+							ytick            = {1e-6, 1e-4, 1e-2, 1e0},
+							mark size        = 1.1pt,
+							width            = 6.1cm
+						]
+							\pgfplotstableread{images/partModelUpdating/perturbation-plate-errors.txt}\contentFile
+							\addplot[color = blue, mark = *] table [x index = 0, y index = 1] {\contentFile};
+							\addplot[color = red, mark = triangle*] table [x index = 0, y index = 2] {\contentFile};
+							\addplot[color = olive, mark = diamond*] table [x index = 0, y index = 3] {\contentFile};
+							\addplot[color = purple, mark = halfcircle*] table [x index = 0, y index = 4] {\contentFile};
+							\addplot[color = teal, mark = x] table [x index = 0, y index = 5] {\contentFile};
+							\legend{$ 1 $, $ 3 $, $ 5 $, $ 7 $, $ 9 $}
+						\end{semilogyaxis}
+					\end{tikzpicture}
+					Погрешность определения форм колебаний свободной пластины
 				\end{figure}
 			\end{column}
+			\hfill
 			\begin{column}{0.5\textwidth}
 				\centering
-				\vspace{-0.9em}
+				\vspace{-1.8em}
 				\begin{figure}
-					\includegraphics[width = 1\textwidth]{perturbation-plate-samplesize}
-					\caption{Число независимых испытаний в зависимости от погрешности целевых частот}
+					\begin{tikzpicture}[scale = 1]
+						\hspace{-1em}
+						\begin{axis}[
+							xlabel           = {$\Delta \mat{f} $, \% },
+							ylabel           = {$ N_\Sigma $},
+							ylabel shift     = -10 pt,
+							legend columns   = 1,
+							legend style     = {
+								at           = {(0.05, 0.65)},
+								anchor       = west,
+								fill         = white,
+								fill opacity = 0.6,
+								draw opacity = 1,
+								text opacity = 1,
+							},
+							ylabel near ticks,
+							try min ticks = 6,
+							bar width  = 2pt,
+							width      = 6.1cm,
+							ybar stacked,
+							scaled y ticks = base 10:-3,
+							tick scale binop = \times,
+				          	xmin = 0.15, xmax = 5.05, ymin = 0
+						]
+							\pgfplotstableread{images/partModelUpdating/perturbation-plate-samplesize.txt}\contentFile
+							\addplot table [x index = 0, y index = 1] {\contentFile};
+							\addplot table [x index = 0, y index = 2] {\contentFile};
+							\addplot table [x index = 0, y index = 3] {\contentFile};
+							\addplot table [x index = 0, y index = 4] {\contentFile};
+							\addplot table [x index = 0, y index = 5] {\contentFile};
+							\legend{$ 1 $, $ 3 $, $ 5 $, $ 7 $, $ 9 $}
+						\end{axis}
+					\end{tikzpicture}
+					Число независимых испытаний свободной пластины
 				\end{figure}
 			\end{column}
 		\end{columns}
 	\end{center}
 \end{frame}
 
+\section{Способ освобождения КЭ-моделей от закреплений}
+
+\begin{frame}{Способ освобождения КЭ-модели от закреплений}
+	\begin{equation} 
+		\begin{pmatrix}
+			\mat{K} & -(\sum \mat{k})^\intercal \\
+			 -\sum \mat{k} & \mat{0} 
+		\end{pmatrix} 
+		\begin{Bmatrix}
+			\tilde{X} \\ 
+			\xi
+		\end{Bmatrix}			
+		+ 
+		\begin{pmatrix}
+			\mat{M} & \mat{0} \\
+			\mat{0} & \mu - \sum \sum \mat{m}
+		\end{pmatrix}
+			\begin{Bmatrix}
+			\ddot{\tilde{\mat{X}}} \\ 
+			\ddot{\mat{\xi}}
+		\end{Bmatrix}	
+		= 0,
+	\end{equation}
+	где $ \sum k = F_s(\mat{K}) \in R ^ {6 \times n}$, $ \sum \sum m = F_m(F_s(\mat{M})) \in R ^ {6 \times 6} $~---~дополнительные матричные элементы.
+	\begin{center}
+		\begin{tikzpicture}[scale = 1]
+			\pgfmathsetmacro{\nodeDist}{0.2}
+			\pgfmathsetmacro{\shiftText}{0.01}
+			\tikzstyle{arrow} = [draw, line width = 0.75mm, -{Latex[length = 6mm]}] 
+			% Су-34
+			\node[inner sep = 0pt] (spring) at (0, 0) {\includegraphics[width = 0.35\textwidth]{spring-su-34}};
+			\node[inner sep = 0pt, below = \shiftText of spring.south] (textSpring) {Испытания на упругой подвеске};
+			\draw (spring.east) ++ (1.5, 0) node [right] (freeSu34) {\includegraphics[width = 0.3\textwidth]{free-su-34}};
+			% Як-152
+			\node[inner sep = 0pt, below = \nodeDist of textSpring.south] (gear) {\includegraphics[width = 0.35\textwidth]{gear-yak-152}};
+			\node[inner sep = 0pt, below = \shiftText of gear.south] (textGear) {Испытания на шасси};
+			\draw (gear.east) ++ (1.5, 0) node [right] (freeYak152) {\includegraphics[width = 0.3\textwidth]{free-yak-152}};
+			\node[inner sep = 0pt, below = \shiftText of freeYak152.south] (textFree) {После освобождения};
+			% Стрелки
+			\draw [arrow, color = red](spring.east) ++ (0.2, 0) --++ (1.3, 0);
+			\draw [arrow, color = blue](gear.east) ++ (0.2, 0) --++ (1.3, 0);
+		\end{tikzpicture}
+	\end{center}
+\end{frame}
+
+\section{Положения, выносимые на защиту}
+
+\begin{frame}{Положения, выносимые на защиту}
+	\begin{enumerate}
+		\item Методика коррекции конечно-элементных моделей ЛА, заключающаяся в добавлении корректирующих конечных элементов, параметры которых определяются по результатам модальных испытаний.
+		\item Способ определения частот и форм собственных колебаний свободной конструкции по результатам испытаний этой конструкции с наложенными связями.
+	\end{enumerate}
+\end{frame}
+
 \section{Методика синтеза расчетной модели конструкции из ее составных частей}
 
 \begin{frame}{Методика синтеза глобальных расчетных моделей конструкций}
-	\begin{columns}
-		\begin{column}{0.5\textwidth}
-			\centering
-			\includegraphics[width = 1\textwidth]{decomposition}
-		\end{column}
-		\begin{column}{0.5\textwidth}
-			\centering
-			% Определение стиля
-			\tikzstyle{blockWide}=[rectangle, draw = black, fill = blue!20, rounded corners, text width = 20em, text centered, minimum height = 1.5em, drop shadow] % Блок
-			\tikzstyle{blockWideC}=[blockWide, fill = red!20]
-			\tikzstyle{arrow} = [draw, thick, color=black!90, -latex'] % Стрелка
-			\scriptsize % Размер шрифта
-			% Задание перменных
-			\def\nodeDist{0.3cm} % Дистанция между узлами
-			% Отрисовка блок-схемы
-			\begin{tikzpicture}[scale = 1, transform shape]
-				% Задание узлов		
-				\node (modalTests) [blockWide] {Модальные испытания составных частей конструкции};
-				\node (modelUpdating) [blockWide, below = \nodeDist of modalTests] {Коррекция расчетных моделей составных частей конструкции по результатам испытаний};
-				\node (checkInfluence) [blockWide, below = \nodeDist of modelUpdating] {Освобождение закрепленных расчетных моделей составных частей конструкции};
-				\node (buildRealModel) [blockWide, below = \nodeDist of checkInfluence] {Синтез расчетной модели полной конструкции из её составных частей};
-				\node (buildMathModel) [blockWide, below = \nodeDist of buildRealModel] {Определение динамических характеристик полной расчетной модели};
-				% Соединение узлов
-				\draw [arrow] (modalTests.south) -- (modelUpdating.north);
-				\draw [arrow] (modelUpdating.south) -- (checkInfluence.north);
-				\draw [arrow] (checkInfluence.south) -- (buildRealModel.north);
-				\draw [arrow] (buildRealModel.south) -- (buildMathModel.north);
-			\end{tikzpicture}
-		\end{column}
-	\end{columns}
+	\begin{center}
+		\begin{columns}
+			\begin{column}{0.5\textwidth}
+				\centering
+				\includegraphics[width = 1\textwidth]{images/synopsis/decomposition}
+			\end{column}
+			\begin{column}{0.5\textwidth}
+				\centering
+				% Определение стиля
+				\tikzstyle{blockWide}=[rectangle, draw = black, fill = blue!20, rounded corners, text width = 20em, text centered, minimum height = 1.5em, drop shadow] % Блок
+				\tikzstyle{blockWideC}=[blockWide, fill = red!20]
+				\tikzstyle{arrow} = [draw, thick, color=black!90, -latex'] % Стрелка
+				\scriptsize % Размер шрифта
+				% Задание перменных
+				\def\nodeDist{0.3cm} % Дистанция между узлами
+				% Отрисовка блок-схемы
+				\begin{tikzpicture}[scale = 1, transform shape]
+					% Задание узлов		
+					\node (modalTests) [blockWide] {Модальные испытания составных частей конструкции};
+					\node (modelUpdating) [blockWide, below = \nodeDist of modalTests] {Коррекция расчетных моделей составных частей конструкции по результатам испытаний};
+					\node (checkInfluence) [blockWide, below = \nodeDist of modelUpdating] {Освобождение закрепленных расчетных моделей составных частей конструкции};
+					\node (buildRealModel) [blockWide, below = \nodeDist of checkInfluence] {Синтез расчетной модели полной конструкции из её составных частей};
+					\node (buildMathModel) [blockWide, below = \nodeDist of buildRealModel] {Определение динамических характеристик полной расчетной модели};
+					% Соединение узлов
+					\draw [arrow] (modalTests.south) -- (modelUpdating.north);
+					\draw [arrow] (modelUpdating.south) -- (checkInfluence.north);
+					\draw [arrow] (checkInfluence.south) -- (buildRealModel.north);
+					\draw [arrow] (buildRealModel.south) -- (buildMathModel.north);
+				\end{tikzpicture}
+			\end{column}
+		\end{columns}
+		\vspace{0.2em}
+		Схема методики синтеза глобальных расчетных моделей
+	\end{center}
+	\vspace{-0.6em}
+	\begin{block}{Достоинства методики}
+		\begin{itemize}
+			\setlength{\itemsep}{0pt}
+			\item Составные части обладают более высокими частотами собственных колебаний.
+			\item Не требуется больших помещений для проведения испытаний.
+			\item Меньшее влияние воздушной среды на определяемые динамические характеристики.
+		\end{itemize} 
+	\end{block}
 \end{frame}
 
-\begin{frame}{Тестирование методики синтеза на расчетной модели космического аппарата (КА)}
-	\begin{figure}
-		\centering
-		\includegraphics[width = 1\textwidth]{spacecraft-test-mesh}
-	\end{figure}
-	Число степеней свободы: $ 18714 $.
+\begin{frame}{Построение матриц демпфирования составных частей}
+	\begin{center}
+		\begin{columns}
+			\begin{column}{0.54\textwidth }
+				\centering
+				\vspace{-0.75em}
+				\includegraphics[width = 1\textwidth]{ms-21}
+				Модальные испытания МС-21
+			\end{column}
+			\begin{column}{0.45\textwidth}
+				\centering
+				\begin{tikzpicture}[scale = 1]
+					\small
+					\pgfmathsetmacro{\vertStep}{0.6}
+					\begin{axis}[
+						xlabel            = {$ \overline{f} $},
+						ylabel            = {$ \lambda $}, 
+						ylabel shift      = -5 pt,
+						width             = 5.7cm,
+						grid              = both,
+						mark size         = 1pt,
+						ylabel near ticks,
+						xlabel near ticks,
+						xmin = 0.985, xmax = 1.025
+					]
+						\pgfplotstableread{images/presentation/monophase-parameter.txt}\contentFile
+						\addplot table [x index = 0, y index = 1] {\contentFile};
+						\addplot table [x index = 0, y index = 2] {\contentFile};
+						\node[text width = 25mm] at (axis cs: 1.012, -1.55) {Вертикальный изгиб фюзеляжа};
+						\draw[very thick, dashed, color = teal] (axis cs:1, -\vertStep) -- (axis cs:1, \vertStep);
+						\node[color = teal] at (axis cs: 0.996, 0.5) {$ \overline{f}_\text{рез} $};
+					\end{axis}
+				\end{tikzpicture}
+			\end{column}
+		\end{columns}
+	\end{center}
+	\vspace{-1em}
+	\begin{block}{Нулевое приближение по гипотезе Сорокина}
+		\begin{equation}
+			\begin{gathered}
+			\mat{H} = \alpha \tilde{\mat{K}} + \beta \mat{M}, \\
+			G(\alpha, \beta) = \sum\limits_{i\,=\,1}^p w_i \left( 1 - \frac{\alpha \tilde{\kappa}_i + \beta \mu_i}{h_i} \right)^2 \rightarrow \min_{\alpha, \beta}.
+			\end{gathered}
+		\end{equation}
+	\end{block}
+	\vspace{-0.5em}
+	\begin{block}{Введение корректирующих элементов}
+		\begin{equation}
+			\tilde{\mat{H}} = \mat{H} + \Delta \internal{\mat{H}} + \Delta \external{\mat{H}}.
+		\end{equation}
+	\end{block}
 \end{frame}
 
-\begin{frame}{Коррекция моделей составных частей тестового КА}
-	\begin{figure}
-		\centering
-		\begin{subfigure}[t]{0.49\textwidth}
-			\centering
-			\includegraphics[width = \textwidth]{test-spacecraft-orbital-distribution}
-			\caption{Орбитальный модуль} 
-		\end{subfigure}
-		\hfill
-		\begin{subfigure}[t]{0.47\textwidth}
-			\centering
-			\includegraphics[height = \textwidth]{test-spacecraft-panel-distribution}
-			\caption{Панели солнечных батарей} 
-		\end{subfigure} 
-		\caption{Изменения узловых жесткостей при коррекции составных частей}
-	\end{figure}	
+\begin{frame}{Тестирование методики синтеза на примере модели КА}
+	\begin{center}
+		\begin{tikzpicture}
+			\pgfmathsetmacro{\horizDist}{5}
+			\pgfmathsetmacro{\vertDist}{0.75}
+			\pgfmathsetmacro{\shiftText}{0.01}
+			\tikzstyle{arrow} = [draw, line width = 0.5mm, -{Latex[length = 3mm]}, color = blue] 
+			% Полная модель
+			\node[inner sep = 0pt] (mesh) at (0, 0) {\includegraphics[width = 0.7\textwidth]{images/presentation/spacecraft-test-mesh}};
+			\node[inner sep = 0pt, below = \shiftText of mesh.south] (textMesh) {Глобальная модель};
+			% Орбитальный модуль
+			\draw (mesh.south) ++ (-\horizDist/2, -\vertDist) node [below] (orbital) {\includegraphics[width = 0.35\textwidth]{test-spacecraft-orbital-distribution}};
+			\node[inner sep = 0pt, below = \shiftText of orbital.south] (textOrbital) {а) Орбитальный модуль};
+			% Панели солнечных батарей
+			\draw (mesh.south) ++ (\horizDist/2, -\vertDist) node [below] (panel) {\includegraphics[height = 0.33\textwidth]{test-spacecraft-panel-distribution}};
+			\node[inner sep = 0pt, below = \shiftText of panel.south] (textPanel) {б) Панели солнечных батарей};
+			% Стрелки
+			\draw [arrow] (textMesh.west) ++ (-0.3, 0) -- (orbital.north);
+			\draw [arrow] (textMesh.east) ++ (0.3, 0) -- (panel.north);
+		\end{tikzpicture}
+		
+		Изменения узловых жесткостей при коррекции моделей составных частей
+	\end{center}	
 \end{frame}
 
 \begin{frame}{Результаты синтеза глобальной модели КА}
-	\begin{tblr}{
-		colspec = {|X[c, -1]|X[c]|X[c]|X[c]|X[c]|},
-		width = \textwidth, 
-		hlines
-	}
-		\SetCell[r = 3]{c} № тона & \SetCell[c = 4]{c} Погрешность в частотах собственных колебаний, \% &&& \\
-		& \SetCell[r = 2]{c} Без коррекции & \SetCell[c = 3]{c} Коррекция по девяти частотам && \\
-		& & Панелей & Модуля & Панелей и модуля \\ \hline
-		7 & -4.689 & -2.120 & -2.756 & -0.021 \\
-		8 & -4.678 & -2.078 & -2.782 & -0.018 \\
-		9 & -5.121 & -4.447 & -0.674 & 0.100  \\
-		10 & -5.040 & -4.760 & -0.354 & -0.028 \\
-		11 & -5.040 & -4.760 & -0.357 & -0.032 \\
-		12 & -5.121 & -4.443 & -0.687 & 0.091 \\
-		13 & -4.102 & -0.966 & -3.161 & 0.011 \\
-		14 & -4.112 & -0.999 & -3.135 & 0.016 \\
-		15 & -3.303 & -0.234 & -3.066 & -0.006 \\
-	\end{tblr}
+	\begin{center}
+		\begin{columns}
+			\begin{column}{0.47\textwidth}
+				\centering
+				\small
+				\begin{tikzpicture}[scale = 1]
+					\hspace{-0.5em}
+					\begin{semilogyaxis}[
+						xlabel            = {Номер итерации коррекции},
+						ylabel            = {$ \lVert \mat{\alpha} \rVert_{\max} $}, 
+						ylabel shift      = -5 pt,
+						width             = 6.25cm,
+						grid              = both,
+						legend cell align = left,
+						legend style      = {
+							at            = {(0.02, 0.14)},
+							anchor        = west,
+							fill          = white,
+							fill opacity  = 0.6,
+							draw opacity  = 1,
+							text opacity  = 1,
+						},
+						ylabel near ticks,
+						xmin = 0, xmax = 8
+					]
+						\addplot table {images/partModelUpdating/test-spacecraft-panels-convergence.txt};
+						\addplot table {images/partModelUpdating/test-spacecraft-orbital-convergence.txt};
+						\legend{Панели, Орбитальный модуль}
+					\end{semilogyaxis}
+				\end{tikzpicture}
+				Оценка сходимости коррекции по частотному критерию
+			\end{column}
+			\hfill
+			\begin{column}{0.52\textwidth}		
+				\centering
+				\begin{tblr}{
+					colspec = {|X[c, -1]|X[c]|X[c]|X[c]|X[c]|},
+					hlines,
+					colsep = 1pt,
+					rows = {font = \footnotesize}
+				}
+					\SetCell[r = 3]{c} Тон & \SetCell[c = 4]{c} Погрешность в частотах, \% &&& \\
+					& \SetCell[r = 2]{c} Исходная & \SetCell[c = 3]{c} После коррекции && \\
+					& & Панелей & Модуля & {Панелей \\ и модуля} \\ \hline
+					7 & -4.689 & -2.120 & -2.756 & -0.021 \\
+					8 & -4.678 & -2.078 & -2.782 & -0.018 \\
+					9 & -5.121 & -4.447 & -0.674 & 0.100  \\
+					10 & -5.040 & -4.760 & -0.354 & -0.028 \\
+					11 & -5.040 & -4.760 & -0.357 & -0.032 \\
+					12 & -5.121 & -4.443 & -0.687 & 0.091 \\
+					13 & -4.102 & -0.966 & -3.161 & 0.011 \\
+					14 & -4.112 & -0.999 & -3.135 & 0.016 \\
+					15 & -3.303 & -0.234 & -3.066 & -0.006 \\
+					16 & -3.303 & -0.234 & -3.066 & -0.005 \\
+				\end{tblr}
+			\end{column}
+		\end{columns}
+	\end{center}
 \end{frame}
 
-\section{Программы для представления и обработки результатов модальных испытаний}
+\section{Положения, выносимые на защиту (продолжение)}
 
-\begin{frame}{Программа для расчета обобщенных характеристик по результатам модальных испытаний}
-	\begin{figure}
-		\centering
-		\includegraphics[width = 0.7\textwidth]{gencalc-interface}
-	\end{figure}
+\begin{frame}{Положения, выносимые на защиту}
+	\begin{enumerate}
+		\setcounter{enumi}{2} 
+		\item Обоснована методика формирования глобальной матрицы демпфирования конструкций по результатам испытаний их составных частей.
+		\item Развита методика испытаний составных частей ЛА для достоверного построения их матриц жесткости.
+	\end{enumerate}
 \end{frame}
 
-\begin{frame}{Программа для представления результатов модальных испытаний}
-	\begin{figure}
-		\centering
-		\includegraphics[width = 0.8\textwidth]{analyzer-interface}
-	\end{figure}
+\section{Программы для обработки и представления результатов модальных испытаний}
+
+\begin{frame}{Программы для обработки и представления результатов модальных испытаний}
+	\begin{center}
+		\begin{tikzpicture}
+			\node[inner sep = 0pt] (gencalc) at (0, 0) {\includegraphics[width = 0.6\textwidth]{gencalc-interface}};
+			\node[inner sep = 0pt] (analyzer) at (3, -2) {\includegraphics[width = 0.6\textwidth]{analyzer-interface}};
+		\end{tikzpicture}
+	\end{center}
 \end{frame}
 
 \section{Программа для диагностирования дефектов конструкций по результатам испытаний}
 
 \begin{frame}{Программа для диагностирования дефектов конструкций по результатам испытаний}
-	\begin{figure}
-		\centering
-		\begin{subfigure}[t]{0.49\textwidth}
-			\includegraphics[width = 0.75\textwidth]{distortion-airplane-forewing}
-			\caption{Переднего горизонтального оперения}
-		\end{subfigure}
-		\hfill
-		\begin{subfigure}[t]{0.49\textwidth}
-			\includegraphics[width = 1\textwidth]{distortion-airplane-stabilizer} 
-			\caption{Цельноповоротного стабилизатора}
-		\end{subfigure}
-    	\caption{Зазоры в узлах крепления оперения} 
-	\end{figure}
-\end{frame}
-
-\begin{frame}{Программа для диагностирования дефектов конструкций по результатам испытаний}
-	\begin{figure}
-		\begin{subfigure}[t]{0.49\textwidth}
-			\includegraphics[width = 0.7\textwidth]{spacecraft-scheme}
-		\end{subfigure}
-		\hfill
-		\begin{subfigure}[t]{0.49\textwidth}
-			\includegraphics[width = 1\textwidth]{distortion-spacecraft}
-		\end{subfigure}
-		\caption{Зазоры в узлах установки солнечных батарей}
-	\end{figure}
+	Возможное месторасположение дефекта соответствует максимуму параметра искажений портретов колебаний. Типы обнаруживаемых дефектов: зазоры, люфты и трещины. 
+	\begin{center}
+		\begin{figure}
+			\begin{subfigure}[t]{0.53\textwidth}
+				\includegraphics[width = 1\textwidth]{express-amu-7}
+			\end{subfigure}
+			\begin{subfigure}[t]{0.45\textwidth}
+				\includegraphics[width = 1\textwidth]{distortion-spacecraft}
+			\end{subfigure}
+		\end{figure}
+		Обнаружение зазоров в узлах установки солнечных батарей
+	\end{center}
 \end{frame}
 
 \section{Определение модальных характеристик по результатам акустических испытаний}
@@ -442,98 +508,177 @@
 		\item динамическая система является стационарной;
 		\item исследуемый объект является наблюдаемым: расположение датчиков на конструкции позволяет однозначно идентифицировать формы колебаний, частоты которых лежат в интересующем диапазоне.
 	\end{itemize}
-	\begin{figure}
-		\centering
-		\begin{subfigure}[t]{0.49\textwidth}
-			\includegraphics[width = 1\textwidth]{reflector-experiment}
-			\caption{Рефлектор в акустической камере}
-		\end{subfigure}
-		\hfill
-		\begin{subfigure}[t]{0.49\textwidth}
-			\includegraphics[width = 1\textwidth]{reflector-sensors} 
-			\caption{Расположение датчиков на поверхности рефлектора}
-		\end{subfigure}
-    	\caption{Проведение акустических испытаний} 
-	\end{figure}
+	\begin{center}
+		\begin{figure}
+			\centering
+			\small
+			\begin{subfigure}[t]{0.49\textwidth}
+				\includegraphics[width = 1\textwidth]{reflector-experiment}
+				а) Рефлектор в акустической камере
+			\end{subfigure}
+			\hfill
+			\begin{subfigure}[t]{0.49\textwidth}
+				\includegraphics[width = 1\textwidth]{reflector-sensors} 
+				б) Расположение датчиков на поверхности рефлектора
+			\end{subfigure}
+		\end{figure}
+		\vspace{0.5em}
+		Проведение акустических испытаний
+	\end{center}
 \end{frame}
 
 \begin{frame}{Результаты определения динамических характеристик рефлектора методами операционного модального анализа}
 	\centering
+	\vspace{0.5em}
 	\begin{tblr}{
 		colspec = {|c|c|c|c||c|c|c|},
-		hlines
+		hlines,
+		rows = {font = \footnotesize}
 	}
-		\SetCell[r = 2]{c} Тон & \SetCell[c = 3]{c} Частота, Гц && & \SetCell[c = 3]{c} Логарифмический декремент && \\
+		\SetCell[r = 2]{c} Тон & \SetCell[c = 3]{c} Частота $ f $, Гц && & \SetCell[c = 3]{c} Логарифмический декремент $ \delta $ && \\
 		& SSI-COV & ERA & SSI-DD & SSI-COV & ERA & SSI-DD \\ \hline
 		1 & 66.052 & 65.962 & 66.403 & 0.054 & 0.042 & 0.045 \\
 		2 & 91.287 & 90.910 & 91.843 & 0.030 & 0.052 & 0.042 \\
 		3 & 102.540 & --- & --- & 0.056 & --- & --- \\
 		4 & 114.770 & --- & --- & 0.063 & --- & --- \\
 		5 & 122.370 & --- & --- & 0.094 & --- & --- \\
-		6 & 127.850 & --- & --- & 0.049 & --- & --- \\
 	\end{tblr}
+	\begin{columns}
+		\footnotesize
+		\begin{column}{0.25\textwidth}
+			\centering
+			\includegraphics[width = 1\textwidth]{reflector-ssi-cov-mode-1}
+			$ f = 91.29 $ Гц, $ \delta = 0.03 $ 
+		\end{column}
+		\begin{column}{0.25\textwidth}	
+			\centering
+			\includegraphics[width = 1\textwidth]{reflector-ssi-cov-mode-2} 
+			$ f = 127.85 $ Гц, $ \delta = 0.05 $
+		\end{column}
+		\begin{column}{0.25\textwidth}	
+			\centering
+			\includegraphics[width = 1\textwidth]{reflector-ssi-cov-mode-4} 
+			$ f = 325.36 $ Гц, $ \delta = 0.03 $
+		\end{column}
+	\end{columns}
+	\vspace{0.5em}
+	Идентифицированные тона колебаний
 \end{frame}
 
 \section{Определение модальных характеристик по результатам летных испытаний}
 
 \begin{frame}{Определение модальных характеристик по результатам летных испытаний}
-	\begin{block}{Методика определения критической скорости флаттера}
-		\begin{itemize}
-			\item выход летательного аппарата на исследуемый скоростной режим;
-			\item задание генератором сигналов в систему управления; 
-			\item передача системой управления воздействий отклоняемым поверхностям;
-			\item регистрация колебаний тензодатчиками и акселерометрами до полного завершения переходных процессов;
-			\item обобщение и обработка результатов измерений на различных скоростях полета.
-		\end{itemize}
-	\end{block}
-	\begin{block}{Типы возбуждения в ходе полета}
-		\begin{itemize}
-			\item развертка сигнала по частоте; 
-			\item кратковременное гармоническое воздействие на исследуемой частоте; 
-			\item неспокойная атмосфера.
-		\end{itemize}
-	\end{block}
+
+	\begin{center}
+		\begin{columns}
+			\begin{column}{0.55\textwidth}
+				\centering
+				\textbf{Методика определения критической скорости флаттера}:
+				\begin{itemize}
+					\setlength{\itemsep}{0pt}
+					\item выход летательного аппарата на исследуемый скоростной режим;
+					\item задание генератором сигналов в систему управления; 
+					\item передача системой управления воздействий отклоняемым поверхностям;
+					\item регистрация колебаний тензодатчиками и акселерометрами до полного завершения переходных процессов;
+					\item обобщение и обработка результатов измерений на различных скоростях полета.
+				\end{itemize}
+			\end{column}		
+			\begin{column}{0.43\textwidth}
+				\centering
+				\begin{tikzpicture}[scale = 1]
+					\hspace{-1em}
+					\small
+					\begin{axis}[
+						xlabel            = {$ v $, км/ч},
+						ylabel            = {$ \delta $},
+						ylabel shift      = -2 pt,
+						y dir             = reverse,
+						grid              = major,
+						legend columns    = 1,
+						legend cell align = {left},
+						legend style      = {
+							at            = {(0.025, 0.68)},
+							anchor        = west,
+							fill          = white,
+							fill opacity  = 0.6,
+							draw opacity  = 1,
+							text opacity  = 1,
+						},
+						ylabel near ticks,
+						ymin = 0,
+						x tick label style = {
+							/pgf/number format/.cd,
+							set thousands separator = {},
+							fixed
+						},
+						y tick label style = {
+							/pgf/number format/.cd,
+							fixed
+						},
+						ylabel near ticks,  
+						try min ticks    = 6,
+						mark size        = 1.25pt,
+						width            = 5.5cm,
+						height           = 5.75cm,
+					]
+						\pgfplotstableread{images/synopsis/flight-decrements-2.txt}\contentFile
+						\addplot[color = blue, thick, mark = *, smooth, tension = 0.2] table [x index = 0, y index = 1] {\contentFile};
+						\addplot[color = gray, thick, mark = triangle*, smooth, tension = 0.2] table [x index = 0, y index = 2] {\contentFile};
+						\addplot[color = teal, thick, mark = diamond*, smooth, tension = 0.2] table [x index = 0, y index = 3] {\contentFile};
+						\addplot[color = red, thick,  mark = halfcircle*, smooth, tension = 0.2] table [x index = 0, y index = 4] {\contentFile};
+						\addplot[color = orange, thick, densely dashed, mark = o, mark options = {solid}, smooth, tension = 0.2] table [x index = 0, y index = 5] {\contentFile};
+						\addplot[color = violet, thick, densely dashed, mark = o, mark options = {solid}, smooth, tension = 0.2] table [x index = 0, y index = 6] {\contentFile};
+						\legend{\name{SSI-DD}, \name{ERA}, \name{ADA}, \name{N4SID}, {\name{ЛИИ}, оценка сверху}, {\name{ЛИИ}, оценка снизу}}
+					\end{axis}
+				\end{tikzpicture}
+				Скоростные зависимости логарифмического декремента Су-30
+			\end{column}
+		\end{columns}
+	\end{center}
 \end{frame}
 
-\begin{frame}{Результаты обработки летных испытаний Су-30}
-	\begin{figure}
-		\begin{subfigure}[b]{0.49\textwidth}
-			\centering
-	     	\includegraphics[width = 1\textwidth]{flight-decrements-2} 
-	     	\caption{Полет № 1}
-	    \end{subfigure}
-    	\hfill
-	    \begin{subfigure}[b]{0.49\textwidth}
-			\centering
-			\includegraphics[width = 1\textwidth]{flight-decrements-1}
-			\caption{Полет № 2}
-	    \end{subfigure}
-    	\caption{Кривые зависимости логарифмических декрементов от скорости полета}
-	\end{figure}
-\end{frame}
 
 \section{Решение практических задач коррекции расчетных моделей}
 
 \section{Коррекция расчетной модели динамически-подобной модели самолета Ту-204}
 
 \begin{frame}{Коррекция расчетной модели динамически-подобной модели самолета Ту-204}
-	\begin{figure}
-		\begin{subfigure}[t]{0.49\textwidth}
-			\centering
-	     	\includegraphics[width = 1\textwidth]{tu-204-experiment} 
-	     	\caption{Упругое вывешивание модели}
-	    \end{subfigure}
-    	\hfill
-	    \begin{subfigure}[t]{0.49\textwidth}
-			\centering
-			\includegraphics[width = 1\textwidth]{tu-204-coeffs-6}
-			\caption{Изменение узловых жесткостей}
-	    \end{subfigure}
-	    \caption{Динамически-подобная модель самолета Ту-204}
-	\end{figure}
+	Геометрические и физические характеристики модели:
+	\begin{columns}
+		\begin{column}{0.45\textwidth}
+			\begin{itemize}
+				\item Размах крыла --- $ 3172 $ мм.
+				\item Длина фюзеляжа --- $ 3462 $ мм.
+			\end{itemize}
+		\end{column}
+		\begin{column}{0.55\textwidth}
+			\begin{itemize}
+				\item Масштаб моделирования --- $ 1 \div 10 $.
+				\item Масса модели --- $ 50.5 $ кг.
+			\end{itemize}
+		\end{column}
+	\end{columns}
+	\begin{center}
+		\begin{figure}
+			\small
+			\begin{subfigure}[t]{0.49\textwidth}
+				\centering
+		     	\includegraphics[width = 1\textwidth]{tu-204-experiment} 
+		     	а) Упругое вывешивание модели
+		    \end{subfigure}
+	    	\hfill
+		    \begin{subfigure}[t]{0.49\textwidth}
+				\centering
+				\includegraphics[width = 1\textwidth]{tu-204-coeffs-6}
+				б) Изменение узловых жесткостей
+		    \end{subfigure}
+		\end{figure}
+		\vspace{1em}
+		Динамически-подобная модель самолета Ту-204
+	\end{center}
 \end{frame}
 
-\begin{frame}{Результаты применения метода коррекции} 
+\begin{frame}{Результаты применения методики коррекции} 
 	\resizebox{\textwidth}{!}{%
 	\begin{tblr}
 	{
@@ -561,88 +706,108 @@
 \section{Синтез имитационной модели каркаса зонтичной антенны космического аппарата}
 
 \begin{frame}{Синтез имитационной модели каркаса зонтичной антенны космического аппарата}
-	\begin{figure}
-		\centering
-		\includegraphics[width = 0.9\linewidth]{simsat-assembly}
-		\caption{Общий вид имитационной модели каркаса зонтичной антенны в сборе} 
-	\end{figure}
-\end{frame}
-
-\begin{frame}{Составные части имитационной модели}
-	\begin{figure}
-		\centering
-		\begin{subfigure}[t]{0.48\textwidth}
-			\centering
-			\includegraphics[width = \textwidth]{simsat-antenna}
-			\caption{Зонтичный каркас}
-		\end{subfigure}
-		\hfill
-		\begin{subfigure}[t]{0.48\textwidth}
-			\centering
-			\includegraphics[width = \textwidth]{simsat-handle}
-			\caption{Штанга}
-		\end{subfigure}	
-		\caption{Составные части модели каркаса зонтичной антенны}
-	\end{figure}
+	\begin{center}
+		\begin{tikzpicture}
+			\small
+			\pgfmathsetmacro{\vertDist}{4}
+			\pgfmathsetmacro{\shiftText}{0.05}
+			\tikzstyle{arrow} = [draw, line width = 0.5mm, -{Latex[length = 2.5mm]}, color = blue] 
+			% Полная модель
+			\node (boundary) at (0, 0) {};
+			\draw (boundary.east) ++ (3.25, 0) node (assembly) {\includegraphics[width = 0.5\textwidth]{simsat-assembly}};
+			\node[inner sep = 0pt, below = \shiftText of assembly.south] (textAssembly) {Конструкция в сборе};
+			% Сведения
+			\draw (assembly.east) ++ (5.75, 0) node (info){
+				\vbox				
+				{\begin{itemize}
+					\item Длина штанги --- $ 2250 $ мм.
+					\item Масса штанги --- 22 кг.
+					\item Диаметр рефлектора --- $ 3000 $ мм.
+					\item Масса рефлектора --- $ 73 $ кг.
+				\end{itemize}}
+			};
+			% Зонтичный каркас
+			\node (antenna) at (3, -\vertDist)  {\includegraphics[width = 0.35\textwidth]{simsat-antenna}};
+			\node[inner sep = 0pt, below = \shiftText of antenna.south] (textAntenna) {а) Рефлектор};
+			% Штанга
+			\node (handle) at (8, -\vertDist) {\includegraphics[width = 0.35\textwidth]{simsat-handle}};
+			\node[inner sep = 0pt, below = \shiftText of handle.south] (textHandle) {б) Штанга};
+			% Стрелки
+			\draw [arrow] (antenna.north) ++ (0, 0.45) -- (antenna.north);
+			\draw [arrow] (textAssembly.east) ++ (0.2, 0) -- (handle.north);
+		\end{tikzpicture}
+		
+		Имитационная модель каркаса зонтичной антенны
+	\end{center}
 \end{frame}
 
 \begin{frame}{Результаты применения методики синтеза} 
-	\centering
-	\begin{tblr}
-	{
-		colspec = {|c|c|c|c|}, 
-		width = \textwidth, 
-		hlines
-	}
-		\SetCell[r = 3]{c} Тон & \SetCell[c = 3]{c} {Погрешность относительно эксперимента \\ до и после коррекции  моделей составных частей, \%} \\ \cline{2-4} 
-		& \SetCell[r = 2]{c} До коррекции & \SetCell[c = 2]{c} После коррекции & \\ \cline{3-4} 
-		& & Коррекция штанги & {Коррекция штанги и \\ антенны} \\ \hline
-		1 & 1.84 & 0.70 & 0.70 \\ 
-	    2 & 3.88 & 0.33 & 0.40 \\ 
-	    3 & 3.19 & 1.24 & 1.24 \\ 
-    	4 & 2.13 & 1.18 & 1.18 \\ 
-	    5 & 2.25 & 2.73 & 1.95 \\ 
-	    6 & 3.55 & 3.48 & 3.41 \\ 
-    	7 & 3.78 & 3.64 & 3.64 
-	\end{tblr}
+	\small
+	\begin{center}
+		\begin{columns}
+			\begin{column}{0.6\textwidth}
+				\centering
+				\includegraphics[width = 1\textwidth]{scheme-fixture}
+			\end{column}
+			\begin{column}{0.4\textwidth}
+				\centering
+				\includegraphics[width = 0.7\textwidth]{scheme-springs}
+			\end{column}
+		\end{columns}
+		Расчетные схемы для оценки податливости закреплений в эксперименте \\
+		\vspace{0.5em}
+		\begin{tblr}
+		{
+			colspec = {|c|c|c|c|}, 
+			hlines,
+			colsep = 2pt,
+			rows = {font = \footnotesize}
+		}
+			\SetCell[r = 2]{c} Тон & \SetCell[c = 3]{c} {Погрешность до и после коррекции, \%} \\
+			& Исходная & {Коррекция \\ (настоящая методика)} & {Коррекция \\ (Маринин, 2020)} \\ \hline
+			1 & 1.84 & 0.70 & 0.66 \\ 
+		    2 & 3.88 & 0.40 & 2.76 \\ 
+		    3 & 3.19 & 1.24 & 2.97 \\ 
+	    	4 & 2.13 & 1.18 & 1.78 \\ 
+		    5 & 2.25 & 1.95 & 1.95 \\ 
+		\end{tblr}
+	\end{center}	
 \end{frame}
 
 \subsection{Коррекция расчетной модели отъемной части крыла изделия С-70}
 
 \begin{frame}{Коррекция расчетной модели отъемной части крыла изделия С-70}
-	\begin{figure}
-		\begin{subfigure}[b]{0.38\textwidth}
-			\centering
-	     	\includegraphics[width = 1\textwidth]{wing-experiment} 
-	     	\caption{Консоль крыла на подвеске}
-	    \end{subfigure}
-    	\hfill
-	    \begin{subfigure}[b]{0.61\textwidth}
-			\centering
-			\includegraphics[width = 1\textwidth]{wing-coeffs-5}
-			\caption{Распределение изменений узловых жесткостей}
-	    \end{subfigure}
-	    \caption{Композитная консоль крыла изделия С-70}
-	\end{figure}
-\end{frame}
-
-\begin{frame}{Результаты коррекции композитной консоли крыла} 
-	\centering
-	\resizebox{\textwidth}{!}{%
-	\begin{tblr}{
-		colspec = {|c|c|c|c|c|c|c|c|c|}, 
-		width = \textwidth, 
-		hlines
-	}
-		\SetCell[r = 3]{c} Тон & \SetCell[c = 2]{c} Приведенная частота && \SetCell[c = 6]{c} Погрешность до и после коррекции, \% \\
-		& \SetCell[r = 2]{c} Эксперимент & \SetCell[r = 2]{c} {Исходная \\ модель} & \SetCell[r = 2]{c} До & \SetCell[c = 5]{c}После \\
-		& & & & 1 & 2 & 3 & 4 & 5 \\ \hline
-		1 & 1.00 & 1.51 & 50.7 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 \\ 
-		2 & 2.28 & 3.18 & 39.5 & -7.4 & 0.0 & 0.0 & 0.0 & 0.0 \\ 
-		3 & 3.37 & 4.13 & 22.6 & -18.6 & -13.8 & 0.0 & 0.0 & 0.0 \\ 
-		4 & 3.95 & 4.82 & 21.8 & -19.1 & -17.8 & -8.2 & 0.0 & 0.0 \\ 
-		5 & 4.87 & 6.15 & 26.2 & -16.2 & -21.8 & -2.6 & -4.4 & 0.0 \\ 
-	\end{tblr} }
+	\begin{center}
+		\begin{figure}
+			\small
+			\begin{subfigure}[t]{0.35\textwidth}
+				\centering
+		     	\includegraphics[width = 0.7\textwidth]{images/presentation/wing-experiment} \\
+		     	Консоль крыла на подвеске
+		    \end{subfigure}
+		    \begin{subfigure}[t]{0.45\textwidth}
+				\centering
+				\includegraphics[width = 1\textwidth]{wing-coeffs-5} \\
+				Изменение узловых жесткостей
+		    \end{subfigure}
+		\end{figure}
+		\vspace{0.5em}
+		\begin{tblr}{
+			colspec = {|c|c|c|c|c|c|c|c|c|}, 
+			width = \textwidth, 
+			hlines,
+			rows = {font = \footnotesize}
+		}
+			\SetCell[r = 3]{c} Тон & \SetCell[c = 2]{c} Приведенная частота && \SetCell[c = 6]{c} Погрешность до и после коррекции, \% \\
+			& \SetCell[r = 2]{c} Эксперимент & \SetCell[r = 2]{c} {Исходная \\ модель} & \SetCell[r = 2]{c} До & \SetCell[c = 5]{c}После \\
+			& & & & 1 & 2 & 3 & 4 & 5 \\ \hline
+			1 & 1.00 & 1.51 & 50.7 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 \\ 
+			2 & 2.28 & 3.18 & 39.5 & -7.4 & 0.0 & 0.0 & 0.0 & 0.0 \\ 
+			3 & 3.37 & 4.13 & 22.6 & -18.6 & -13.8 & 0.0 & 0.0 & 0.0 \\ 
+			4 & 3.95 & 4.82 & 21.8 & -19.1 & -17.8 & -8.2 & 0.0 & 0.0 \\ 
+			5 & 4.87 & 6.15 & 26.2 & -16.2 & -21.8 & -2.6 & -4.4 & 0.0 \\ 
+		\end{tblr}
+	\end{center}
 \end{frame}
 
 \begin{frame}{Сопоставление форм колебаний до и после коррекции}
@@ -675,20 +840,25 @@
 \subsection{Коррекция расчетной модели гирдера для модульных секций накопителя ЦКП <<СКИФ>>}
 
 \begin{frame}{Коррекция расчетной модели гирдера для модульных секций накопителя ЦКП <<СКИФ>>}
-	\begin{figure}
-		\begin{subfigure}[b]{0.49\textwidth}
-			\centering
-	     	\includegraphics[width = 1\textwidth]{girder-full-system} 
-	     	\caption{Совместная геометрическая модель гирдера и магнитов}
-	    \end{subfigure}
-    	\hfill
-	    \begin{subfigure}[b]{0.49\textwidth}
-			\centering
-			\includegraphics[width = 1\textwidth]{girder-experiment}
-			\caption{Модальные испытания гирдера без магнитов}
-	    \end{subfigure}
-	    \caption{Гирдер для модульных секций накопителя}
-	\end{figure}
+	\vfill
+	\begin{center}
+		\begin{figure}
+			\small
+			\begin{subfigure}[b]{0.49\textwidth}
+				\centering
+		     	\includegraphics[width = 1\textwidth]{girder-full-system} 
+		     	а) Совместная геометрическая модель гирдера и магнитов
+		    \end{subfigure}
+	    	\hfill
+		    \begin{subfigure}[b]{0.49\textwidth}
+				\centering
+				\includegraphics[width = 1\textwidth]{girder-experiment}
+				б) Модальные испытания гирдера без магнитов
+		    \end{subfigure}
+		\end{figure}
+		\vspace{0.5em}
+    	Гирдер для модульных секций накопителя
+    \end{center}
 \end{frame}
 
 \begin{frame}{Результаты коррекции расчетной модели гирдера}
@@ -717,20 +887,50 @@
 	\end{tblr}
 \end{frame}
 
-\begin{frame}{Результаты коррекции расчетной модели гирдера}
-	\begin{figure}[!htb]
-		\centering
-		\begin{subfigure}[t]{0.49\textwidth}
-			\centering
-			\includegraphics[width = \textwidth]{girder-coeffs-0-6} 
-			\caption{Относительно исходной модели} 
-		\end{subfigure}
-		\hfill
-		\begin{subfigure}[t]{0.49\textwidth}
-			\centering
-			\includegraphics[width = \textwidth]{girder-coeffs-1-6}
-			\caption{Относительно коррекции по одной частоте} 
-		\end{subfigure}	
-		\caption{Изменения узловых жестокостей до и после коррекции КЭ-модели} 
-	\end{figure}
+\subsection{Свидетельства о регистрации программ и патент на изобретение}
+
+\begin{frame}{Свидетельства о регистрации программ и патент на изобретение}
+	\begin{center}
+		\begin{columns}
+			\begin{column}{0.24\textwidth}
+				\centering
+				\includegraphics[width = 1\textwidth]{images/presentation/certificate-flightLab} \\ \vspace{0.5em}
+				\includegraphics[width = 1\textwidth]{images/presentation/certificate-genCalc}
+			\end{column}
+			\begin{column}{0.24\textwidth}
+				\centering
+				\includegraphics[width = 1\textwidth]{images/presentation/certificate-responseAnalyzer} \\ \vspace{0.5em}
+				\includegraphics[width = 1\textwidth]{images/presentation/certificate-distortionFinder}
+			\end{column}
+			\begin{column}{0.3\textwidth}
+				\centering
+				\includegraphics[width = 1\textwidth]{images/presentation/patent-freeing-front}
+			\end{column}
+		\end{columns}
+	\end{center}
+\end{frame}
+
+\subsection{Акты об использовании и внедрении}
+
+\begin{frame}{Акты об использовании и внедрении}
+	\begin{center}
+		\begin{columns}
+			\begin{column}{0.34\textwidth}
+				\centering
+				\includegraphics[width = 1\textwidth]{images/presentation/act-oak}
+				\textbf{<<ОКБ Сухого>>} \\ (Cy-57, C-70)
+			\end{column}
+			\begin{column}{0.34\textwidth}
+				\centering
+				\includegraphics[width = 1\textwidth]{images/presentation/act-skif}
+				\textbf{ЦКП <<СКИФ>>} \\ (гирдер)
+			\end{column}
+			\begin{column}{0.34\textwidth}
+				\centering
+				\vspace{2.5em}
+				\includegraphics[width = 1\textwidth]{images/presentation/act-sibnia}
+				\textbf{ФАУ <<СибНИА им.\,С.А.\,Чаплыгина>>} (Су-30, Су-34, Як-130, Як-152, МС-21)
+			\end{column}
+		\end{columns}
+	\end{center}	
 \end{frame}

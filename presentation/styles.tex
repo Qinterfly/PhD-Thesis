@@ -16,7 +16,7 @@
 
 % --- Макет страниц --- %
 
-\setbeamersize{text margin left = 1cm, text margin right = 1cm} % Размер полей слайдов
+\setbeamersize{text margin left = 0.5cm, text margin right = 0.5cm} % Размер полей слайдов
 
 % --- Настройки навигации --- %
 
@@ -88,26 +88,32 @@
 
 \renewcommand{\thefootnote}{[\arabic{footnote}]}
 
-% --- Разметка нижнего колонтитула --- %
-
-\setbeamertemplate{footline}{
-    \leavevmode%
-    \hbox{%
-    	% Автор
-        \begin{beamercolorbox}[wd=0.28\paperwidth, ht=2.25ex, dp=1ex, center]{author in head/foot}%
-            \usebeamerfont{author in head/foot}\thesisAuthor
-        \end{beamercolorbox}%
-        % Тема и страницы
-        \begin{beamercolorbox}[wd=0.72\paperwidth, ht=2.25ex, dp=1ex, right]{title in head/foot}%
-            \thesisTitleShort\hfill\insertframenumber{}\,/\,\inserttotalframenumber\hspace*{2ex}
-        \end{beamercolorbox}}%
-    \vskip0pt%
-}
-
 % --- Разметка верхнего колонтитула --- %
 
 \setbeamertemplate{headline}{
-    \begin{beamercolorbox}[wd=\paperwidth, colsep=1.5pt]{lower separation line head}
+	\usebeamerfont{headline}%
+    \begin{beamercolorbox}[wd = \paperwidth, colsep = 1.5pt]{lower separation line head}
     \end{beamercolorbox}
-} 
+}
+\setbeamerfont{frametitle}{size=\fontsize{13}{15}\selectfont}
+
+% --- Разметка нижнего колонтитула (основное содержание) --- %
+
+\setbeamertemplate{footline}
+{
+  \hfill%
+  \usebeamercolor[fg]{page number in head/foot}%
+  \usebeamerfont{page number in head/foot}%
+  \insertframenumber\kern1em\vskip5pt%
+}
+\setbeamerfont{page number in head/foot}{size={\fontsize{10}{12}}}
+
+% --- Разметка нижнего колонтитула (приложение) --- %
+
+\makeatletter
+\g@addto@macro\appendix{
+    \setbeamertemplate{footline}{}
+}
+\makeatother
+
 
