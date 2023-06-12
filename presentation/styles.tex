@@ -5,6 +5,7 @@
 % --- Шаблон --- %
 
 \DeclareRobustCommand{\fixme}{\textcolor{red}}
+\DeclareRobustCommand{\highlight}{\textcolor{blue}}
 
 % --- Путь к изображениям --- %
 
@@ -97,6 +98,7 @@
 }
 \setbeamerfont{frametitle}{size=\fontsize{13}{15}\selectfont}
 
+
 % --- Разметка нижнего колонтитула (основное содержание) --- %
 
 \setbeamertemplate{footline}
@@ -107,6 +109,7 @@
   \insertframenumber\kern1em\vskip5pt%
 }
 \setbeamerfont{page number in head/foot}{size={\fontsize{10}{12}}}
+\newcommand{\beginSkip}{\vspace{1em}}
 
 % --- Разметка нижнего колонтитула (приложение) --- %
 
@@ -115,5 +118,25 @@
     \setbeamertemplate{footline}{}
 }
 \makeatother
+
+% --- Таблицы --- %
+
+\newenvironment{comtblr}[1]
+{
+	\begin{tblr}
+	{
+		colspec = {|X[m, t]|X[m, t]|}, 
+		width   = \textwidth,
+		hlines,
+		column{1} = {#1}
+	}
+	\SetCell[]{c} \textbf{Замечания} & \SetCell[]{c} \textbf{Ответы на замечания} \\ \hline
+}
+{	
+	\end{tblr}
+	\vskip0pt plus 1filll
+} 	
+
+
 
 
