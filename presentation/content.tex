@@ -1,5 +1,26 @@
 \section{Методика коррекции конечно-элементных моделей ЛА}
 
+\begin{frame}{Принципиальная схема коррекции}
+	\begin{center}
+		\begin{tikzpicture}[scale = 1]
+			\pgfmathsetmacro{\nodeDist}{0.1}
+			\pgfmathsetmacro{\shiftText}{0.0}
+			% Исходная модель
+			\node[inner sep = 0pt] (initial) at (0, 0) {\includegraphics[width = 0.3\textwidth]{simple-model-initial}};
+			\node[inner sep = 0pt, below = \shiftText of initial.south] (textInitial) {Исходная модель};
+			% Знак
+			\node [font = \fontsize{30}{32}, below = \nodeDist of textInitial.south, color = blue] (sumSign) {\bfseries +};
+			% Коррректирующие элементы
+			\node[inner sep = 0pt, below = -\nodeDist of sumSign.south] (elements) {\includegraphics[width = 0.3\textwidth]{simple-model-elements}};
+			\node[inner sep = 0pt, below = \shiftText of elements.south] (textElements) {Корректирующие элементы};
+			% Скорректированная модель
+			\draw (sumSign.east) ++ (2.25, 0) node [right] (updated) {\includegraphics[width = 0.5\textwidth]{simple-model-updated}};
+			\draw [line width = 0.75mm, -{Latex[length = 6mm]}, color = red](sumSign.east) ++ (1.25, 0) --++ (1.75, 0);
+			\node[inner sep = 0pt, below = \shiftText of updated.south] (textUpdated) {Скорректированная модель};
+		\end{tikzpicture}
+	\end{center}
+\end{frame}
+
 \begin{frame}{Методика коррекции конечно-элементной модели}
 	\begin{block}{Обобщенная проблема собственных значений}
 		\begin{equation}
@@ -74,28 +95,6 @@
 		\end{equation*}
 	\end{block}
 	где $ \ell $~---~длина корректирующего балочного элемента, $ k = 1 \hdots 3 $.
-\end{frame}
-
-\begin{frame}{Принципиальная схема коррекции}
-	При создании корректирующих элементов учитывается особенности конструкции: наличие плоскостей симметрии и конструктивно-идентичных элементов, а также неопределенность физико-механических характеристик.
-	\begin{center}
-		\begin{tikzpicture}[scale = 1]
-			\pgfmathsetmacro{\nodeDist}{0.1}
-			\pgfmathsetmacro{\shiftText}{0.0}
-			% Исходная модель
-			\node[inner sep = 0pt] (initial) at (0, 0) {\includegraphics[width = 0.3\textwidth]{simple-model-initial}};
-			\node[inner sep = 0pt, below = \shiftText of initial.south] (textInitial) {Исходная модель};
-			% Знак
-			\node [font = \fontsize{30}{32}, below = \nodeDist of textInitial.south, color = blue] (sumSign) {\bfseries +};
-			% Коррректирующие элементы
-			\node[inner sep = 0pt, below = -\nodeDist of sumSign.south] (elements) {\includegraphics[width = 0.3\textwidth]{simple-model-elements}};
-			\node[inner sep = 0pt, below = \shiftText of elements.south] (textElements) {Корректирующие элементы};
-			% Скорректированная модель
-			\draw (sumSign.east) ++ (2.25, 0) node [right] (updated) {\includegraphics[width = 0.5\textwidth]{simple-model-updated}};
-			\draw [line width = 0.75mm, -{Latex[length = 6mm]}, color = red](sumSign.east) ++ (1.25, 0) --++ (1.75, 0);
-			\node[inner sep = 0pt, below = \shiftText of updated.south] (textUpdated) {Скорректированная модель};
-		\end{tikzpicture}
-	\end{center}
 \end{frame}
 
 \begin{frame}{Расчет корректирующих жесткостей}
@@ -500,7 +499,80 @@
 	\end{center}
 \end{frame}
 
-\section{Определение модальных характеристик по результатам акустических испытаний}
+\section{Операционный модальный анализ по результатам летных испытаний}
+
+\begin{frame}{Операционный модальный анализ по результатам летных испытаний}
+
+	\begin{center}
+		\begin{columns}
+			\begin{column}{0.55\textwidth}
+				\centering
+				\textbf{Методика определения критической скорости флаттера}:
+				\begin{itemize}
+					\setlength{\itemsep}{0pt}
+					\raggedright
+					\item выход летательного аппарата на исследуемый скоростной режим;
+					\item задание генератором сигналов в систему управления; 
+					\item передача системой управления воздействий отклоняемым поверхностям;
+					\item регистрация колебаний тензодатчиками и акселерометрами до полного завершения переходных процессов;
+					\item обобщение и обработка результатов измерений на различных скоростях полета.
+				\end{itemize}
+			\end{column}		
+			\begin{column}{0.43\textwidth}
+				\centering
+				\begin{tikzpicture}[scale = 1]
+					\hspace{-1em}
+					\small
+					\begin{axis}[
+						xlabel            = {$ v $, км/ч},
+						ylabel            = {$ \delta $},
+						ylabel shift      = -2 pt,
+						y dir             = reverse,
+						grid              = major,
+						legend columns    = 1,
+						legend cell align = {left},
+						legend style      = {
+							at            = {(0.025, 0.68)},
+							anchor        = west,
+							fill          = white,
+							fill opacity  = 0.6,
+							draw opacity  = 1,
+							text opacity  = 1,
+						},
+						ylabel near ticks,
+						ymin = 0,
+						x tick label style = {
+							/pgf/number format/.cd,
+							set thousands separator = {},
+							fixed
+						},
+						y tick label style = {
+							/pgf/number format/.cd,
+							fixed
+						},
+						ylabel near ticks,  
+						try min ticks    = 6,
+						mark size        = 1.25pt,
+						width            = 5.5cm,
+						height           = 5.75cm,
+					]
+						\pgfplotstableread{images/synopsis/flight-decrements-2.txt}\contentFile
+						\addplot[color = blue, thick, mark = *, smooth, tension = 0.2] table [x index = 0, y index = 1] {\contentFile};
+						\addplot[color = gray, thick, mark = triangle*, smooth, tension = 0.2] table [x index = 0, y index = 2] {\contentFile};
+						\addplot[color = teal, thick, mark = diamond*, smooth, tension = 0.2] table [x index = 0, y index = 3] {\contentFile};
+						\addplot[color = red, thick,  mark = halfcircle*, smooth, tension = 0.2] table [x index = 0, y index = 4] {\contentFile};
+						\addplot[color = orange, thick, densely dashed, mark = o, mark options = {solid}, smooth, tension = 0.2] table [x index = 0, y index = 5] {\contentFile};
+						\addplot[color = violet, thick, densely dashed, mark = o, mark options = {solid}, smooth, tension = 0.2] table [x index = 0, y index = 6] {\contentFile};
+						\legend{\name{SSI-DD}, \name{ERA}, \name{ADA}, \name{N4SID}, {\name{ЛИИ}, оценка сверху}, {\name{ЛИИ}, оценка снизу}}
+					\end{axis}
+				\end{tikzpicture}
+				Скоростные зависимости логарифмического декремента Су-30
+			\end{column}
+		\end{columns}
+	\end{center}
+\end{frame}
+
+\section{Определение динамических характеристик рефлектора по результатам акустических испытаний}
 
 \begin{frame}{Определение модальных характеристик рефлектора по результатам акустических испытаний}
 	\textbf{\underline{Принимаемые гипотезы}}:
@@ -565,79 +637,6 @@
 	Идентифицированные тона колебаний
 \end{frame}
 
-\section{Определение модальных характеристик по результатам летных испытаний}
-
-\begin{frame}{Определение модальных характеристик по результатам летных испытаний}
-
-	\begin{center}
-		\begin{columns}
-			\begin{column}{0.55\textwidth}
-				\centering
-				\textbf{Методика определения критической скорости флаттера}:
-				\begin{itemize}
-					\setlength{\itemsep}{0pt}
-					\item выход летательного аппарата на исследуемый скоростной режим;
-					\item задание генератором сигналов в систему управления; 
-					\item передача системой управления воздействий отклоняемым поверхностям;
-					\item регистрация колебаний тензодатчиками и акселерометрами до полного завершения переходных процессов;
-					\item обобщение и обработка результатов измерений на различных скоростях полета.
-				\end{itemize}
-			\end{column}		
-			\begin{column}{0.43\textwidth}
-				\centering
-				\begin{tikzpicture}[scale = 1]
-					\hspace{-1em}
-					\small
-					\begin{axis}[
-						xlabel            = {$ v $, км/ч},
-						ylabel            = {$ \delta $},
-						ylabel shift      = -2 pt,
-						y dir             = reverse,
-						grid              = major,
-						legend columns    = 1,
-						legend cell align = {left},
-						legend style      = {
-							at            = {(0.025, 0.68)},
-							anchor        = west,
-							fill          = white,
-							fill opacity  = 0.6,
-							draw opacity  = 1,
-							text opacity  = 1,
-						},
-						ylabel near ticks,
-						ymin = 0,
-						x tick label style = {
-							/pgf/number format/.cd,
-							set thousands separator = {},
-							fixed
-						},
-						y tick label style = {
-							/pgf/number format/.cd,
-							fixed
-						},
-						ylabel near ticks,  
-						try min ticks    = 6,
-						mark size        = 1.25pt,
-						width            = 5.5cm,
-						height           = 5.75cm,
-					]
-						\pgfplotstableread{images/synopsis/flight-decrements-2.txt}\contentFile
-						\addplot[color = blue, thick, mark = *, smooth, tension = 0.2] table [x index = 0, y index = 1] {\contentFile};
-						\addplot[color = gray, thick, mark = triangle*, smooth, tension = 0.2] table [x index = 0, y index = 2] {\contentFile};
-						\addplot[color = teal, thick, mark = diamond*, smooth, tension = 0.2] table [x index = 0, y index = 3] {\contentFile};
-						\addplot[color = red, thick,  mark = halfcircle*, smooth, tension = 0.2] table [x index = 0, y index = 4] {\contentFile};
-						\addplot[color = orange, thick, densely dashed, mark = o, mark options = {solid}, smooth, tension = 0.2] table [x index = 0, y index = 5] {\contentFile};
-						\addplot[color = violet, thick, densely dashed, mark = o, mark options = {solid}, smooth, tension = 0.2] table [x index = 0, y index = 6] {\contentFile};
-						\legend{\name{SSI-DD}, \name{ERA}, \name{ADA}, \name{N4SID}, {\name{ЛИИ}, оценка сверху}, {\name{ЛИИ}, оценка снизу}}
-					\end{axis}
-				\end{tikzpicture}
-				Скоростные зависимости логарифмического декремента Су-30
-			\end{column}
-		\end{columns}
-	\end{center}
-\end{frame}
-
-
 \section{Решение практических задач коррекции расчетных моделей}
 
 \section{Коррекция расчетной модели динамически-подобной модели самолета Ту-204}
@@ -688,12 +687,12 @@
    		\SetCell[r = 3]{c} Тон & \SetCell[c = 2]{c} Частоты, Гц && \SetCell[c = 7]{c} Погрешность до и после коррекции, \%  \\
 	   	& \SetCell[r = 2]{c} Эксперимент & \SetCell[r = 2]{c} {Исходная \\ модель} & \SetCell[r = 2]{c} До & \SetCell[c = 6]{c} После \\ 
    		& & & & 1 & 2 & 3 & 4 & 5 & 6 \\ \hline
-		СИКр1 & 3.44 & 3.49 & 1.5 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 \\
-		АСИКр1 & 4.87 & 4.96 & 1.7 & -0.6 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 \\
-		ГИФ1 & 5.44 & 5.73 & 5.3 & 4.7 & 4.7 & 0.0 & 0.0 & 0.0 & 0.0 \\ 
-		ВИФ1 & 5.73 & 5.97 & 4.2 & 3.5 & 3.3 & 2.6 & 0.0 & 0.0 & 0.0 \\
-		СИКр2 & 9.30 & 9.13 & -1.8 & -4.4 & -3.2 & -3.9 & -4.4 & 0.0 & 0.0 \\
-		ВИФ2 & 14.18 & 14.77 & 4.2 & 3.7 & 3.8 & 3.4 & 2.0 & 3.3 & 0.0 \\
+		СИКр1\footnotemark[1] & 3.44 & 3.49 & 1.5 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 \\
+		АСИКр1\footnotemark[2] & 4.87 & 4.96 & 1.7 & -0.6 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 \\
+		ГИФ1\footnotemark[3] & 5.44 & 5.73 & 5.3 & 4.7 & 4.7 & 0.0 & 0.0 & 0.0 & 0.0 \\ 
+		ВИФ1\footnotemark[4] & 5.73 & 5.97 & 4.2 & 3.5 & 3.3 & 2.6 & 0.0 & 0.0 & 0.0 \\
+		СИКр2\footnotemark[5] & 9.30 & 9.13 & -1.8 & -4.4 & -3.2 & -3.9 & -4.4 & 0.0 & 0.0 \\
+		ВИФ2\footnotemark[6] & 14.18 & 14.77 & 4.2 & 3.7 & 3.8 & 3.4 & 2.0 & 3.3 & 0.0 \\
 	\end{tblr} }
 	\footnotetext[1]{Cимметричный изгиб крыла I тона}
 	\footnotetext[2]{Антисимметричный изгиб крыла I тона}
@@ -774,7 +773,7 @@
 	\end{center}	
 \end{frame}
 
-\subsection{Коррекция расчетной модели отъемной части крыла изделия С-70}
+\section{Коррекция расчетной модели отъемной части крыла изделия С-70}
 
 \begin{frame}{Коррекция расчетной модели отъемной части крыла изделия С-70}
 	\begin{center}
@@ -837,7 +836,7 @@
 	\end{columns}
 \end{frame}
 
-\subsection{Коррекция расчетной модели гирдера для модульных секций накопителя ЦКП <<СКИФ>>}
+\section{Коррекция расчетной модели гирдера для модульных секций накопителя ЦКП <<СКИФ>>}
 
 \begin{frame}{Коррекция расчетной модели гирдера для модульных секций накопителя ЦКП <<СКИФ>>}
 	\vfill
@@ -887,7 +886,7 @@
 	\end{tblr}
 \end{frame}
 
-\subsection{Свидетельства о регистрации программ и патент на изобретение}
+\section{Свидетельства о регистрации программ и патент на изобретение}
 
 \begin{frame}{Свидетельства о регистрации программ и патент на изобретение}
 	\begin{center}
@@ -910,7 +909,7 @@
 	\end{center}
 \end{frame}
 
-\subsection{Акты об использовании и внедрении}
+\section{Акты об использовании и внедрении}
 
 \begin{frame}{Акты об использовании и внедрении}
 	\begin{center}
